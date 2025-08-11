@@ -1,0 +1,234 @@
+/* 全局样式 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background-color: #f5f7fa;
+  color: #333;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+/* 左侧侧边栏样式 */
+.sidebar {
+  width: 240px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+}
+
+.user-avatar {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.user-avatar img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.nav-menu {
+  margin-top: 30px;
+}
+
+.nav-menu ul {
+  list-style: none;
+}
+
+.nav-menu li {
+  padding: 15px 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+}
+
+.nav-menu li i {
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+.nav-menu li:hover {
+  background-color: #f0f5ff;
+  color: #1677ff;
+}
+
+.nav-menu li.active {
+  background-color: #e6f4ff;
+  color: #1677ff;
+  font-weight: 500;
+  border-right: 3px solid #1677ff;
+}
+
+/* 主内容区样式 */
+.main-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 顶部信息区样式 */
+.top-info {
+  text-align: center;
+  padding: 20px 0;
+  margin-bottom: 30px;
+}
+
+.current-time {
+  font-size: 48px;
+  font-weight: 300;
+  color: #1677ff;
+  margin-bottom: 5px;
+}
+
+.date-info {
+  font-size: 16px;
+  color: #666;
+}
+
+/* 工具图标列表样式 */
+.tools-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 10px;
+}
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 20px;
+  padding: 10px 0;
+}
+
+.tool-item {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px 15px;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 140px;
+}
+
+.tool-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.tool-icon {
+  font-size: 36px;
+  margin-bottom: 15px;
+  color: #1677ff;
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.text-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tool-name {
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 40px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    height: auto;
+    padding: 10px 0;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .user-avatar {
+    padding: 10px;
+  }
+  
+  .user-avatar img {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .nav-menu {
+    margin-top: 0;
+    width: 100%;
+  }
+  
+  .nav-menu ul {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0 10px;
+  }
+  
+  .nav-menu li {
+    padding: 10px 15px;
+    border-right: none;
+  }
+  
+  .nav-menu li.active {
+    border-right: none;
+    border-bottom: 3px solid #1677ff;
+  }
+  
+  .tools-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+  
+  .tool-item {
+    height: 120px;
+    padding: 15px 10px;
+  }
+  
+  .current-time {
+    font-size: 36px;
+  }
+}

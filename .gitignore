@@ -1,0 +1,38 @@
+# 依赖目录
+node_modules/
+
+# 环境变量文件
+.env
+
+# 日志文件
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 运行时数据
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# 目录缓存
+.npm
+
+# 可选的REPL历史记录
+.node_repl_history
+
+# 输出的打包文件
+dist/
+build/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# IDE配置文件
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
