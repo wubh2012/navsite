@@ -131,6 +131,8 @@ body {
   align-items: center;
   justify-content: center;
   height: 140px;
+  text-decoration: none;
+  color: inherit;
 }
 
 .tool-item:hover {

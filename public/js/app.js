@@ -182,9 +182,27 @@ function generateTextIcon(name) {
 
 // 添加工具项
 function addToolItem(tool) {
-  const toolItem = document.createElement('div');
+  const toolItem = document.createElement('a');
   toolItem.className = 'tool-item';
-  toolItem.addEventListener('click', () => window.open(tool.url.link, '_blank'));
+  // 解析URL，兼容对象格式 { link: string } 或 { text: string }
+  let urlString = '';
+  if (tool && tool.url) {
+    if (typeof tool.url === 'string') {
+      urlString = tool.url;
+    } else if (typeof tool.url === 'object') {
+      if (tool.url.link && typeof tool.url.link === 'string') {
+        urlString = tool.url.link;
+      } else if (tool.url.text && typeof tool.url.text === 'string') {
+        urlString = tool.url.text;
+      }
+    }
+  }
+  toolItem.href = urlString || '#';
+  toolItem.target = '_blank';
+  toolItem.rel = 'noopener noreferrer';
+  if (tool && tool.name) {
+    toolItem.title = tool.name;
+  }
   
   // 使用图标（如果有）或尝试获取网站favicon或生成文字图标
   let iconHtml = '';
