@@ -26,7 +26,7 @@ async function getTenantAccessToken() {
   }
 
   try {
-    console.log('重新获取tenant_access_token');
+    console.log('重新获取tenant_access_token', process.env.APP_ID, process.env.APP_SECRET);
     const response = await axios.post(
       'https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal',
       {
@@ -51,6 +51,7 @@ async function getTenantAccessToken() {
       throw new Error(`获取tenant_access_token失败: ${response.data.msg}`);
     }
   } catch (error) {
+    console.error('获取tenant_access_token异常:', error);
     console.error('获取tenant_access_token异常:', error.message);
     throw error;
   }
