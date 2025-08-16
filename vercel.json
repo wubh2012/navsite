@@ -2,24 +2,20 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/index.js",
+      "src": "server.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/index.js"
-    },
-    {
       "src": "/(.*)",
-      "dest": "/api/index.js"
+      "dest": "/server.js"
     }
   ],
   "env": {
-    "APP_ID": "@app_id",
-    "APP_SECRET": "@app_secret",
-    "APP_TOKEN": "@app_token",
-    "TABLE_ID": "@table_id"
+    "APP_ID": "${APP_ID}",
+    "APP_SECRET": "${APP_SECRET}",
+    "APP_TOKEN": "${APP_TOKEN}",
+    "TABLE_ID": "${TABLE_ID}"
   }
 }

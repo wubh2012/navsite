@@ -3,6 +3,7 @@ const path = require('path');
 const axios = require('axios');
 const moment = require('moment');
 const { Lunar } = require('lunar-javascript');
+const serverless = require('serverless-http');
 
 const app = express();
 
@@ -93,5 +94,15 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
-// Vercel 需要的导出
-module.exports = app;
+// Vercel 无服务器函数适配器
+
+// 开发环境
+if (process.env.NODE_ENV !== 'production') {
+  const port = process.env.PORT || 3000;
+  app.listen(port, () => {
+    console.log(`服务器运行在 http://localhost:${port}`);
+  });
+}
+
+// Vercel 无服务器函数导出
+module.exports = serverless(app);
