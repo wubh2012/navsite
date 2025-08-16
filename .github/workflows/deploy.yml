@@ -1,0 +1,42 @@
+name: Deploy Node.js App
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run tests
+      run: npm test
+      continue-on-error: true
+
+    - name: Build
+      run: npm run build --if-present
+
+    - name: Deploy
+      env:
+        APP_ID: ${{ secrets.APP_ID }}
+        APP_SECRET: ${{ secrets.APP_SECRET }}
+        APP_TOKEN: ${{ secrets.APP_TOKEN }}
+        TABLE_ID: ${{ secrets.TABLE_ID }}
+      run: |
+        echo '部署步骤示例'
+        # 这里根据实际部署目标添加部署命令
+        # 例如部署到Vercel: vercel --prod
+        # 或部署到Heroku: git push heroku main
+        # 或部署到AWS: 相关AWS CLI命令
