@@ -284,7 +284,64 @@ function addEventListeners() {
   // 主页菜单项点击事件
   const homeMenuItem = document.querySelector('[data-category="all"]');
   homeMenuItem.addEventListener('click', () => showTools('all'));
+  
+  // 暗黑模式切换按钮点击事件
+  const themeToggleBtn = document.getElementById('theme-toggle-btn');
+  themeToggleBtn.addEventListener('click', toggleTheme);
+}
+
+// 切换主题模式
+function toggleTheme() {
+  const currentTheme = document.documentElement.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  
+  // 应用新主题
+  document.documentElement.setAttribute('data-theme', newTheme);
+  
+  // 保存用户选择到localStorage
+  localStorage.setItem('theme', newTheme);
+  
+  // 更新按钮文本和图标
+  const themeToggleBtn = document.getElementById('theme-toggle-btn');
+  const icon = themeToggleBtn.querySelector('i');
+  if (newTheme === 'dark') {
+    themeToggleBtn.innerHTML = '<i class="bi bi-sun"></i> 亮色模式';
+  } else {
+    themeToggleBtn.innerHTML = '<i class="bi bi-moon"></i> 暗黑模式';
+  }
+}
+
+// 初始化主题模式
+function initTheme() {
+  // 检查localStorage中是否有用户选择
+  const savedTheme = localStorage.getItem('theme');
+  
+  // 检查系统偏好
+  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  
+  // 确定要应用的主题
+  let themeToApply;
+  if (savedTheme) {
+    themeToApply = savedTheme;
+  } else {
+    themeToApply = systemPrefersDark ? 'dark' : 'light';
+  }
+  
+  // 应用主题
+  document.documentElement.setAttribute('data-theme', themeToApply);
+  
+  // 更新按钮文本和图标
+  const themeToggleBtn = document.getElementById('theme-toggle-btn');
+  const icon = themeToggleBtn.querySelector('i');
+  if (themeToApply === 'dark') {
+    themeToggleBtn.innerHTML = '<i class="bi bi-sun"></i> 亮色模式';
+  } else {
+    themeToggleBtn.innerHTML = '<i class="bi bi-moon"></i> 暗黑模式';
+  }
 }
 
 // 页面加载完成后初始化
 document.addEventListener('DOMContentLoaded', init);
+
+// 初始化主题模式
+initTheme();

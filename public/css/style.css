@@ -5,10 +5,44 @@
   box-sizing: border-box;
 }
 
+:root {
+  /* 亮色模式变量 */
+  --bg-color: #f5f7fa;
+  --text-color: #333;
+  --sidebar-bg: #fff;
+  --menu-hover-bg: #f0f5ff;
+  --menu-active-color: #1677ff;
+  --menu-active-border: #1677ff;
+  --time-color: #333;
+  --date-color: #666;
+  --tool-item-bg: #fff;
+  --tool-item-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --tool-item-hover-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --tool-icon-color: #555;
+  --tool-name-color: #333;
+}
+
+/* 暗黑模式变量 */
+[data-theme="dark"] {
+  --bg-color: #1a1a1a;
+  --text-color: #e0e0e0;
+  --sidebar-bg: #2d2d2d;
+  --menu-hover-bg: #3d3d3d;
+  --menu-active-color: #64a0ff;
+  --menu-active-border: #64a0ff;
+  --time-color: #f0f0f0;
+  --date-color: #aaa;
+  --tool-item-bg: #2d2d2d;
+  --tool-item-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --tool-item-hover-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --tool-icon-color: #ccc;
+  --tool-name-color: #e0e0e0;
+}
+
 body {
   font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  background-color: #f5f7fa;
-  color: #333;
+  background-color: var(--bg-color);
+  color: var(--text-color);
   height: 100vh;
   overflow: hidden;
 }
@@ -21,7 +55,7 @@ body {
 /* 左侧侧边栏样式 */
 .sidebar {
   width: 240px;
-  background-color: #fff;
+  background-color: var(--sidebar-bg);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
   padding: 20px 0;
   display: flex;
@@ -65,15 +99,40 @@ body {
 }
 
 .nav-menu li:hover {
-  background-color: #f0f5ff;
-  color: #1677ff;
+  background-color: var(--menu-hover-bg);
+  color: var(--menu-active-color);
 }
 
 .nav-menu li.active {
-  background-color: #e6f4ff;
-  color: #1677ff;
+  background-color: var(--menu-hover-bg);
+  color: var(--menu-active-color);
   font-weight: 500;
-  border-right: 3px solid #1677ff;
+  border-right: 3px solid var(--menu-active-border);
+}
+
+/* 暗黑模式切换按钮样式 */
+.theme-toggle {
+  margin-top: auto;
+  padding: 20px 0;
+}
+
+.theme-toggle li {
+  padding: 15px 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+}
+
+.theme-toggle li i {
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+.theme-toggle li:hover {
+  background-color: var(--menu-hover-bg);
+  color: var(--menu-active-color);
 }
 
 /* 主内容区样式 */
@@ -95,13 +154,13 @@ body {
 .current-time {
   font-size: 48px;
   font-weight: 300;
-  color: #1677ff;
+  color: var(--time-color);
   margin-bottom: 5px;
 }
 
 .date-info {
   font-size: 16px;
-  color: #666;
+  color: var(--date-color);
 }
 
 /* 工具图标列表样式 */
@@ -119,12 +178,12 @@ body {
 }
 
 .tool-item {
-  background-color: #fff;
+  background-color: var(--tool-item-bg);
   border-radius: 10px;
   padding: 20px 15px;
   text-align: center;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--tool-item-shadow);
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -137,13 +196,13 @@ body {
 
 .tool-item:hover {
   transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--tool-item-hover-shadow);
 }
 
 .tool-icon {
   font-size: 36px;
   margin-bottom: 15px;
-  color: #1677ff;
+  color: var(--tool-icon-color);
   width: 48px;
   height: 48px;
   object-fit: contain;
@@ -164,7 +223,7 @@ body {
 
 .tool-name {
   font-size: 14px;
-  color: #333;
+  color: var(--tool-name-color);
   font-weight: 500;
   word-break: break-word;
   display: -webkit-box;
