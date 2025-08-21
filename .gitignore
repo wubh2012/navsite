@@ -37,3 +37,4 @@ Thumbs.db
 *.sublime-project
 *.sublime-workspace
 .vercel
+.codebuddy/

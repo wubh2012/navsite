@@ -2,6 +2,9 @@
 let navigationData = {};
 let categories = [];
 let currentCategory = 'all';
+let dataCache = null; // 数据缓存
+let cacheTimestamp = null; // 缓存时间戳
+const CACHE_DURATION = 5 * 60 * 1000; // 缓存5分钟
 
 // DOM元素
 const categoryMenu = document.getElementById('category-menu');
@@ -20,10 +23,30 @@ async function init() {
   
   // 添加事件监听器
   addEventListeners();
+  
+  // 初始化触摸支持
+  initTouchSupport();
 }
 
 // 获取导航数据
 async function fetchNavigationData() {
+  // 检查缓存是否有效
+  if (dataCache && cacheTimestamp && (Date.now() - cacheTimestamp < CACHE_DURATION)) {
+    console.log('使用缓存数据');
+    navigationData = dataCache.data;
+    categories = dataCache.categories;
+    
+    // 生成分类菜单
+    generateCategoryMenu();
+    
+    // 显示所有工具
+    showTools('all');
+    return;
+  }
+
+  // 显示加载动画
+  showLoadingAnimation();
+  
   try {
     const response = await fetch('/api/navigation');
     const result = await response.json();
@@ -33,6 +56,16 @@ async function fetchNavigationData() {
       navigationData = result.data;
       categories = result.categories;
       
+      // 缓存数据
+      dataCache = {
+        data: result.data,
+        categories: result.categories
+      };
+      cacheTimestamp = Date.now();
+      
+      // 隐藏加载动画
+      hideLoadingAnimation();
+      
       // 生成分类菜单
       generateCategoryMenu();
       
@@ -40,11 +73,53 @@ async function fetchNavigationData() {
       showTools('all');
     } else {
       console.error('获取导航数据失败:', result.message);
+      hideLoadingAnimation();
       showError('获取数据失败，请刷新页面重试');
     }
   } catch (error) {
     console.error('获取导航数据异常:', error);
+    hideLoadingAnimation();
     showError('网络错误，请检查网络连接后重试');
+  }
+}
+
+// 显示加载动画
+function showLoadingAnimation() {
+  toolsGrid.innerHTML = `
+    <div class="loading-container" style="
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 300px;
+      text-align: center;
+    ">
+      <div class="loading-spinner" style="
+        width: 40px;
+        height: 40px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #007bff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 20px;
+      "></div>
+      <p style="color: #666; font-size: 16px; margin: 0;">正在加载导航数据...</p>
+    </div>
+    <style>
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+  `;
+}
+
+// 隐藏加载动画
+function hideLoadingAnimation() {
+  const loadingContainer = toolsGrid.querySelector('.loading-container');
+  if (loadingContainer) {
+    loadingContainer.remove();
   }
 }
 
@@ -123,14 +198,12 @@ function getFaviconUrl(url) {
         url = url.text;
       } else {
         // 如果没有可用的字符串属性，则返回null
-        console.error('URL对象格式不正确:', url);
         return null;
       }
     }
     
     // 确保url是字符串
-    if (typeof url !== 'string') {
-      console.error('URL不是字符串:', url);
+    if (typeof url !== 'string' || !url.trim()) {
       return null;
     }
     
@@ -138,17 +211,11 @@ function getFaviconUrl(url) {
     const urlObj = new URL(url);
     const hostname = urlObj.hostname;
     
-    // 使用Favicon.im服务获取高质量图标（支持更大尺寸和更清晰的图标）
-    return `https://favicon.im/${hostname}?larger=true`;
+    // 使用Google的favicon服务，更稳定
+    return `https://www.google.com/s2/favicons?domain=${hostname}&size=32`;
     
-    // 备选方案
-    // 1. Google的favicon服务
-    // return `https://www.google.com/s2/favicons?domain=${hostname}&size=64`;
-    
-    // 2. ToolB的favicon服务
-    // return `https://toolb.cn/favicon/${hostname}`;
   } catch (e) {
-    console.error('无效的URL:', url);
+    // 静默处理URL错误，返回null使用文字图标
     return null;
   }
 }
@@ -288,6 +355,561 @@ function addEventListeners() {
   // 暗黑模式切换按钮点击事件
   const themeToggleBtn = document.getElementById('theme-toggle-btn');
   themeToggleBtn.addEventListener('click', toggleTheme);
+  
+  // 移动端汉堡菜单事件监听器
+  addMobileMenuListeners();
+}
+
+// 添加移动端菜单事件监听器
+function addMobileMenuListeners() {
+  const hamburgerBtn = document.getElementById('hamburger-btn');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('mobile-overlay');
+  
+  if (hamburgerBtn && sidebar && overlay) {
+    // 汉堡菜单按钮点击事件
+    hamburgerBtn.addEventListener('click', toggleMobileMenu);
+    
+    // 遮罩层点击事件 - 关闭菜单
+    overlay.addEventListener('click', closeMobileMenu);
+    
+    // 侧边栏菜单项点击事件 - 选择分类后关闭菜单
+    const menuItems = sidebar.querySelectorAll('.nav-menu li');
+    menuItems.forEach(item => {
+      item.addEventListener('click', () => {
+        // 延迟关闭菜单，让用户看到选中效果
+        setTimeout(closeMobileMenu, 300);
+      });
+    });
+    
+    // ESC键关闭菜单
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+        closeMobileMenu();
+      }
+    });
+  }
+  
+  // 添加搜索功能事件监听器
+  addMobileSearchListeners();
+}
+
+// 添加移动端搜索事件监听器
+function addMobileSearchListeners() {
+  const searchBtn = document.getElementById('mobile-search-btn');
+  const searchContainer = document.getElementById('mobile-search');
+  const searchBackBtn = document.getElementById('search-back-btn');
+  const searchInput = document.getElementById('search-input');
+  const searchClearBtn = document.getElementById('search-clear-btn');
+  
+  console.log('初始化搜索事件监听器');
+  console.log('搜索按钮:', searchBtn);
+  console.log('搜索容器:', searchContainer);
+  
+  if (searchBtn && searchContainer) {
+    console.log('绑定搜索按钮点击事件');
+    // 搜索按钮点击事件
+    searchBtn.addEventListener('click', function(e) {
+      console.log('搜索按钮被点击');
+      e.preventDefault();
+      e.stopPropagation();
+      openMobileSearch();
+    });
+    
+    // 返回按钮点击事件
+    if (searchBackBtn) {
+      searchBackBtn.addEventListener('click', function(e) {
+        console.log('返回按钮被点击');
+        e.preventDefault();
+        e.stopPropagation();
+        closeMobileSearch();
+      });
+    }
+    
+    // 搜索输入框事件
+    if (searchInput) {
+      searchInput.addEventListener('input', handleSearchInput);
+      searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const query = searchInput.value.trim();
+          if (query) {
+            console.log('回车键搜索:', query);
+            performSearch(query);
+          }
+        }
+      });
+      searchInput.addEventListener('focus', () => {
+        searchInput.parentElement.classList.add('focused');
+      });
+      searchInput.addEventListener('blur', () => {
+        searchInput.parentElement.classList.remove('focused');
+      });
+    }
+    
+    // 清除按钮点击事件
+    if (searchClearBtn) {
+      searchClearBtn.addEventListener('click', clearSearch);
+    }
+    
+    // ESC键关闭搜索
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && searchContainer.classList.contains('active')) {
+        closeMobileSearch();
+      }
+    });
+  } else {
+    console.error('搜索按钮或搜索容器未找到');
+    console.error('searchBtn:', searchBtn);
+    console.error('searchContainer:', searchContainer);
+  }
+  
+  // 生成搜索建议
+  generateSearchSuggestions();
+}
+
+// 打开移动端搜索
+function openMobileSearch() {
+  console.log('打开移动端搜索');
+  const searchContainer = document.getElementById('mobile-search');
+  const searchInput = document.getElementById('search-input');
+  
+  console.log('搜索容器:', searchContainer);
+  console.log('搜索输入框:', searchInput);
+  
+  if (searchContainer) {
+    searchContainer.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    console.log('搜索界面已激活');
+    
+    // 延迟聚焦输入框，确保动画完成
+    setTimeout(() => {
+      if (searchInput) {
+        searchInput.focus();
+        console.log('输入框已聚焦');
+      }
+    }, 300);
+  } else {
+    console.error('搜索容器未找到，无法打开搜索界面');
+  }
+}
+
+// 关闭移动端搜索
+function closeMobileSearch() {
+  const searchContainer = document.getElementById('mobile-search');
+  const searchInput = document.getElementById('search-input');
+  
+  searchContainer.classList.remove('active');
+  document.body.style.overflow = '';
+  
+  // 清空搜索内容
+  if (searchInput) {
+    searchInput.value = '';
+    handleSearchInput({ target: searchInput });
+  }
+}
+
+// 处理搜索输入
+function handleSearchInput(e) {
+  const query = e.target.value.trim();
+  const clearBtn = document.getElementById('search-clear-btn');
+  const resultsContainer = document.getElementById('search-results');
+  
+  // 显示/隐藏清除按钮
+  if (query) {
+    clearBtn.classList.add('visible');
+  } else {
+    clearBtn.classList.remove('visible');
+  }
+  
+  // 执行搜索
+  if (query.length > 0) {
+    performSearch(query);
+  } else {
+    showSearchSuggestions();
+  }
+}
+
+// 执行搜索
+function performSearch(query) {
+  console.log('执行搜索，关键词:', query);
+  console.log('当前数据状态:', { navigationData, categories });
+  
+  const resultsContainer = document.getElementById('search-results');
+  const searchResults = [];
+  
+  // 检查数据是否已加载
+  if (!navigationData || Object.keys(navigationData).length === 0) {
+    console.log('导航数据为空，尝试重新获取数据');
+    // 如果数据为空，尝试重新获取
+    fetchNavigationData().then(() => {
+      if (navigationData && Object.keys(navigationData).length > 0) {
+        performSearch(query); // 递归调用
+      } else {
+        console.log('重新获取数据失败');
+        displaySearchResults([], query);
+      }
+    });
+    return;
+  }
+  
+  if (!categories || categories.length === 0) {
+    console.log('分类数据为空，使用navigationData的键作为分类');
+    categories = Object.keys(navigationData);
+  }
+  
+  console.log('开始在以下分类中搜索:', categories);
+  
+  // 在所有分类中搜索
+  categories.forEach(category => {
+    const tools = navigationData[category] || [];
+    console.log(`分类 "${category}" 中有 ${tools.length} 个工具`);
+    
+    tools.forEach(tool => {
+      if (tool && tool.name) {
+        const toolName = tool.name.toLowerCase();
+        const searchQuery = query.toLowerCase();
+        
+        if (toolName.includes(searchQuery)) {
+          console.log(`找到匹配项: ${tool.name} (分类: ${category})`);
+          searchResults.push({
+            ...tool,
+            category: category
+          });
+        }
+      }
+    });
+  });
+  
+  console.log(`搜索 "${query}" 找到 ${searchResults.length} 个结果:`, searchResults);
+  
+  // 显示搜索结果
+  displaySearchResults(searchResults, query);
+}
+
+// 显示搜索结果
+function displaySearchResults(results, query) {
+  const resultsContainer = document.getElementById('search-results');
+  const noResultsContainer = document.getElementById('search-no-results');
+  
+  if (!resultsContainer) {
+    console.error('搜索结果容器未找到，尝试创建');
+    // 如果容器不存在，尝试重新初始化搜索界面
+    const searchContainer = document.getElementById('mobile-search');
+    if (searchContainer) {
+      const searchResultsHtml = `
+        <div class="search-results" id="search-results">
+          <div class="search-suggestions">
+            <div class="suggestions-title">热门搜索</div>
+            <div class="suggestions-list" id="suggestions-list"></div>
+          </div>
+          <div class="search-no-results" id="search-no-results" style="display: none;">
+            <i class="bi bi-search"></i>
+            <p>未找到相关网站</p>
+            <span>请尝试其他关键词</span>
+          </div>
+        </div>
+      `;
+      const searchContainerDiv = searchContainer.querySelector('.search-container');
+      if (searchContainerDiv) {
+        const existingResults = searchContainerDiv.querySelector('.search-results');
+        if (!existingResults) {
+          searchContainerDiv.insertAdjacentHTML('beforeend', searchResultsHtml);
+        }
+      }
+    }
+    // 重新获取容器
+    const newResultsContainer = document.getElementById('search-results');
+    const newNoResultsContainer = document.getElementById('search-no-results');
+    if (!newResultsContainer || !newNoResultsContainer) {
+      console.error('无法创建搜索结果容器');
+      return;
+    }
+    return displaySearchResults(results, query); // 递归调用
+  }
+  
+  if (!noResultsContainer) {
+    console.error('无结果容器未找到');
+    return;
+  }
+  
+  if (results.length > 0) {
+    noResultsContainer.style.display = 'none';
+    
+    let resultsHtml = `<div class="search-results-list">`;
+    results.forEach(result => {
+      // 安全地处理URL
+      let urlString = '';
+      if (result.url) {
+        if (typeof result.url === 'string') {
+          urlString = result.url;
+        } else if (typeof result.url === 'object') {
+          urlString = result.url.link || result.url.text || '';
+        }
+      }
+      
+      // 生成图标
+      const faviconUrl = getFaviconUrl(result.url);
+      let iconHtml = '';
+      if (faviconUrl) {
+        iconHtml = `<img src="${faviconUrl}" alt="${result.name}" class="search-result-icon" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`;
+      }
+      
+      // 生成文字图标作为备用
+      if (result.name) {
+        const textIconMatch = generateTextIcon(result.name).match(/>(.*?)</);
+        const textIconText = textIconMatch ? textIconMatch[1] : result.name[0];
+        iconHtml += `<div class="search-result-icon text-icon" style="width: 32px; height: 32px; font-size: 14px; ${faviconUrl ? 'display: none;' : ''}">${textIconText}</div>`;
+      }
+      
+      resultsHtml += `
+        <div class="search-result-item" onclick="openSearchResult('${urlString}')">
+          ${iconHtml}
+          <div class="search-result-info">
+            <div class="search-result-name">${highlightSearchTerm(result.name, query)}</div>
+            <div class="search-result-category">${result.category}</div>
+          </div>
+        </div>
+      `;
+    });
+    resultsHtml += `</div>`;
+    
+    resultsContainer.innerHTML = resultsHtml;
+  } else {
+    noResultsContainer.style.display = 'flex';
+    // 重新生成搜索建议
+    generateSearchSuggestions();
+    showSearchSuggestions();
+  }
+}
+
+// 高亮搜索关键词
+function highlightSearchTerm(text, term) {
+  if (!term) return text;
+  const regex = new RegExp(`(${term})`, 'gi');
+  return text.replace(regex, '<mark style="background-color: #fff3cd; padding: 0 2px;">$1</mark>');
+}
+
+// 打开搜索结果
+function openSearchResult(url) {
+  let urlString = '';
+  if (typeof url === 'string') {
+    urlString = url;
+  } else if (typeof url === 'object') {
+    if (url.link && typeof url.link === 'string') {
+      urlString = url.link;
+    } else if (url.text && typeof url.text === 'string') {
+      urlString = url.text;
+    }
+  }
+  
+  if (urlString) {
+    window.open(urlString, '_blank', 'noopener,noreferrer');
+    closeMobileSearch();
+  }
+}
+
+// 清除搜索
+function clearSearch() {
+  const searchInput = document.getElementById('search-input');
+  if (searchInput) {
+    searchInput.value = '';
+    searchInput.focus();
+    handleSearchInput({ target: searchInput });
+  }
+}
+
+// 生成搜索建议
+function generateSearchSuggestions() {
+  const suggestionsContainer = document.getElementById('suggestions-list');
+  if (!suggestionsContainer) return;
+  
+  // 热门搜索建议
+  const suggestions = ['GitHub', '设计工具', '开发工具', 'AI工具', '在线编辑器', '图标库'];
+  
+  let suggestionsHtml = '';
+  suggestions.forEach(suggestion => {
+    suggestionsHtml += `
+      <div class="suggestion-item" onclick="searchSuggestion('${suggestion}')">
+        ${suggestion}
+      </div>
+    `;
+  });
+  
+  suggestionsContainer.innerHTML = suggestionsHtml;
+}
+
+// 点击搜索建议
+function searchSuggestion(term) {
+  const searchInput = document.getElementById('search-input');
+  if (searchInput) {
+    searchInput.value = term;
+    handleSearchInput({ target: searchInput });
+    // 自动执行搜索
+    performSearch(term);
+  }
+}
+
+// 显示搜索建议
+function showSearchSuggestions() {
+  const resultsContainer = document.getElementById('search-results');
+  const noResultsContainer = document.getElementById('search-no-results');
+  
+  noResultsContainer.style.display = 'none';
+  resultsContainer.innerHTML = `
+    <div class="search-suggestions">
+      <div class="suggestions-title">热门搜索</div>
+      <div class="suggestions-list" id="suggestions-list">
+        ${document.getElementById('suggestions-list').innerHTML}
+      </div>
+    </div>
+  `;
+}
+
+// 切换移动端菜单显示/隐藏
+function toggleMobileMenu() {
+  const hamburgerBtn = document.getElementById('hamburger-btn');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('mobile-overlay');
+  
+  if (sidebar.classList.contains('active')) {
+    closeMobileMenu();
+  } else {
+    openMobileMenu();
+  }
+}
+
+// 打开移动端菜单
+function openMobileMenu() {
+  const hamburgerBtn = document.getElementById('hamburger-btn');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('mobile-overlay');
+  
+  hamburgerBtn.classList.add('active');
+  sidebar.classList.add('active');
+  overlay.classList.add('active');
+  
+  // 防止背景滚动
+  document.body.style.overflow = 'hidden';
+}
+
+// 关闭移动端菜单
+function closeMobileMenu() {
+  const hamburgerBtn = document.getElementById('hamburger-btn');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('mobile-overlay');
+  
+  hamburgerBtn.classList.remove('active');
+  sidebar.classList.remove('active');
+  overlay.classList.remove('active');
+  
+  // 恢复背景滚动
+  document.body.style.overflow = '';
+}
+
+// 处理窗口大小变化
+function handleResize() {
+  const sidebar = document.getElementById('sidebar');
+  
+  // 如果窗口变大（超过768px），自动关闭移动端菜单
+  if (window.innerWidth > 768 && sidebar && sidebar.classList.contains('active')) {
+    closeMobileMenu();
+  }
+}
+
+// 监听窗口大小变化
+window.addEventListener('resize', handleResize);
+
+// 添加触摸手势支持
+function addTouchGestureSupport() {
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchEndX = 0;
+  let touchEndY = 0;
+  
+  // 为工具卡片添加涟漪效果
+  function addRippleEffect(element) {
+    element.classList.add('ripple');
+    
+    element.addEventListener('touchstart', function(e) {
+      // 添加触摸震动反馈（如果支持）
+      if (navigator.vibrate) {
+        navigator.vibrate(10);
+      }
+    });
+  }
+  
+  // 为所有工具卡片添加涟漪效果
+  function initRippleEffects() {
+    const toolItems = document.querySelectorAll('.tool-item');
+    toolItems.forEach(addRippleEffect);
+  }
+  
+  // 左右滑动切换分类
+  function handleSwipeGesture() {
+    const mainContent = document.querySelector('.main-content');
+    if (!mainContent) return;
+    
+    mainContent.addEventListener('touchstart', function(e) {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+    
+    mainContent.addEventListener('touchend', function(e) {
+      touchEndX = e.changedTouches[0].screenX;
+      touchEndY = e.changedTouches[0].screenY;
+      handleGesture();
+    }, { passive: true });
+  }
+  
+  function handleGesture() {
+    const deltaX = touchEndX - touchStartX;
+    const deltaY = touchEndY - touchStartY;
+    const minSwipeDistance = 50;
+    
+    // 确保是水平滑动而不是垂直滑动
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
+      const currentIndex = categories.indexOf(currentCategory);
+      
+      if (deltaX > 0 && currentIndex > 0) {
+        // 向右滑动，切换到上一个分类
+        showTools(categories[currentIndex - 1]);
+      } else if (deltaX < 0 && currentIndex < categories.length - 1) {
+        // 向左滑动，切换到下一个分类
+        showTools(categories[currentIndex + 1]);
+      }
+    }
+  }
+  
+  // 初始化触摸手势
+  initRippleEffects();
+  handleSwipeGesture();
+  
+  // 监听DOM变化，为新添加的工具卡片添加涟漪效果
+  const observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+      if (mutation.type === 'childList') {
+        mutation.addedNodes.forEach(function(node) {
+          if (node.nodeType === 1 && node.classList.contains('tool-item')) {
+            addRippleEffect(node);
+          }
+        });
+      }
+    });
+  });
+  
+  const toolsGrid = document.getElementById('tools-grid');
+  if (toolsGrid) {
+    observer.observe(toolsGrid, { childList: true });
+  }
+}
+
+// 在初始化函数中调用触摸手势支持
+function initTouchSupport() {
+  // 检查是否为触摸设备
+  if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+    addTouchGestureSupport();
+  }
 }
 
 // 切换主题模式
@@ -341,7 +963,61 @@ function initTheme() {
 }
 
 // 页面加载完成后初始化
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', function() {
+  try {
+    init();
+  } catch (error) {
+    console.error('初始化失败:', error);
+    // 显示错误信息给用户
+    const toolsGrid = document.getElementById('tools-grid');
+    if (toolsGrid) {
+      toolsGrid.innerHTML = `
+        <div style="text-align: center; padding: 40px; color: #666;">
+          <i class="bi bi-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px; color: #ff4d4f;"></i>
+          <h3>页面加载失败</h3>
+          <p>请刷新页面重试</p>
+          <button onclick="location.reload()" style="
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #1677ff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+          ">刷新页面</button>
+        </div>
+      `;
+    }
+  }
+});
 
 // 初始化主题模式
-initTheme();
+try {
+  initTheme();
+} catch (error) {
+  console.error('主题初始化失败:', error);
+}
+
+// 添加全局错误处理
+window.addEventListener('error', function(event) {
+  console.error('全局错误:', event.error);
+});
+
+// 添加未处理的Promise错误处理
+window.addEventListener('unhandledrejection', function(event) {
+  console.error('未处理的Promise错误:', event.reason);
+});
+
+// 性能监控
+if ('performance' in window) {
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      const perfData = performance.getEntriesByType('navigation')[0];
+      console.log('页面加载性能:', {
+        domContentLoaded: perfData.domContentLoadedEventEnd - perfData.domContentLoadedEventStart,
+        loadComplete: perfData.loadEventEnd - perfData.loadEventStart,
+        totalTime: perfData.loadEventEnd - perfData.fetchStart
+      });
+    }, 0);
+  });
+}

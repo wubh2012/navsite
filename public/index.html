@@ -2,15 +2,66 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>导航网站</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </head>
 <body>
+  <!-- 移动端顶部导航栏 -->
+  <header class="mobile-header">
+    <div class="mobile-nav">
+      <button class="hamburger-btn" id="hamburger-btn" aria-label="打开菜单">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <div class="mobile-logo">
+        <img src="img/avatar.svg" alt="导航网站">
+        <span>导航网站</span>
+      </div>
+      <button class="search-btn" id="mobile-search-btn" aria-label="搜索">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- 移动端遮罩层 -->
+  <div class="mobile-overlay" id="mobile-overlay"></div>
+
+  <!-- 移动端搜索框 -->
+  <div class="mobile-search" id="mobile-search">
+    <div class="search-container">
+      <div class="search-header">
+        <button class="search-back-btn" id="search-back-btn" aria-label="返回">
+          <i class="bi bi-arrow-left"></i>
+        </button>
+        <div class="search-input-wrapper">
+          <input type="text" class="search-input" id="search-input" placeholder="搜索网站..." autocomplete="off">
+          <button class="search-clear-btn" id="search-clear-btn" aria-label="清除">
+            <i class="bi bi-x"></i>
+          </button>
+        </div>
+      </div>
+      <div class="search-results" id="search-results">
+        <div class="search-suggestions">
+          <div class="suggestions-title">热门搜索</div>
+          <div class="suggestions-list" id="suggestions-list">
+            <!-- 动态生成的搜索建议 -->
+          </div>
+        </div>
+        <div class="search-no-results" id="search-no-results" style="display: none;">
+          <i class="bi bi-search"></i>
+          <p>未找到相关网站</p>
+          <span>请尝试其他关键词</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="container">
     <!-- 左侧侧边栏 -->
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
       <div class="user-avatar">
         <img src="img/avatar.svg" alt="用户头像">
       </div>
