@@ -211,6 +211,64 @@ app.get('/api/navigation', async (req, res) => {
   }
 });
 
+// Favicon代理端点
+app.get('/api/favicon', async (req, res) => {
+  try {
+    const { url } = req.query;
+    
+    if (!url) {
+      return res.status(400).json({
+        success: false,
+        message: '缺少url参数'
+      });
+    }
+    
+    // 验证URL格式
+    let parsedUrl;
+    try {
+      parsedUrl = new URL(url);
+    } catch (e) {
+      return res.status(400).json({
+        success: false,
+        message: '无效的URL格式'
+      });
+    }
+    
+    // 只允许http和https协议
+    if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
+      return res.status(400).json({
+        success: false,
+        message: '只支持HTTP和HTTPS协议'
+      });
+    }
+    
+    // 尝试获取网站的favicon
+    const faviconUrl = `https://www.google.com/s2/favicons?domain=${parsedUrl.hostname}&size=32`;
+    
+    // 代理请求到Google favicon服务
+    const response = await axios.get(faviconUrl, {
+      responseType: 'arraybuffer',
+      timeout: 5000 // 5秒超时
+    });
+    
+    // 设置正确的Content-Type
+    res.set('Content-Type', response.headers['content-type']);
+    res.set('Cache-Control', 'public, max-age=86400'); // 缓存24小时
+    
+    // 返回图片数据
+    res.send(response.data);
+    
+  } catch (error) {
+    console.error('Favicon代理错误:', error.message);
+    
+    // 返回一个透明的1x1像素图片作为fallback
+    const fallbackImage = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=', 'base64');
+    res.set('Content-Type', 'image/png');
+    res.set('Cache-Control', 'public, max-age=300'); // 缓存5分钟
+    res.send(fallbackImage);
+  }
+});
+
 // 主页路由
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));

@@ -186,6 +186,9 @@ function showTools(category) {
   }
 }
 
+// 获取网站favicon的缓存
+const faviconCache = new Map();
+
 // 获取网站favicon的URL
 function getFaviconUrl(url) {
   try {
@@ -211,8 +214,50 @@ function getFaviconUrl(url) {
     const urlObj = new URL(url);
     const hostname = urlObj.hostname;
     
-    // 使用Google的favicon服务，更稳定
-    return `https://www.google.com/s2/favicons?domain=${hostname}&size=32`;
+    // 检查内存缓存
+    const cacheKey = `favicon_${hostname}`;
+    if (faviconCache.has(cacheKey)) {
+      return faviconCache.get(cacheKey);
+    }
+    
+    // 检查LocalStorage缓存
+    try {
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) {
+        const cacheData = JSON.parse(cached);
+        // 检查缓存是否过期（24小时）
+        if (Date.now() - cacheData.timestamp < 24 * 60 * 60 * 1000) {
+          faviconCache.set(cacheKey, cacheData.url);
+          return cacheData.url;
+        }
+      }
+    } catch (e) {
+      // 静默处理LocalStorage错误
+    }
+    
+    // 使用Google的favicon服务作为主要方案
+    const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${hostname}&size=32`;
+    
+    // 服务器代理作为备用方案
+    const proxyFaviconUrl = `/api/favicon?url=${encodeURIComponent(url)}`;
+    
+    // 预缓存到内存（使用Google服务）
+    faviconCache.set(cacheKey, googleFaviconUrl);
+    
+    // 异步缓存到LocalStorage（不阻塞主线程）
+    setTimeout(() => {
+      try {
+        localStorage.setItem(cacheKey, JSON.stringify({
+          url: googleFaviconUrl,
+          timestamp: Date.now(),
+          ttl: 24 * 60 * 60 * 1000 // 24小时
+        }));
+      } catch (e) {
+        // 静默处理LocalStorage错误
+      }
+    }, 0);
+    
+    return googleFaviconUrl;
     
   } catch (e) {
     // 静默处理URL错误，返回null使用文字图标
@@ -439,6 +484,17 @@ function addMobileSearchListeners() {
           }
         }
       });
+      // 添加keypress事件作为备用，确保移动端回车键能被捕获
+      searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' || e.keyCode === 13) {
+          e.preventDefault();
+          const query = searchInput.value.trim();
+          if (query) {
+            console.log('keypress回车键搜索:', query);
+            performSearch(query);
+          }
+        }
+      });
       searchInput.addEventListener('focus', () => {
         searchInput.parentElement.classList.add('focused');
       });
@@ -464,8 +520,6 @@ function addMobileSearchListeners() {
     console.error('searchContainer:', searchContainer);
   }
   
-  // 生成搜索建议
-  generateSearchSuggestions();
 }
 
 // 打开移动端搜索
@@ -588,52 +642,43 @@ function performSearch(query) {
 }
 
 // 显示搜索结果
-function displaySearchResults(results, query) {
-  const resultsContainer = document.getElementById('search-results');
-  const noResultsContainer = document.getElementById('search-no-results');
+function displaySearchResults(results, query, resultsContainer = null, noResultsContainer = null) {
+  if (!resultsContainer) {
+    resultsContainer = document.getElementById('search-results');
+  }
+  if (!noResultsContainer) {
+    noResultsContainer = document.getElementById('search-no-results');
+  }
   
   if (!resultsContainer) {
-    console.error('搜索结果容器未找到，尝试创建');
-    // 如果容器不存在，尝试重新初始化搜索界面
-    const searchContainer = document.getElementById('mobile-search');
-    if (searchContainer) {
-      const searchResultsHtml = `
-        <div class="search-results" id="search-results">
-          <div class="search-suggestions">
-            <div class="suggestions-title">热门搜索</div>
-            <div class="suggestions-list" id="suggestions-list"></div>
-          </div>
-          <div class="search-no-results" id="search-no-results" style="display: none;">
-            <i class="bi bi-search"></i>
-            <p>未找到相关网站</p>
-            <span>请尝试其他关键词</span>
-          </div>
-        </div>
-      `;
-      const searchContainerDiv = searchContainer.querySelector('.search-container');
-      if (searchContainerDiv) {
-        const existingResults = searchContainerDiv.querySelector('.search-results');
-        if (!existingResults) {
-          searchContainerDiv.insertAdjacentHTML('beforeend', searchResultsHtml);
-        }
-      }
-    }
-    // 重新获取容器
-    const newResultsContainer = document.getElementById('search-results');
-    const newNoResultsContainer = document.getElementById('search-no-results');
-    if (!newResultsContainer || !newNoResultsContainer) {
-      console.error('无法创建搜索结果容器');
-      return;
-    }
-    return displaySearchResults(results, query); // 递归调用
+    console.error('搜索结果容器未找到');
+    return;
   }
   
   if (!noResultsContainer) {
     console.error('无结果容器未找到');
-    return;
+    
+    // 如果无结果容器不存在，创建一个
+    const searchContainer = document.querySelector('.search-container');
+    if (searchContainer) {
+      const newNoResults = document.createElement('div');
+      newNoResults.id = 'search-no-results';
+      newNoResults.className = 'search-no-results';
+      newNoResults.style.display = 'none';
+      newNoResults.innerHTML = `
+        <i class="bi bi-search"></i>
+        <p>未找到相关网站</p>
+        <span>请尝试其他关键词</span>
+      `;
+      searchContainer.appendChild(newNoResults);
+      noResultsContainer = newNoResults;
+    } else {
+      return;
+    }
   }
   
   if (results.length > 0) {
+    resultsContainer.style.display = 'flex';
     noResultsContainer.style.display = 'none';
     
     let resultsHtml = `<div class="search-results-list">`;
@@ -677,9 +722,8 @@ function displaySearchResults(results, query) {
     resultsContainer.innerHTML = resultsHtml;
   } else {
     noResultsContainer.style.display = 'flex';
-    // 重新生成搜索建议
-    generateSearchSuggestions();
-    showSearchSuggestions();
+    resultsContainer.style.display = 'none';
+    //showSearchSuggestions();
   }
 }
 
@@ -719,26 +763,6 @@ function clearSearch() {
   }
 }
 
-// 生成搜索建议
-function generateSearchSuggestions() {
-  const suggestionsContainer = document.getElementById('suggestions-list');
-  if (!suggestionsContainer) return;
-  
-  // 热门搜索建议
-  const suggestions = ['GitHub', '设计工具', '开发工具', 'AI工具', '在线编辑器', '图标库'];
-  
-  let suggestionsHtml = '';
-  suggestions.forEach(suggestion => {
-    suggestionsHtml += `
-      <div class="suggestion-item" onclick="searchSuggestion('${suggestion}')">
-        ${suggestion}
-      </div>
-    `;
-  });
-  
-  suggestionsContainer.innerHTML = suggestionsHtml;
-}
-
 // 点击搜索建议
 function searchSuggestion(term) {
   const searchInput = document.getElementById('search-input');
@@ -755,15 +779,26 @@ function showSearchSuggestions() {
   const resultsContainer = document.getElementById('search-results');
   const noResultsContainer = document.getElementById('search-no-results');
   
+  if (!noResultsContainer || !resultsContainer) {
+    console.error('搜索容器未找到');
+    return;
+  }
+  
   noResultsContainer.style.display = 'none';
-  resultsContainer.innerHTML = `
+  
+  // 创建建议容器，而不是覆盖整个results容器
+  let suggestionsHtml = `
     <div class="search-suggestions">
       <div class="suggestions-title">热门搜索</div>
       <div class="suggestions-list" id="suggestions-list">
-        ${document.getElementById('suggestions-list').innerHTML}
+  `;
+  
+  suggestionsHtml += `
       </div>
     </div>
   `;
+  
+  resultsContainer.innerHTML = suggestionsHtml;
 }
 
 // 切换移动端菜单显示/隐藏

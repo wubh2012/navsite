@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>导航网站</title>
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>导航</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </head>
+
 <body>
   <!-- 移动端顶部导航栏 -->
   <header class="mobile-header">
@@ -37,7 +40,8 @@
           <i class="bi bi-arrow-left"></i>
         </button>
         <div class="search-input-wrapper">
-          <input type="text" class="search-input" id="search-input" placeholder="搜索网站..." autocomplete="off">
+          <input type="text" class="search-input" id="search-input" placeholder="搜索网站..." autocomplete="off"
+            enterkeyhint="search">
           <button class="search-clear-btn" id="search-clear-btn" aria-label="清除">
             <i class="bi bi-x"></i>
           </button>
@@ -50,11 +54,12 @@
             <!-- 动态生成的搜索建议 -->
           </div>
         </div>
-        <div class="search-no-results" id="search-no-results" style="display: none;">
-          <i class="bi bi-search"></i>
-          <p>未找到相关网站</p>
-          <span>请尝试其他关键词</span>
-        </div>
+
+      </div>
+      <div class="search-no-results" id="search-no-results" style="display: none;">
+        <i class="bi bi-search"></i>
+        <p>未找到相关网站</p>
+        <span>请尝试其他关键词</span>
       </div>
     </div>
   </div>
@@ -97,4 +102,5 @@
 
   <script src="js/app.js"></script>
 </body>
+
 </html>
