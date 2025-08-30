@@ -235,8 +235,9 @@ function getFaviconUrl(url) {
       // 静默处理LocalStorage错误
     }
     
-    // 使用Google的favicon服务作为主要方案
-    const googleFaviconUrl = `https://www.google.com/s2/favicons?domain=${hostname}&size=32`;
+    // 备用方案： https://favicon.im/hey.com
+    // 使用Google的favicon服务作为主要方案 `https://www.google.com/s2/favicons?sz=32&domain_url=${hostname}`;
+    const googleFaviconUrl = `https://www.google.com/s2/favicons?sz=48&domain_url=${hostname}`;
     
     // 服务器代理作为备用方案
     const proxyFaviconUrl = `/api/favicon?url=${encodeURIComponent(url)}`;
