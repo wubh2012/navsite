@@ -91,14 +91,67 @@
         </div>
       </header>
 
-      <!-- 工具图标列表 -->
-      <div class="tools-container">
-        <div id="tools-grid" class="tools-grid">
-          <!-- 动态生成的工具图标 -->
-        </div>
+    <!-- 添加链接按钮 -->
+    <button id="add-link-btn" class="add-link-btn" style="position: fixed; bottom: 20px; left: 20px; z-index: 1000;">
+      <i class="bi bi-plus-circle"></i>
+      <span>添加网站</span>
+    </button>
+    
+    <!-- 工具图标列表 -->
+    <div class="tools-container">
+      <div id="tools-grid" class="tools-grid">
+        <!-- 动态生成的工具图标 -->
       </div>
-    </main>
+    </div>
+  </main>
+</div>
+
+<!-- 添加链接模态框 -->
+<div id="add-link-modal" class="modal">
+  <div class="modal-overlay"></div>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>添加网站</h2>
+      <button id="close-modal-btn" class="close-modal-btn" aria-label="关闭">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <form id="add-link-form">
+        <div class="form-group">
+          <label for="site-name">网站名称 *</label>
+          <input type="text" id="site-name" name="site-name" placeholder="请输入网站名称" maxlength="50">
+          <div class="error-message" id="name-error"></div>
+        </div>
+        
+        <div class="form-group">
+          <label for="site-url">网站网址 *</label>
+          <input type="url" id="site-url" name="site-url" placeholder="请输入完整网址，包含http://或https://">
+          <div class="error-message" id="url-error"></div>
+        </div>
+        
+        <div class="form-group">
+          <label for="site-category">分类 *</label>
+          <select id="site-category" name="site-category">
+            <!-- 动态生成的分类选项 -->
+          </select>
+          <div class="error-message" id="category-error"></div>
+        </div>
+        
+        <div class="form-group">
+          <label for="site-sort">排序 (可选)</label>
+          <input type="number" id="site-sort" name="site-sort" placeholder="数字越小，排序越靠前" min="0" max="999" value="200">
+        </div>
+      </form>
+    </div>
+    
+    <div class="modal-footer">
+      <button id="cancel-add-btn" class="cancel-btn">取消</button>
+      <button id="save-link-btn" class="save-btn">保存</button>
+    </div>
   </div>
+</div>
 
   <script src="js/app.js"></script>
 </body>

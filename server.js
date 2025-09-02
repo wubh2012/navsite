@@ -9,6 +9,9 @@ moment.locale('zh-cn');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// 解析JSON请求体
+app.use(express.json());
+
 // 静态文件服务
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -272,6 +275,111 @@ app.get('/api/favicon', async (req, res) => {
 // 主页路由
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// 添加新的网站链接
+app.post('/api/links', async (req, res) => {
+  try {
+    // 解析请求体
+    let requestBody = req.body;
+    
+    // 检查请求体是否存在
+    if (!requestBody) {
+      return res.status(400).json({
+        success: false,
+        message: '请求体不能为空'
+      });
+    }
+    
+    // 验证必要的字段
+    if (!requestBody.name || !requestBody.name.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: '网站名称不能为空'
+      });
+    }
+    
+    if (!requestBody.url || !requestBody.url.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: '网站网址不能为空'
+      });
+    }
+    
+    if (!requestBody.category || !requestBody.category.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: '分类不能为空'
+      });
+    }
+    
+    // 验证网址格式
+    try {
+      new URL(requestBody.url);
+    } catch (e) {
+      return res.status(400).json({
+        success: false,
+        message: '无效的网址格式，请确保包含http://或https://'
+      });
+    }
+    
+    // 验证网站名称长度
+    if (requestBody.name.length > 50) {
+      return res.status(400).json({
+        success: false,
+        message: '网站名称长度不能超过50个字符'
+      });
+    }
+    
+    // 获取飞书访问令牌
+    const token = await getTenantAccessToken();
+    
+    // 构建请求体，符合飞书多维表格API的要求
+    const createRecordBody = {
+      fields: {
+        '分类': requestBody.category,
+        '排序': requestBody.sort || 200, // 默认排序值
+        '站点名称': requestBody.name,
+        '网址': {
+          'link': requestBody.url,
+          'text': requestBody.name
+        }
+      }
+    };
+    
+    // 调用飞书多维表格API创建记录
+    const response = await axios.post(
+      `https://open.feishu.cn/open-apis/bitable/v1/apps/${process.env.APP_TOKEN}/tables/${process.env.TABLE_ID}/records`,
+      createRecordBody,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json; charset=utf-8'
+        }
+      }
+    );
+    
+    // 处理响应
+    if (response.data.code === 0) {
+      res.json({
+        success: true,
+        message: '链接添加成功',
+        data: response.data.data
+      });
+    } else {
+      console.error('飞书API错误:', response.data);
+      res.status(500).json({
+        success: false,
+        message: `添加链接失败: ${response.data.msg || '未知错误'}`
+      });
+    }
+  } catch (error) {
+    console.error('添加链接异常:', error.message);
+    res.status(500).json({
+      success: false,
+      message: `添加链接失败: ${error.message}`
+    });
+  }
 });
 
 // 启动服务器

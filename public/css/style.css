@@ -208,6 +208,257 @@ body {
   transition: transform 0.3s ease;
 }
 
+/* 添加链接按钮样式 */
+.add-link-section {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.add-link-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background-color: var(--menu-active-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.add-link-btn:hover {
+  background-color: #0958d9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.add-link-btn:active {
+  transform: translateY(0);
+}
+
+/* 模态框样式 */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1003;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal.active {
+  display: block;
+}
+
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--sidebar-bg);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow: hidden;
+  animation: slideIn 0.3s ease;
+}
+
+/* 模态框头部 */
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.modal-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.close-modal-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+  font-size: 18px;
+  color: var(--text-color);
+}
+
+.close-modal-btn:hover {
+  background-color: var(--menu-hover-bg);
+}
+
+/* 模态框内容 */
+.modal-body {
+  padding: 24px;
+  max-height: calc(80vh - 140px);
+  overflow-y: auto;
+}
+
+/* 表单样式 */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  height: 44px;
+  padding: 0 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: var(--tool-item-bg);
+  color: var(--text-color);
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: var(--menu-active-color);
+  box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
+}
+
+.form-group input::placeholder {
+  color: #999;
+}
+
+.error-message {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #ff4d4f;
+  min-height: 16px;
+}
+
+/* 模态框底部 */
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid #e0e0e0;
+  background-color: var(--sidebar-bg);
+}
+
+/* 按钮样式 */
+.cancel-btn,
+.save-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancel-btn {
+  background-color: transparent;
+  color: var(--text-color);
+  border: 1px solid #e0e0e0;
+}
+
+.cancel-btn:hover {
+  background-color: var(--menu-hover-bg);
+}
+
+.save-btn {
+  background-color: var(--menu-active-color);
+  color: white;
+}
+
+.save-btn:hover {
+  background-color: #0958d9;
+}
+
+.save-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* 动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    margin: 10px;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    transform: none;
+    max-height: none;
+    border-radius: 12px 12px 0 0;
+  }
+  
+  .modal-body {
+    max-height: calc(100vh - 200px);
+  }
+  
+  .add-link-btn {
+    width: 100%;
+  }
+}
+
 .mobile-search.active {
   transform: translateY(0);
 }

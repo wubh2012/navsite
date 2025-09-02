@@ -1044,6 +1044,380 @@ window.addEventListener('unhandledrejection', function(event) {
   console.error('未处理的Promise错误:', event.reason);
 });
 
+// 添加链接功能
+function initAddLinkFeature() {
+  const addLinkBtn = document.getElementById('add-link-btn');
+  const addLinkModal = document.getElementById('add-link-modal');
+  const closeModalBtn = document.getElementById('close-modal-btn');
+  const cancelAddBtn = document.getElementById('cancel-add-btn');
+  const saveLinkBtn = document.getElementById('save-link-btn');
+  const addLinkForm = document.getElementById('add-link-form');
+  const modalOverlay = document.querySelector('.modal-overlay');
+  
+  // 检查元素是否存在
+  if (!addLinkBtn || !addLinkModal || !closeModalBtn || !cancelAddBtn || !saveLinkBtn || !addLinkForm) {
+    console.error('添加链接功能的DOM元素未找到');
+    return;
+  }
+  
+  // 填充分类下拉菜单
+  function populateCategories() {
+    const categorySelect = document.getElementById('site-category');
+    if (!categorySelect) return;
+    
+    // 清空现有选项
+    categorySelect.innerHTML = '<option value="">请选择分类</option>';
+    
+    // 添加现有分类
+    if (categories && categories.length > 0) {
+      categories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        categorySelect.appendChild(option);
+      });
+    } else {
+      // 如果没有分类数据，添加默认分类
+      const defaultCategories = ['主页', '工具', '文档', '社交', '娱乐', '其他'];
+      defaultCategories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        categorySelect.appendChild(option);
+      });
+    }
+  }
+  
+  // 显示模态框
+  function showModal() {
+    addLinkModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // 填充分类
+    populateCategories();
+    
+    // 清空表单
+    addLinkForm.reset();
+    clearErrors();
+    
+    // 聚焦到第一个输入框
+    setTimeout(() => {
+      document.getElementById('site-name')?.focus();
+    }, 300);
+  }
+  
+  // 隐藏模态框
+  function hideModal() {
+    addLinkModal.classList.remove('active');
+    document.body.style.overflow = '';
+    clearErrors();
+  }
+  
+  // 清除错误提示
+  function clearErrors() {
+    const nameError = document.getElementById('name-error');
+    const urlError = document.getElementById('url-error');
+    const categoryError = document.getElementById('category-error');
+    
+    if (nameError) nameError.textContent = '';
+    if (urlError) urlError.textContent = '';
+    if (categoryError) categoryError.textContent = '';
+  }
+  
+  // 显示错误提示
+  function showError(fieldId, message) {
+    const errorElement = document.getElementById(`${fieldId}-error`);
+    if (errorElement) {
+      errorElement.textContent = message;
+    }
+  }
+  
+  // 验证表单
+  function validateForm() {
+    let isValid = true;
+    clearErrors();
+    
+    // 验证网站名称
+    const siteName = document.getElementById('site-name').value.trim();
+    if (!siteName) {
+      showError('name', '请输入网站名称');
+      isValid = false;
+    } else if (siteName.length > 50) {
+      showError('name', '网站名称长度不能超过50个字符');
+      isValid = false;
+    }
+    
+    // 验证网址
+    const siteUrl = document.getElementById('site-url').value.trim();
+    if (!siteUrl) {
+      showError('url', '请输入网站网址');
+      isValid = false;
+    } else {
+      try {
+        new URL(siteUrl);
+      } catch (e) {
+        showError('url', '无效的网址格式，请确保包含http://或https://');
+        isValid = false;
+      }
+    }
+    
+    // 验证分类
+    const siteCategory = document.getElementById('site-category').value;
+    if (!siteCategory) {
+      showError('category', '请选择分类');
+      isValid = false;
+    }
+    
+    return isValid;
+  }
+  
+  // 提交表单
+  async function submitForm() {
+    if (!validateForm()) {
+      return;
+    }
+    
+    // 收集表单数据
+    const formData = {
+      name: document.getElementById('site-name').value.trim(),
+      url: document.getElementById('site-url').value.trim(),
+      category: document.getElementById('site-category').value,
+      sort: document.getElementById('site-sort').value ? parseInt(document.getElementById('site-sort').value) : 200
+    };
+    
+    // 禁用保存按钮，防止重复提交
+    saveLinkBtn.disabled = true;
+    saveLinkBtn.textContent = '保存中...';
+    
+    try {
+      // 调用后端API
+      const response = await fetch('/api/links', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        // 显示成功提示
+        showSuccessMessage('链接添加成功');
+        
+        // 隐藏模态框
+        hideModal();
+        
+        // 刷新导航数据
+        await fetchNavigationData();
+      } else {
+        // 显示错误提示
+        showErrorMessage(result.message || '添加链接失败');
+      }
+    } catch (error) {
+      console.error('添加链接异常:', error);
+      showErrorMessage('网络错误，请检查网络连接后重试');
+    } finally {
+      // 恢复保存按钮状态
+      saveLinkBtn.disabled = false;
+      saveLinkBtn.textContent = '保存';
+    }
+  }
+  
+  // 显示成功消息
+  function showSuccessMessage(message) {
+    // 创建成功消息元素
+    const messageElement = document.createElement('div');
+    messageElement.className = 'success-message';
+    messageElement.innerHTML = `
+      <i class="bi bi-check-circle"></i>
+      <span>${message}</span>
+    `;
+    
+    // 添加样式
+    Object.assign(messageElement.style, {
+      position: 'fixed',
+      top: '20px',
+      right: '20px',
+      backgroundColor: '#52c41a',
+      color: 'white',
+      padding: '12px 20px',
+      borderRadius: '8px',
+      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+      zIndex: '1004',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px',
+      fontSize: '14px',
+      animation: 'fadeInSlideIn 0.3s ease',
+      maxWidth: '300px'
+    });
+    
+    // 添加动画样式
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes fadeInSlideIn {
+        from {
+          opacity: 0;
+          transform: translateX(100%);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // 添加到页面
+    document.body.appendChild(messageElement);
+    
+    // 3秒后自动移除
+    setTimeout(() => {
+      messageElement.style.animation = 'fadeOutSlideOut 0.3s ease';
+      setTimeout(() => {
+        messageElement.remove();
+        style.remove();
+      }, 300);
+    }, 3000);
+  }
+  
+  // 显示错误消息
+  function showErrorMessage(message) {
+    // 创建错误消息元素
+    const messageElement = document.createElement('div');
+    messageElement.className = 'error-message';
+    messageElement.innerHTML = `
+      <i class="bi bi-exclamation-circle"></i>
+      <span>${message}</span>
+    `;
+    
+    // 添加样式
+    Object.assign(messageElement.style, {
+      position: 'fixed',
+      top: '20px',
+      right: '20px',
+      backgroundColor: '#ff4d4f',
+      color: 'white',
+      padding: '12px 20px',
+      borderRadius: '8px',
+      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+      zIndex: '1004',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px',
+      fontSize: '14px',
+      animation: 'fadeInSlideIn 0.3s ease',
+      maxWidth: '300px'
+    });
+    
+    // 添加动画样式
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes fadeInSlideIn {
+        from {
+          opacity: 0;
+          transform: translateX(100%);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // 添加到页面
+    document.body.appendChild(messageElement);
+    
+    // 5秒后自动移除
+    setTimeout(() => {
+      messageElement.style.animation = 'fadeOutSlideOut 0.3s ease';
+      setTimeout(() => {
+        messageElement.remove();
+        style.remove();
+      }, 300);
+    }, 5000);
+  }
+  
+  // 添加事件监听器
+  addLinkBtn.addEventListener('click', showModal);
+  closeModalBtn.addEventListener('click', hideModal);
+  cancelAddBtn.addEventListener('click', hideModal);
+  saveLinkBtn.addEventListener('click', submitForm);
+  modalOverlay.addEventListener('click', hideModal);
+  
+  // 阻止模态框内容点击事件冒泡到遮罩层
+  addLinkModal.querySelector('.modal-content').addEventListener('click', function(e) {
+    e.stopPropagation();
+  });
+  
+  // ESC键关闭模态框
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && addLinkModal.classList.contains('active')) {
+      hideModal();
+    }
+  });
+  
+  // 表单提交事件
+  addLinkForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    submitForm();
+  });
+  
+  // 实时验证
+  document.getElementById('site-name').addEventListener('input', function() {
+    const value = this.value.trim();
+    if (value.length > 50) {
+      showError('name', '网站名称长度不能超过50个字符');
+    } else {
+      document.getElementById('name-error').textContent = '';
+    }
+  });
+  
+  document.getElementById('site-url').addEventListener('input', function() {
+    const value = this.value.trim();
+    if (value) {
+      try {
+        new URL(value);
+        document.getElementById('url-error').textContent = '';
+      } catch (e) {
+        showError('url', '无效的网址格式，请确保包含http://或https://');
+      }
+    } else {
+      document.getElementById('url-error').textContent = '';
+    }
+  });
+}
+
+// 在数据加载完成后初始化添加链接功能
+function initAddLinkFeatureAfterDataLoaded() {
+  // 检查是否有分类数据
+  if (categories && categories.length > 0) {
+    initAddLinkFeature();
+  } else {
+    // 如果没有分类数据，等待数据加载
+    const checkInterval = setInterval(() => {
+      if (categories && categories.length > 0) {
+        clearInterval(checkInterval);
+        initAddLinkFeature();
+      }
+    }, 500);
+    
+    // 5秒后超时
+    setTimeout(() => {
+      clearInterval(checkInterval);
+      initAddLinkFeature();
+    }, 5000);
+  }
+}
+
+// 在页面加载完成后初始化添加链接功能
+document.addEventListener('DOMContentLoaded', function() {
+  // 延迟初始化，确保数据已经加载
+  setTimeout(initAddLinkFeatureAfterDataLoaded, 1000);
+});
+
 // 性能监控
 if ('performance' in window) {
   window.addEventListener('load', function() {
