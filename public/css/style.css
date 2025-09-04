@@ -1282,6 +1282,11 @@ body {
     height: 32px;
     -webkit-line-clamp: 2;
   }
+
+  /* 移动端隐藏添加按钮 */
+  .add-link-btn {
+    display: none;
+  }
 }
 
 /* 大屏手机 (481px - 768px) */
@@ -1352,7 +1357,7 @@ body {
   }
 
   .tools-grid {
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     gap: 16px;
   }
 
@@ -1377,6 +1382,11 @@ body {
 
   .tool-name {
     font-size: 13px;
+  }
+
+  /* 大屏手机也隐藏添加按钮 */
+  .add-link-btn {
+    display: none;
   }
 }
 
