@@ -153,7 +153,34 @@
   </div>
 </div>
 
+<!-- 删除确认模态框 -->
+<div id="delete-link-modal" class="modal">
+  <div class="modal-overlay"></div>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>确认删除</h2>
+      <button id="close-delete-modal-btn" class="close-modal-btn" aria-label="关闭">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="delete-confirmation">
+        <div class="delete-icon">
+          <i class="bi bi-exclamation-triangle"></i>
+        </div>
+        <p>确定要删除网站 <span id="delete-site-name" class="site-name-highlight"></span> 吗？</p>
+        <p class="delete-warning">此操作不可撤销。</p>
+      </div>
+    </div>
+    
+    <div class="modal-footer">
+      <button id="cancel-delete-btn" class="cancel-btn">取消</button>
+      <button id="confirm-delete-btn" class="delete-btn">确认删除</button>
+    </div>
+  </div>
+</div>
+
   <script src="js/app.js"></script>
 </body>
-
 </html>

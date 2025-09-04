@@ -29,9 +29,9 @@ async function init() {
 }
 
 // 获取导航数据
-async function fetchNavigationData() {
-  // 检查缓存是否有效
-  if (dataCache && cacheTimestamp && (Date.now() - cacheTimestamp < CACHE_DURATION)) {
+async function fetchNavigationData(forceRefresh = false) {
+  // 检查缓存是否有效（除非强制刷新）
+  if (!forceRefresh && dataCache && cacheTimestamp && (Date.now() - cacheTimestamp < CACHE_DURATION)) {
     console.log('使用缓存数据');
     navigationData = dataCache.data;
     categories = dataCache.categories;
@@ -295,8 +295,12 @@ function generateTextIcon(name) {
 
 // 添加工具项
 function addToolItem(tool) {
-  const toolItem = document.createElement('a');
+  const toolItem = document.createElement('div');
   toolItem.className = 'tool-item';
+  toolItem.dataset.id = tool.id || '';
+  
+  // 创建链接元素
+  const linkElement = document.createElement('a');
   // 解析URL，兼容对象格式 { link: string } 或 { text: string }
   let urlString = '';
   if (tool && tool.url) {
@@ -310,11 +314,11 @@ function addToolItem(tool) {
       }
     }
   }
-  toolItem.href = urlString || '#';
-  toolItem.target = '_blank';
-  toolItem.rel = 'noopener noreferrer';
+  linkElement.href = urlString || '#';
+  linkElement.target = '_blank';
+  linkElement.rel = 'noopener noreferrer';
   if (tool && tool.name) {
-    toolItem.title = tool.name;
+    linkElement.title = tool.name;
   }
   
   // 使用图标（如果有）或尝试获取网站favicon或生成文字图标
@@ -352,10 +356,29 @@ function addToolItem(tool) {
     }
   }
   
-  toolItem.innerHTML = `
+  linkElement.innerHTML = `
     ${iconHtml}
     <div class="tool-name">${tool.name}</div>
   `;
+  
+  // 添加删除按钮
+  const deleteBtn = document.createElement('button');
+  deleteBtn.className = 'tool-item-delete-btn';
+  deleteBtn.innerHTML = '<i class="bi bi-trash"></i>';
+  deleteBtn.title = '删除网站';
+  deleteBtn.dataset.toolId = tool.id || '';
+  deleteBtn.dataset.toolName = tool.name || '';
+  
+  // 添加点击事件
+  deleteBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    showDeleteConfirmation(tool.id || '', tool.name || '');
+  });
+  
+  // 组装工具项
+  toolItem.appendChild(linkElement);
+  toolItem.appendChild(deleteBtn);
   
   toolsGrid.appendChild(toolItem);
 }
@@ -1044,6 +1067,147 @@ window.addEventListener('unhandledrejection', function(event) {
   console.error('未处理的Promise错误:', event.reason);
 });
 
+// 显示删除确认对话框
+function showDeleteConfirmation(toolId, toolName) {
+  const deleteModal = document.getElementById('delete-link-modal');
+  const siteNameElement = document.getElementById('delete-site-name');
+  
+  if (!deleteModal || !siteNameElement) {
+    console.error('删除确认对话框的DOM元素未找到');
+    return;
+  }
+  
+  // 设置要删除的网站名称
+  siteNameElement.textContent = toolName;
+  
+  // 保存当前要删除的工具ID和名称
+  deleteModal.dataset.toolId = toolId;
+  deleteModal.dataset.toolName = toolName;
+  
+  // 显示模态框
+  deleteModal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+// 隐藏删除确认对话框
+function hideDeleteConfirmation() {
+  const deleteModal = document.getElementById('delete-link-modal');
+  
+  if (!deleteModal) {
+    console.error('删除确认对话框的DOM元素未找到');
+    return;
+  }
+  
+  // 隐藏模态框
+  deleteModal.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// 删除网站
+async function deleteTool(toolId, toolName) {
+  if (!toolId) {
+    showErrorMessage('无效的工具ID');
+    return;
+  }
+  
+  try {
+    // 显示加载状态
+    const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+    const originalText = confirmDeleteBtn.textContent;
+    confirmDeleteBtn.textContent = '删除中...';
+    confirmDeleteBtn.disabled = true;
+    
+    // 调用后端API
+    const response = await fetch(`/api/links/${toolId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    const result = await response.json();
+    
+    // 恢复按钮状态
+    confirmDeleteBtn.textContent = originalText;
+    confirmDeleteBtn.disabled = false;
+    
+    if (result.success) {
+      // 显示成功提示
+      showSuccessMessage(`网站 "${toolName}" 删除成功`);
+      
+      // 隐藏模态框
+      hideDeleteConfirmation();
+      
+      // 刷新导航数据（强制刷新绕过缓存）
+      await fetchNavigationData(true);
+    } else {
+      // 显示错误提示
+      showErrorMessage(result.message || '删除网站失败');
+      
+      // 如果是模拟数据的ID，提示用户
+      if (toolId.startsWith('mock_')) {
+        showErrorMessage('这是演示数据，无法删除真实记录');
+      }
+    }
+  } catch (error) {
+    console.error('删除网站异常:', error);
+    
+    // 恢复按钮状态
+    const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+    confirmDeleteBtn.textContent = '确认删除';
+    confirmDeleteBtn.disabled = false;
+    
+    showErrorMessage('网络错误，请检查网络连接后重试');
+  }
+}
+
+// 初始化删除网站功能
+function initDeleteLinkFeature() {
+  const deleteModal = document.getElementById('delete-link-modal');
+  const closeDeleteModalBtn = document.getElementById('close-delete-modal-btn');
+  const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+  const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+  const modalOverlay = deleteModal?.querySelector('.modal-overlay');
+  
+  // 检查元素是否存在
+  if (!deleteModal || !closeDeleteModalBtn || !cancelDeleteBtn || !confirmDeleteBtn) {
+    console.error('删除链接功能的DOM元素未找到');
+    return;
+  }
+  
+  // 关闭模态框事件
+  const closeModalEvents = [
+    { element: closeDeleteModalBtn, event: 'click' },
+    { element: cancelDeleteBtn, event: 'click' },
+    { element: modalOverlay, event: 'click' }
+  ];
+  
+  closeModalEvents.forEach(({ element, event }) => {
+    if (element) {
+      element.addEventListener(event, (e) => {
+        // 如果点击的是覆盖层，确保不是点击模态框内容
+        if (element === modalOverlay && e.target !== modalOverlay) {
+          return;
+        }
+        hideDeleteConfirmation();
+      });
+    }
+  });
+  
+  // 确认删除事件
+  confirmDeleteBtn.addEventListener('click', () => {
+    const toolId = deleteModal.dataset.toolId || '';
+    const toolName = deleteModal.dataset.toolName || '';
+    
+    if (toolId) {
+      deleteTool(toolId, toolName);
+    } else {
+      showErrorMessage('无效的工具ID');
+      hideDeleteConfirmation();
+    }
+  });
+}
+
 // 添加链接功能
 function initAddLinkFeature() {
   const addLinkBtn = document.getElementById('add-link-btn');
@@ -1208,8 +1372,8 @@ function initAddLinkFeature() {
         // 隐藏模态框
         hideModal();
         
-        // 刷新导航数据
-        await fetchNavigationData();
+        // 刷新导航数据（强制刷新绕过缓存）
+        await fetchNavigationData(true);
       } else {
         // 显示错误提示
         showErrorMessage(result.message || '添加链接失败');
@@ -1224,121 +1388,145 @@ function initAddLinkFeature() {
     }
   }
   
-  // 显示成功消息
-  function showSuccessMessage(message) {
-    // 创建成功消息元素
-    const messageElement = document.createElement('div');
-    messageElement.className = 'success-message';
-    messageElement.innerHTML = `
-      <i class="bi bi-check-circle"></i>
-      <span>${message}</span>
-    `;
-    
-    // 添加样式
-    Object.assign(messageElement.style, {
-      position: 'fixed',
-      top: '20px',
-      right: '20px',
-      backgroundColor: '#52c41a',
-      color: 'white',
-      padding: '12px 20px',
-      borderRadius: '8px',
-      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-      zIndex: '1004',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '8px',
-      fontSize: '14px',
-      animation: 'fadeInSlideIn 0.3s ease',
-      maxWidth: '300px'
-    });
-    
-    // 添加动画样式
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes fadeInSlideIn {
-        from {
-          opacity: 0;
-          transform: translateX(100%);
-        }
-        to {
-          opacity: 1;
-          transform: translateX(0);
-        }
-      }
-    `;
-    document.head.appendChild(style);
-    
-    // 添加到页面
-    document.body.appendChild(messageElement);
-    
-    // 3秒后自动移除
-    setTimeout(() => {
-      messageElement.style.animation = 'fadeOutSlideOut 0.3s ease';
-      setTimeout(() => {
-        messageElement.remove();
-        style.remove();
-      }, 300);
-    }, 3000);
-  }
+// 显示成功消息
+function showSuccessMessage(message) {
+  // 移除已存在的成功消息
+  const existingMessages = document.querySelectorAll('.success-message');
+  existingMessages.forEach(msg => msg.remove());
   
-  // 显示错误消息
-  function showErrorMessage(message) {
-    // 创建错误消息元素
-    const messageElement = document.createElement('div');
-    messageElement.className = 'error-message';
-    messageElement.innerHTML = `
-      <i class="bi bi-exclamation-circle"></i>
-      <span>${message}</span>
-    `;
-    
-    // 添加样式
-    Object.assign(messageElement.style, {
-      position: 'fixed',
-      top: '20px',
-      right: '20px',
-      backgroundColor: '#ff4d4f',
-      color: 'white',
-      padding: '12px 20px',
-      borderRadius: '8px',
-      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-      zIndex: '1004',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '8px',
-      fontSize: '14px',
-      animation: 'fadeInSlideIn 0.3s ease',
-      maxWidth: '300px'
-    });
-    
-    // 添加动画样式
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes fadeInSlideIn {
-        from {
-          opacity: 0;
-          transform: translateX(100%);
-        }
-        to {
-          opacity: 1;
-          transform: translateX(0);
-        }
+  const messageElement = document.createElement('div');
+  messageElement.className = 'success-message';
+  messageElement.innerHTML = `
+    <i class="bi bi-check-circle"></i>
+    <span>${message}</span>
+  `;
+  
+  // 添加样式
+  Object.assign(messageElement.style, {
+    position: 'fixed',
+    top: '20px',
+    right: '20px',
+    backgroundColor: '#52c41a',
+    color: 'white',
+    padding: '12px 20px',
+    borderRadius: '8px',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+    zIndex: '1004',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    fontSize: '14px',
+    animation: 'fadeInSlideIn 0.3s ease',
+    maxWidth: '300px'
+  });
+  
+  // 添加动画样式
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes fadeInSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(100%);
       }
-    `;
-    document.head.appendChild(style);
-    
-    // 添加到页面
-    document.body.appendChild(messageElement);
-    
-    // 5秒后自动移除
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    @keyframes fadeOutSlideOut {
+      from {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateX(100%);
+      }
+    }
+  `;
+  document.head.appendChild(style);
+  
+  // 添加到页面
+  document.body.appendChild(messageElement);
+  
+  // 3秒后自动移除
+  setTimeout(() => {
+    messageElement.style.animation = 'fadeOutSlideOut 0.3s ease';
     setTimeout(() => {
-      messageElement.style.animation = 'fadeOutSlideOut 0.3s ease';
-      setTimeout(() => {
-        messageElement.remove();
-        style.remove();
-      }, 300);
-    }, 5000);
-  }
+      messageElement.remove();
+    }, 300);
+  }, 3000);
+}
+
+// 显示错误消息
+function showErrorMessage(message) {
+  // 移除已存在的错误消息
+  const existingMessages = document.querySelectorAll('.error-message');
+  existingMessages.forEach(msg => msg.remove());
+  
+  const messageElement = document.createElement('div');
+  messageElement.className = 'error-message';
+  messageElement.innerHTML = `
+    <i class="bi bi-exclamation-circle"></i>
+    <span>${message}</span>
+  `;
+  
+  // 添加样式
+  Object.assign(messageElement.style, {
+    position: 'fixed',
+    top: '20px',
+    right: '20px',
+    backgroundColor: '#ff4d4f',
+    color: 'white',
+    padding: '12px 20px',
+    borderRadius: '8px',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+    zIndex: '1004',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    fontSize: '14px',
+    animation: 'fadeInSlideIn 0.3s ease',
+    maxWidth: '300px'
+  });
+  
+  // 添加动画样式
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes fadeInSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(100%);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    @keyframes fadeOutSlideOut {
+      from {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateX(100%);
+      }
+    }
+  `;
+  document.head.appendChild(style);
+  
+  // 添加到页面
+  document.body.appendChild(messageElement);
+  
+  // 5秒后自动移除
+  setTimeout(() => {
+    messageElement.style.animation = 'fadeOutSlideOut 0.3s ease';
+    setTimeout(() => {
+      messageElement.remove();
+    }, 300);
+  }, 5000);
+}
   
   // 添加事件监听器
   addLinkBtn.addEventListener('click', showModal);
@@ -1412,10 +1600,13 @@ function initAddLinkFeatureAfterDataLoaded() {
   }
 }
 
-// 在页面加载完成后初始化添加链接功能
+// 在页面加载完成后初始化添加和删除链接功能
 document.addEventListener('DOMContentLoaded', function() {
   // 延迟初始化，确保数据已经加载
   setTimeout(initAddLinkFeatureAfterDataLoaded, 1000);
+  
+  // 初始化删除网站功能
+  initDeleteLinkFeature();
 });
 
 // 性能监控

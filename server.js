@@ -121,6 +121,7 @@ function processTableData(items) {
       return null;
     }
     return {
+      id: item.record_id, // 添加记录ID
       name: fields.name || fields.站点名称 || '',
       url: fields.url || fields.网址.link || '',
       category: fields.category || fields.分类 || '其它',
@@ -149,28 +150,28 @@ function processTableData(items) {
 // 模拟数据（当无法连接飞书API时使用）
 const mockData = {
   'Code': [
-    { name: 'GitHub', url: 'https://github.com', category: 'Code', sort: 1, icon: 'bi-github' },
-    { name: 'Stack Overflow', url: 'https://stackoverflow.com', category: 'Code', sort: 2, icon: 'bi-stack-overflow' },
-    { name: 'VSCode', url: 'https://code.visualstudio.com', category: 'Code', sort: 3, icon: 'bi-code-square' },
-    { name: 'CodePen', url: 'https://codepen.io', category: 'Code', sort: 4, icon: 'bi-code-slash' }
+    { id: 'mock_001', name: 'GitHub', url: 'https://github.com', category: 'Code', sort: 1, icon: 'bi-github' },
+    { id: 'mock_002', name: 'Stack Overflow', url: 'https://stackoverflow.com', category: 'Code', sort: 2, icon: 'bi-stack-overflow' },
+    { id: 'mock_003', name: 'VSCode', url: 'https://code.visualstudio.com', category: 'Code', sort: 3, icon: 'bi-code-square' },
+    { id: 'mock_004', name: 'CodePen', url: 'https://codepen.io', category: 'Code', sort: 4, icon: 'bi-code-slash' }
   ],
   '设计': [
-    { name: 'Figma', url: 'https://figma.com', category: '设计', sort: 1, icon: 'bi-palette' },
-    { name: 'Dribbble', url: 'https://dribbble.com', category: '设计', sort: 2, icon: 'bi-dribbble' },
-    { name: 'Behance', url: 'https://behance.net', category: '设计', sort: 3, icon: 'bi-brush' },
-    { name: 'Unsplash', url: 'https://unsplash.com', category: '设计', sort: 4, icon: 'bi-image' }
+    { id: 'mock_005', name: 'Figma', url: 'https://figma.com', category: '设计', sort: 1, icon: 'bi-palette' },
+    { id: 'mock_006', name: 'Dribbble', url: 'https://dribbble.com', category: '设计', sort: 2, icon: 'bi-dribbble' },
+    { id: 'mock_007', name: 'Behance', url: 'https://behance.net', category: '设计', sort: 3, icon: 'bi-brush' },
+    { id: 'mock_008', name: 'Unsplash', url: 'https://unsplash.com', category: '设计', sort: 4, icon: 'bi-image' }
   ],
   '产品': [
-    { name: 'ProductHunt', url: 'https://producthunt.com', category: '产品', sort: 1, icon: 'bi-graph-up' },
-    { name: 'Trello', url: 'https://trello.com', category: '产品', sort: 2, icon: 'bi-kanban' },
-    { name: 'Notion', url: 'https://notion.so', category: '产品', sort: 3, icon: 'bi-journal-text' },
-    { name: 'Asana', url: 'https://asana.com', category: '产品', sort: 4, icon: 'bi-list-check' }
+    { id: 'mock_009', name: 'ProductHunt', url: 'https://producthunt.com', category: '产品', sort: 1, icon: 'bi-graph-up' },
+    { id: 'mock_010', name: 'Trello', url: 'https://trello.com', category: '产品', sort: 2, icon: 'bi-kanban' },
+    { id: 'mock_011', name: 'Notion', url: 'https://notion.so', category: '产品', sort: 3, icon: 'bi-journal-text' },
+    { id: 'mock_012', name: 'Asana', url: 'https://asana.com', category: '产品', sort: 4, icon: 'bi-list-check' }
   ],
   '其它': [
-    { name: '百度', url: 'https://baidu.com', category: '其它', sort: 1, icon: 'bi-search' },
-    { name: '微博', url: 'https://weibo.com', category: '其它', sort: 2, icon: 'bi-chat-dots' },
-    { name: '知乎', url: 'https://zhihu.com', category: '其它', sort: 3, icon: 'bi-question-circle' },
-    { name: 'B站', url: 'https://bilibili.com', category: '其它', sort: 4, icon: 'bi-play-btn' }
+    { id: 'mock_013', name: '百度', url: 'https://baidu.com', category: '其它', sort: 1, icon: 'bi-search' },
+    { id: 'mock_014', name: '微博', url: 'https://weibo.com', category: '其它', sort: 2, icon: 'bi-chat-dots' },
+    { id: 'mock_015', name: '知乎', url: 'https://zhihu.com', category: '其它', sort: 3, icon: 'bi-question-circle' },
+    { id: 'mock_016', name: 'B站', url: 'https://bilibili.com', category: '其它', sort: 4, icon: 'bi-play-btn' }
   ]
 };
 
@@ -378,6 +379,55 @@ app.post('/api/links', async (req, res) => {
     res.status(500).json({
       success: false,
       message: `添加链接失败: ${error.message}`
+    });
+  }
+});
+
+// 删除网站链接
+app.delete('/api/links/:id', async (req, res) => {
+  try {
+    const recordId = req.params.id;
+    
+    if (!recordId) {
+      return res.status(400).json({
+        success: false,
+        message: '记录ID不能为空'
+      });
+    }
+    
+    // 获取飞书访问令牌
+    const token = await getTenantAccessToken();
+    
+    // 调用飞书多维表格API删除记录
+    const response = await axios.delete(
+      `https://open.feishu.cn/open-apis/bitable/v1/apps/${process.env.APP_TOKEN}/tables/${process.env.TABLE_ID}/records/${recordId}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json; charset=utf-8'
+        }
+      }
+    );
+    
+    // 处理响应
+    if (response.data.code === 0) {
+      res.json({
+        success: true,
+        message: '链接删除成功',
+        data: response.data.data
+      });
+    } else {
+      console.error('飞书API错误:', response.data);
+      res.status(500).json({
+        success: false,
+        message: `删除链接失败: ${response.data.msg || '未知错误'}`
+      });
+    }
+  } catch (error) {
+    console.error('删除链接异常:', error.message);
+    res.status(500).json({
+      success: false,
+      message: `删除链接失败: ${error.message}`
     });
   }
 });

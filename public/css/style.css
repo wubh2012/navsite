@@ -5,6 +5,19 @@
   box-sizing: border-box;
 }
 
+/* 全局链接样式 - 移除下划线 */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+a:visited,
+a:hover,
+a:active {
+  text-decoration: none;
+  color: inherit;
+}
+
 /* 移动端基础样式重置 */
 html {
   -webkit-text-size-adjust: 100%;
@@ -381,7 +394,8 @@ body {
 
 /* 按钮样式 */
 .cancel-btn,
-.save-btn {
+.save-btn,
+.delete-btn {
   padding: 10px 20px;
   border: none;
   border-radius: 8px;
@@ -413,6 +427,90 @@ body {
 .save-btn:disabled {
   background-color: #ccc;
   cursor: not-allowed;
+}
+
+/* 删除确认对话框样式 */
+.delete-confirmation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 16px 0;
+}
+
+.delete-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  background-color: rgba(255, 77, 79, 0.1);
+  border-radius: 50%;
+  margin-bottom: 16px;
+}
+
+.delete-icon i {
+  font-size: 32px;
+  color: #ff4d4f;
+}
+
+.delete-confirmation p {
+  margin: 8px 0;
+  color: var(--text-color);
+  font-size: 16px;
+}
+
+.site-name-highlight {
+  font-weight: 600;
+  color: #ff4d4f;
+}
+
+.delete-warning {
+  font-size: 14px;
+  color: #999;
+}
+
+.delete-btn {
+  background-color: #ff4d4f;
+  color: white;
+  border: 1px solid #ff4d4f;
+}
+
+.delete-btn:hover {
+  background-color: #ff7875;
+  border-color: #ff7875;
+}
+
+/* 工具项删除按钮样式 */
+.tool-item-delete-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background-color: rgba(255, 77, 79, 0.1);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+.tool-item-delete-btn i {
+  font-size: 14px;
+  color: #ff4d4f;
+}
+
+.tool-item:hover .tool-item-delete-btn {
+  opacity: 1;
+}
+
+.tool-item-delete-btn:hover {
+  background-color: rgba(255, 77, 79, 0.2);
 }
 
 /* 动画 */
