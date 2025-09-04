@@ -50,37 +50,50 @@ textarea {
 }
 
 :root {
-  /* 亮色模式变量 */
+  /* 霓虹风格主题变量 */
+  --primary-color: #FF0066; /* Neo magenta */
+  --secondary-color: #4500FF; /* Neo purple */
+  --accent-color: #0006FF; /* Accent blue */
+  --accent-green: #00FFAA; /* Accent green */
+  --warning-color: #FF8800; /* Warning orange */
+  --danger-color: #FF4D4F; /* Danger red */
+  
+  /* 文本颜色层级 */
+  --text-high: #FFFFFF; /* High contrast text */
+  --text-mid: #8B86BD; /* Mid contrast text */
+  --text-low: #5E55E7; /* Low contrast text */
+  
+  /* 亮色模式变量 - 基于霓虹风格 */
   --bg-color: #f5f7fa;
-  --text-color: #333;
+  --text-color: var(--text-low); /* 使用新的文本颜色层级 */
   --sidebar-bg: #fff;
-  --menu-hover-bg: #f0f5ff;
-  --menu-active-color: #1677ff;
-  --menu-active-border: #1677ff;
-  --time-color: #333;
-  --date-color: #666;
+  --menu-hover-bg: rgba(255, 0, 102, 0.1); /* Neo magenta hover */
+  --menu-active-color: #FF0066; /* Neo magenta */
+  --menu-active-border: #FF0066; /* Neo magenta */
+  --time-color: var(--text-mid);
+  --date-color: var(--text-low);
   --tool-item-bg: #fff;
   --tool-item-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  --tool-item-hover-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-  --tool-icon-color: #555;
-  --tool-name-color: #333;
+  --tool-item-hover-shadow: 0 4px 16px rgba(255, 0, 102, 0.2); /* Neon glow effect */
+  --tool-icon-color: var(--text-high);
+  --tool-name-color: var(--text-low);
 }
 
-/* 暗黑模式变量 */
+/* 暗黑模式变量 - 霓虹风格 */
 [data-theme="dark"] {
-  --bg-color: #1a1a1a;
-  --text-color: #e0e0e0;
-  --sidebar-bg: #2d2d2d;
-  --menu-hover-bg: #3d3d3d;
-  --menu-active-color: #64a0ff;
-  --menu-active-border: #64a0ff;
-  --time-color: #f0f0f0;
-  --date-color: #aaa;
-  --tool-item-bg: #2d2d2d;
-  --tool-item-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --tool-item-hover-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-  --tool-icon-color: #ccc;
-  --tool-name-color: #e0e0e0;
+  --bg-color: #050012; /* Primary dark background */
+  --text-color: var(--text-high); /* High contrast text */
+  --sidebar-bg: #0D0122; /* Elevated dark background */
+  --menu-hover-bg: rgba(255, 0, 102, 0.15); /* Neo magenta hover */
+  --menu-active-color: #FF0066; /* Neo magenta */
+  --menu-active-border: #FF0066; /* Neo magenta */
+  --time-color: var(--text-high);
+  --date-color: var(--text-mid);
+  --tool-item-bg: rgba(13, 1, 34, 0.8); /* Glass effect background */
+  --tool-item-shadow: 0 2px 12px rgba(255, 0, 102, 0.2); /* Neon glow */
+  --tool-item-hover-shadow: 0 4px 20px rgba(255, 0, 102, 0.35); /* Stronger neon glow */
+  --tool-icon-color: var(--text-high);
+  --tool-name-color: var(--text-high);
 }
 
 body {
