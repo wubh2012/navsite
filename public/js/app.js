@@ -46,6 +46,12 @@ if (document.readyState === 'loading') {
 
 // 初始化函数
 async function init() {
+  // 显示页面加载动画
+  showPageLoader();
+  
+  // 初始化粒子系统
+  const particleSystem = new ParticleSystem();
+  
   // 更新时间信息（确保时间准确）
   updateTimeInfo();
   setInterval(updateTimeInfo, 1000); // 每秒更新一次
@@ -58,6 +64,14 @@ async function init() {
 
   // 初始化触摸支持
   initTouchSupport();
+  
+  // 初始化交互管理器
+  const interactionManager = new InteractionManager();
+  
+  // 延迟隐藏页面加载动画，确保动画效果完整
+  setTimeout(() => {
+    hidePageLoader();
+  }, 800);
 }
 
 // 获取导航数据
@@ -269,7 +283,7 @@ function getFaviconUrl(url) {
 
     // 备用方案： https://favicon.im/hey.com
     // 使用Google的favicon服务作为主要方案 `https://www.google.com/s2/favicons?sz=32&domain_url=${hostname}`;
-    const googleFaviconUrl = `https://www.google.com/s2/favicons?sz=48&domain_url=${hostname}`;
+    const googleFaviconUrl = `https://favicon.im/${hostname}`;
 
     // 服务器代理作为备用方案
     const proxyFaviconUrl = `/api/favicon?url=${encodeURIComponent(url)}`;
@@ -328,7 +342,7 @@ function generateTextIcon(name) {
 // 添加工具项
 function addToolItem(tool) {
   const toolItem = document.createElement('div');
-  toolItem.className = 'tool-item';
+  toolItem.className = 'tool-item glass-container hover-lift click-bounce';
   toolItem.dataset.id = tool.id || '';
 
   // 创建链接元素
@@ -445,6 +459,191 @@ function showError(message) {
       <p style="color: #666;">${message}</p>
     </div>
   `;
+}
+
+// 显示页面加载动画
+function showPageLoader() {
+  const loader = document.createElement('div');
+  loader.id = 'page-loader';
+  loader.className = 'page-loader';
+  loader.innerHTML = `
+    <div class="loader-logo"></div>
+  `;
+  document.body.appendChild(loader);
+}
+
+// 隐藏页面加载动画
+function hidePageLoader() {
+  const loader = document.getElementById('page-loader');
+  if (loader) {
+    loader.style.opacity = '0';
+    loader.style.visibility = 'hidden';
+    setTimeout(() => loader.remove(), 500);
+  }
+}
+
+// 粒子系统管理
+class ParticleSystem {
+  constructor() {
+    this.particles = [];
+    this.maxParticles = 50;
+    this.init();
+  }
+  
+  init() {
+    this.createParticleContainer();
+    setInterval(() => this.createParticle(), 200);
+    setInterval(() => this.cleanup(), 1000);
+  }
+  
+  createParticleContainer() {
+    const container = document.createElement('div');
+    container.className = 'particle-system';
+    container.id = 'particle-system';
+    document.body.appendChild(container);
+  }
+  
+  createParticle() {
+    if (this.particles.length >= this.maxParticles) return;
+    
+    const particle = document.createElement('div');
+    particle.className = 'particle particle-animate';
+    particle.style.left = Math.random() * window.innerWidth + 'px';
+    particle.style.animationDelay = Math.random() * 2 + 's';
+    particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+    
+    const container = document.getElementById('particle-system');
+    if (container) {
+      container.appendChild(particle);
+      this.particles.push(particle);
+      
+      setTimeout(() => {
+        this.removeParticle(particle);
+      }, 8000);
+    }
+  }
+  
+  removeParticle(particle) {
+    const index = this.particles.indexOf(particle);
+    if (index > -1) {
+      this.particles.splice(index, 1);
+      if (particle.parentNode) {
+        particle.parentNode.removeChild(particle);
+      }
+    }
+  }
+  
+  cleanup() {
+    this.particles = this.particles.filter(p => {
+      const container = document.getElementById('particle-system');
+      return container && container.contains(p);
+    });
+  }
+}
+
+// 交互管理器
+class InteractionManager {
+  constructor() {
+    this.init();
+  }
+  
+  init() {
+    this.bindMenuEvents();
+    this.bindCardEvents();
+    this.bindThemeToggle();
+    this.bindGlobalEvents();
+  }
+  
+  bindMenuEvents() {
+    document.querySelectorAll('.nav-menu li').forEach(item => {
+      item.addEventListener('click', (e) => {
+        // 移除其他活跃状态
+        document.querySelectorAll('.nav-menu li').forEach(i => 
+          i.classList.remove('active'));
+        
+        // 添加当前活跃状态
+        e.currentTarget.classList.add('active');
+        
+        // 添加点击波纹效果
+        this.createRipple(e);
+      });
+    });
+  }
+  
+  bindCardEvents() {
+    document.querySelectorAll('.tool-item').forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        card.style.setProperty('--hover-scale', '1.05');
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        card.style.removeProperty('--hover-scale');
+      });
+      
+      card.addEventListener('click', (e) => {
+        this.createClickEffect(e.currentTarget);
+      });
+    });
+  }
+  
+  bindThemeToggle() {
+    const themeToggleBtn = document.getElementById('theme-toggle-btn');
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', (e) => {
+        this.createClickEffect(e.currentTarget);
+      });
+    }
+  }
+  
+  bindGlobalEvents() {
+    // 添加键盘导航支持
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') {
+        // 为可聚焦元素添加焦点样式
+        const focusableElements = document.querySelectorAll('.tool-item, .nav-menu li, button');
+        focusableElements.forEach(el => {
+          el.addEventListener('focus', () => {
+            el.style.outline = '2px solid var(--neon-cyan)';
+            el.style.outlineOffset = '2px';
+          });
+          el.addEventListener('blur', () => {
+            el.style.outline = 'none';
+          });
+        });
+      }
+    });
+  }
+  
+  createRipple(e) {
+    const ripple = document.createElement('span');
+    const rect = e.currentTarget.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = e.clientX - rect.left - size / 2;
+    const y = e.clientY - rect.top - size / 2;
+    
+    ripple.style.cssText = `
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 0, 102, 0.3);
+      transform: scale(0);
+      animation: ripple 0.6s linear;
+      left: ${x}px;
+      top: ${y}px;
+      width: ${size}px;
+      height: ${size}px;
+      pointer-events: none;
+    `;
+    
+    e.currentTarget.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 600);
+  }
+  
+  createClickEffect(element) {
+    element.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+      element.style.transform = '';
+    }, 150);
+  }
 }
 
 // 添加事件监听器

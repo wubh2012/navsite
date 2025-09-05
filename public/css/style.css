@@ -50,7 +50,7 @@ textarea {
 }
 
 :root {
-  /* 霓虹风格主题变量 */
+  /* 霓虹风格主题变量 - 基于优化建议 */
   --primary-color: #FF0066; /* Neo magenta */
   --secondary-color: #4500FF; /* Neo purple */
   --accent-color: #0006FF; /* Accent blue */
@@ -58,50 +58,140 @@ textarea {
   --warning-color: #FF8800; /* Warning orange */
   --danger-color: #FF4D4F; /* Danger red */
   
+  /* 霓虹发光颜色 */
+  --neon-pink: #FF0066;
+  --neon-cyan: #00F6FF;
+  --neon-purple: #4500FF;
+  
   /* 文本颜色层级 */
   --text-high: #FFFFFF; /* High contrast text */
   --text-mid: #8B86BD; /* Mid contrast text */
   --text-low: #5E55E7; /* Low contrast text */
   
+  /* 背景渐变 */
+  --primary-bg: linear-gradient(135deg, #050012, #0D0122, #1a0033);
+  --glass-bg: rgba(13, 1, 34, 0.6);
+  --elevated-bg: rgba(13, 1, 34, 0.8);
+  
+  /* 边框和效果 */
+  --border-glass: rgba(255, 255, 255, 0.1);
+  --border-neon: rgba(255, 0, 102, 0.3);
+  --glow-pink: 0 0 20px rgba(255, 0, 102, 0.5);
+  --glow-cyan: 0 0 20px rgba(0, 246, 255, 0.3);
+  
   /* 亮色模式变量 - 基于霓虹风格 */
   --bg-color: #f5f7fa;
-  --text-color: var(--text-low); /* 使用新的文本颜色层级 */
+  --text-color: var(--text-low);
   --sidebar-bg: #fff;
-  --menu-hover-bg: rgba(255, 0, 102, 0.1); /* Neo magenta hover */
-  --menu-active-color: #FF0066; /* Neo magenta */
-  --menu-active-border: #FF0066; /* Neo magenta */
+  --menu-hover-bg: rgba(255, 0, 102, 0.1);
+  --menu-active-color: #FF0066;
+  --menu-active-border: #FF0066;
   --time-color: var(--text-mid);
   --date-color: var(--text-low);
   --tool-item-bg: #fff;
   --tool-item-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  --tool-item-hover-shadow: 0 4px 16px rgba(255, 0, 102, 0.2); /* Neon glow effect */
+  --tool-item-hover-shadow: 0 4px 16px rgba(255, 0, 102, 0.2);
   --tool-icon-color: var(--text-high);
   --tool-name-color: var(--text-low);
 }
 
 /* 暗黑模式变量 - 霓虹风格 */
 [data-theme="dark"] {
-  --bg-color: #050012; /* Primary dark background */
-  --text-color: var(--text-high); /* High contrast text */
-  --sidebar-bg: #0D0122; /* Elevated dark background */
-  --menu-hover-bg: rgba(255, 0, 102, 0.15); /* Neo magenta hover */
-  --menu-active-color: #FF0066; /* Neo magenta */
-  --menu-active-border: #FF0066; /* Neo magenta */
+  --bg-color: var(--primary-bg);
+  --text-color: var(--text-high);
+  --sidebar-bg: var(--elevated-bg);
+  --menu-hover-bg: rgba(255, 0, 102, 0.15);
+  --menu-active-color: var(--neon-pink);
+  --menu-active-border: var(--neon-pink);
   --time-color: var(--text-high);
   --date-color: var(--text-mid);
-  --tool-item-bg: rgba(13, 1, 34, 0.8); /* Glass effect background */
-  --tool-item-shadow: 0 2px 12px rgba(255, 0, 102, 0.2); /* Neon glow */
-  --tool-item-hover-shadow: 0 4px 20px rgba(255, 0, 102, 0.35); /* Stronger neon glow */
+  --tool-item-bg: var(--glass-bg);
+  --tool-item-shadow: 0 2px 12px rgba(255, 0, 102, 0.2);
+  --tool-item-hover-shadow: var(--glow-pink);
   --tool-icon-color: var(--text-high);
   --tool-name-color: var(--text-high);
 }
 
 body {
-  font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  background-color: var(--bg-color);
+  font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: var(--bg-color);
   color: var(--text-color);
   min-height: 100vh;
   overflow-x: hidden;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* 🎭 玻璃拟态效果 */
+.glass-container {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-glass);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 0, 102, 0.08) 0%,
+    transparent 50%,
+    rgba(0, 246, 255, 0.08) 100%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.glass-container:hover::before {
+  opacity: 1;
+}
+
+/* 🌟 霓虹发光系统 */
+.neon-glow {
+  box-shadow: 
+    0 0 10px var(--neon-pink),
+    0 0 20px var(--neon-pink),
+    0 0 40px var(--neon-pink),
+    inset 0 0 10px rgba(255, 0, 102, 0.1);
+}
+
+/* 动态发光动画 */
+@keyframes neon-pulse {
+  0%, 100% {
+    box-shadow: 
+      0 0 10px var(--neon-pink),
+      0 0 20px var(--neon-pink),
+      0 0 30px var(--neon-pink);
+  }
+  50% {
+    box-shadow: 
+      0 0 15px var(--neon-pink),
+      0 0 30px var(--neon-pink),
+      0 0 45px var(--neon-pink),
+      0 0 60px rgba(255, 0, 102, 0.4);
+  }
+}
+
+.neon-animate {
+  animation: neon-pulse 2s ease-in-out infinite;
+}
+
+/* 文字霓虹效果 */
+.neon-text {
+  background: linear-gradient(135deg, var(--neon-pink), var(--neon-cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 10px rgba(255, 0, 102, 0.5));
 }
 
 /* 移动端顶部导航栏 */
@@ -813,29 +903,54 @@ body {
 }
 
 .nav-menu li {
-  padding: 15px 25px;
-  cursor: pointer;
-  transition: all 0.3s ease;
   display: flex;
   align-items: center;
+  padding: 16px 20px;
+  margin: 8px 0;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-glass);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
   font-size: 16px;
 }
 
-.nav-menu li i {
-  margin-right: 10px;
-  font-size: 18px;
+.nav-menu li::before {
+  content: '';
+  position: absolute;
+  left: -100%;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 0, 102, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.nav-menu li:hover::before {
+  left: 100%;
 }
 
 .nav-menu li:hover {
-  background-color: var(--menu-hover-bg);
-  color: var(--menu-active-color);
+  /* transform: translateX(8px); */
+  background: rgba(255, 0, 102, 0.1);
+  border-color: var(--neon-pink);
+  box-shadow: var(--glow-pink);
 }
 
 .nav-menu li.active {
-  background-color: var(--menu-hover-bg);
-  color: var(--menu-active-color);
-  font-weight: 500;
-  border-right: 3px solid var(--menu-active-border);
+  background: linear-gradient(135deg, rgba(255, 0, 102, 0.15), rgba(69, 0, 255, 0.1));
+  border-color: var(--neon-pink);
+  box-shadow: var(--glow-pink);
+}
+
+.nav-menu li i {
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+  color: var(--neon-cyan);
+  font-size: 18px;
 }
 
 /* 暗黑模式切换按钮样式 */
@@ -912,32 +1027,51 @@ body {
 }
 
 .tool-item {
-  background-color: var(--tool-item-bg);
-  border-radius: 10px;
-  padding: 15px;
+  @apply glass-container hover-lift click-bounce;
+  padding: 20px;
   text-align: center;
-  transition: all 0.3s ease;
-  box-shadow: var(--tool-item-shadow);
   cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  aspect-ratio: 1/1; /* 正方形比例 */
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1/1;
   min-height: 100px;
   text-decoration: none;
   color: inherit;
 }
 
-.tool-item:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--tool-item-hover-shadow);
+.tool-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 0, 102, 0.08) 0%,
+    transparent 50%,
+    rgba(0, 246, 255, 0.08) 100%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
-/* 移动端触摸反馈效果 */
-.tool-item:active {
-  transform: translateY(-2px) scale(0.98);
-  transition: all 0.1s ease;
+.tool-item:hover::before {
+  opacity: 1;
+}
+
+.tool-item:hover {
+  box-shadow: var(--glow-pink);
+}
+
+/* 暗黑模式下的玻璃效果 */
+[data-theme="dark"] .tool-item {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-glass);
 }
 
 /* 涟漪效果 */
@@ -1085,6 +1219,241 @@ body {
     min-width: 44px;
     min-height: 44px;
   }
+}
+
+/* 浏览器兼容性 */
+@supports not (backdrop-filter: blur(10px)) {
+  .glass-container {
+    background: rgba(13, 1, 34, 0.9);
+  }
+}
+
+/* 全局动画样式 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tool-item {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.tool-item:nth-child(1) { animation-delay: 0.1s; }
+.tool-item:nth-child(2) { animation-delay: 0.2s; }
+.tool-item:nth-child(3) { animation-delay: 0.3s; }
+.tool-item:nth-child(4) { animation-delay: 0.4s; }
+.tool-item:nth-child(5) { animation-delay: 0.5s; }
+.tool-item:nth-child(6) { animation-delay: 0.6s; }
+.tool-item:nth-child(7) { animation-delay: 0.7s; }
+.tool-item:nth-child(8) { animation-delay: 0.8s; }
+.tool-item:nth-child(9) { animation-delay: 0.9s; }
+.tool-item:nth-child(10) { animation-delay: 1.0s; }
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+  .nav-menu li {
+    padding: 12px 15px;
+    margin: 8px 0;
+  }
+  
+  .tool-item {
+    padding: 15px;
+    margin: 8px;
+  }
+}
+
+/* 可访问性优化 */
+@media (prefers-reduced-motion: reduce) {
+  .tool-item,
+  .nav-menu li,
+  .glass-container,
+  .hover-lift,
+  .click-bounce,
+  .neon-glow,
+  .neon-text,
+  .particle,
+  .page-loader {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* 焦点样式优化 */
+.tool-item:focus-within,
+.nav-menu li:focus,
+button:focus,
+input:focus {
+  outline: 2px solid var(--neon-cyan);
+  outline-offset: 2px;
+}
+
+/* 全局动画样式 */
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+body.loaded .tool-item {
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+body.loaded .tool-item:nth-child(n) {
+  animation-delay: calc(var(--index, 0) * 0.1s);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+  .nav-menu li {
+    padding: 12px 16px;
+    margin: 4px 0;
+  }
+  
+  .tool-item {
+    padding: 15px;
+    border-radius: 12px;
+  }
+}
+
+/* 可访问性优化 */
+@media (prefers-reduced-motion: reduce) {
+  .hover-lift,
+  .neon-animate,
+  .particle-animate,
+  .loader-logo {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* 焦点样式优化 */
+.tool-item:focus,
+.nav-menu li:focus,
+button:focus {
+  outline: 2px solid var(--neon-cyan);
+  outline-offset: 2px;
+}
+
+/* 🚀 高级动画系统 */
+.hover-lift {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-origin: center;
+}
+
+.hover-lift:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    var(--glow-pink);
+}
+
+/* 弹性点击效果 */
+.click-bounce {
+  transition: transform 0.1s ease;
+}
+
+.click-bounce:active {
+  transform: scale(0.95);
+}
+
+/* 粒子动画系统 */
+.particle-system {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: var(--neon-cyan);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--neon-cyan);
+}
+
+@keyframes particle-float {
+  0% {
+    transform: translateY(100vh) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-20px) translateX(100px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.particle-animate {
+  animation: particle-float 6s linear infinite;
+}
+
+/* 页面加载动画 */
+.page-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-bg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.loader-logo {
+  width: 80px;
+  height: 80px;
+  border: 3px solid transparent;
+  border-top: 3px solid var(--neon-pink);
+  border-bottom: 3px solid var(--neon-cyan);
+  border-radius: 50%;
+  animation: spin 1s linear infinite, neon-pulse 2s ease-in-out infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 打字机霓虹效果 */
+.neon-typewriter {
+  border-right: 2px solid var(--neon-cyan);
+  animation: neon-blink 1s infinite, neon-glow 2s ease-in-out infinite;
+}
+
+@keyframes neon-blink {
+  0%, 50% { border-color: var(--neon-cyan); }
+  51%, 100% { border-color: transparent; }
 }
 
 .tool-icon {
