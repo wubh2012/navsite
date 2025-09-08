@@ -49,8 +49,7 @@ async function init() {
   // 显示页面加载动画
   showPageLoader();
   
-  // 初始化粒子系统
-  const particleSystem = new ParticleSystem();
+  // 粒子系统已移除
   
   // 更新时间信息（确保时间准确）
   updateTimeInfo();
@@ -71,6 +70,11 @@ async function init() {
   // 延迟隐藏页面加载动画，确保动画效果完整
   setTimeout(() => {
     hidePageLoader();
+    
+    // 确保图标背景色正确设置
+    if (window.themeInitialized) {
+      refreshToolIcons();
+    }
   }, 800);
 }
 
@@ -282,8 +286,8 @@ function getFaviconUrl(url) {
     }
 
     // 备用方案： https://favicon.im/hey.com
-    // 使用Google的favicon服务作为主要方案 `https://www.google.com/s2/favicons?sz=32&domain_url=${hostname}`;
-    const googleFaviconUrl = `https://favicon.im/${hostname}`;
+    // 使用Google的favicon服务作为主要方案 `https://www.google.com/s2/favicons?sz=48&domain_url=${hostname}`;
+    const googleFaviconUrl = `https://www.google.com/s2/favicons?sz=48&domain_url=${hostname}`;
 
     // 服务器代理作为备用方案
     const proxyFaviconUrl = `/api/favicon?url=${encodeURIComponent(url)}`;
@@ -331,9 +335,14 @@ function generateTextIcon(name) {
     }
   }
 
+  // 检查当前主题模式
+  const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
+  
   // 生成随机背景色（柔和的颜色）
   const hue = Math.floor(Math.random() * 360);
-  const bgColor = `hsl(${hue}, 70%, 80%)`;
+  // 在亮色模式下使用更浅的背景色（亮度从80%提高到90%）
+  const lightness = isDarkMode ? 80 : 90;
+  const bgColor = `hsl(${hue}, 70%, ${lightness}%)`;
   const textColor = `hsl(${hue}, 70%, 30%)`;
 
   return `<div class="text-icon" style="background-color: ${bgColor}; color: ${textColor};">${iconText}</div>`;
@@ -482,64 +491,7 @@ function hidePageLoader() {
   }
 }
 
-// 粒子系统管理
-class ParticleSystem {
-  constructor() {
-    this.particles = [];
-    this.maxParticles = 50;
-    this.init();
-  }
-  
-  init() {
-    this.createParticleContainer();
-    setInterval(() => this.createParticle(), 200);
-    setInterval(() => this.cleanup(), 1000);
-  }
-  
-  createParticleContainer() {
-    const container = document.createElement('div');
-    container.className = 'particle-system';
-    container.id = 'particle-system';
-    document.body.appendChild(container);
-  }
-  
-  createParticle() {
-    if (this.particles.length >= this.maxParticles) return;
-    
-    const particle = document.createElement('div');
-    particle.className = 'particle particle-animate';
-    particle.style.left = Math.random() * window.innerWidth + 'px';
-    particle.style.animationDelay = Math.random() * 2 + 's';
-    particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
-    
-    const container = document.getElementById('particle-system');
-    if (container) {
-      container.appendChild(particle);
-      this.particles.push(particle);
-      
-      setTimeout(() => {
-        this.removeParticle(particle);
-      }, 8000);
-    }
-  }
-  
-  removeParticle(particle) {
-    const index = this.particles.indexOf(particle);
-    if (index > -1) {
-      this.particles.splice(index, 1);
-      if (particle.parentNode) {
-        particle.parentNode.removeChild(particle);
-      }
-    }
-  }
-  
-  cleanup() {
-    this.particles = this.particles.filter(p => {
-      const container = document.getElementById('particle-system');
-      return container && container.contains(p);
-    });
-  }
-}
+// 粒子系统已移除
 
 // 交互管理器
 class InteractionManager {
@@ -1221,6 +1173,18 @@ function toggleTheme() {
   } else {
     themeToggleBtn.innerHTML = '<i class="bi bi-moon"></i> 暗黑模式';
   }
+  
+  // 重新生成工具图标，确保图标背景色正确更新
+  refreshToolIcons();
+}
+
+// 刷新工具图标
+function refreshToolIcons() {
+  // 获取当前分类
+  const currentCategory = document.querySelector('.nav-menu li.active')?.getAttribute('data-category') || 'all';
+  
+  // 重新显示工具，这将重新生成图标
+  showTools(currentCategory);
 }
 
 // 初始化主题模式
@@ -1250,6 +1214,9 @@ function initTheme() {
   } else {
     themeToggleBtn.innerHTML = '<i class="bi bi-moon"></i> 暗黑模式';
   }
+  
+  // 设置标志，表示主题已初始化
+  window.themeInitialized = true;
 }
 
 // 页面加载完成后初始化

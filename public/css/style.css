@@ -70,7 +70,7 @@ textarea {
   
   /* 背景渐变 */
   --primary-bg: linear-gradient(135deg, #050012, #0D0122, #1a0033);
-  --glass-bg: rgba(13, 1, 34, 0.6);
+  --glass-bg: rgba(255, 255, 255, 0.8);
   --elevated-bg: rgba(13, 1, 34, 0.8);
   
   /* 边框和效果 */
@@ -105,6 +105,7 @@ textarea {
   --menu-active-border: var(--neon-pink);
   --time-color: var(--text-high);
   --date-color: var(--text-mid);
+  --glass-bg: rgba(13, 1, 34, 0.6);
   --tool-item-bg: var(--glass-bg);
   --tool-item-shadow: 0 2px 12px rgba(255, 0, 102, 0.2);
   --tool-item-hover-shadow: var(--glow-pink);
@@ -1374,46 +1375,7 @@ button:focus {
   transform: scale(0.95);
 }
 
-/* 粒子动画系统 */
-.particle-system {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.particle {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background: var(--neon-cyan);
-  border-radius: 50%;
-  box-shadow: 0 0 6px var(--neon-cyan);
-}
-
-@keyframes particle-float {
-  0% {
-    transform: translateY(100vh) translateX(0) rotate(0deg);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-20px) translateX(100px) rotate(360deg);
-    opacity: 0;
-  }
-}
-
-.particle-animate {
-  animation: particle-float 6s linear infinite;
-}
+/* 粒子动画系统已移除 */
 
 /* 页面加载动画 */
 .page-loader {
