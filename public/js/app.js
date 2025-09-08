@@ -29,10 +29,14 @@ function updateTimeInfoImmediately() {
     const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
     const weekday = weekdays[now.getDay()];
 
-    // 这里使用固定的农历日期，实际应用中可以使用专门的农历转换库
-    const lunarDate = '闰六月十八'; // 示例值
-
-    dateInfoEl.textContent = `${month} 月 ${date} 日 ${weekday} ${lunarDate}`;
+    // 如果有缓存数据，使用缓存的日期信息
+    if (dataCache && dataCache.dateInfo) {
+      dateInfoEl.textContent = `${dataCache.dateInfo.date} ${dataCache.dateInfo.weekday} ${dataCache.dateInfo.lunarDate}`;
+    } else {
+      // 这里使用固定的农历日期，实际应用中可以使用专门的农历转换库
+      const lunarDate = '闰六月十八'; // 示例值
+      dateInfoEl.textContent = `${month} 月 ${date} 日 ${weekday} ${lunarDate}`;
+    }
   }
 }
 
@@ -91,6 +95,11 @@ async function fetchNavigationData(forceRefresh = false) {
 
     // 显示所有工具
     showTools('all');
+    
+    // 更新日期信息
+    if (dataCache.dateInfo) {
+      updateDateInfo(dataCache.dateInfo);
+    }
     return;
   }
 
@@ -109,7 +118,8 @@ async function fetchNavigationData(forceRefresh = false) {
       // 缓存数据
       dataCache = {
         data: result.data,
-        categories: result.categories
+        categories: result.categories,
+        dateInfo: result.dateInfo
       };
       cacheTimestamp = Date.now();
 
@@ -121,6 +131,9 @@ async function fetchNavigationData(forceRefresh = false) {
 
       // 显示所有工具
       showTools('all');
+      
+      // 更新日期信息
+      updateDateInfo(result.dateInfo);
     } else {
       console.error('获取导航数据失败:', result.message);
       hideLoadingAnimation();
@@ -448,16 +461,25 @@ function updateTimeInfo() {
   const seconds = String(now.getSeconds()).padStart(2, '0');
   currentTimeEl.textContent = `${hours}:${minutes}:${seconds}`;
 
-  // 更新日期信息
-  const month = now.getMonth() + 1;
-  const date = now.getDate();
-  const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
-  const weekday = weekdays[now.getDay()];
+  // 如果有缓存数据，使用缓存的日期信息
+  if (dataCache && dataCache.dateInfo) {
+    updateDateInfo(dataCache.dateInfo);
+  } else {
+    // 更新日期信息（使用静态值作为fallback）
+    const month = now.getMonth() + 1;
+    const date = now.getDate();
+    const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+    const weekday = weekdays[now.getDay()];
+    const lunarDate = '闰六月十八'; // 示例值
+    dateInfoEl.textContent = `${month} 月 ${date} 日 ${weekday} ${lunarDate}`;
+  }
+}
 
-  // 这里使用固定的农历日期，实际应用中可以使用专门的农历转换库
-  const lunarDate = '闰六月十八'; // 示例值
-
-  dateInfoEl.textContent = `${month} 月 ${date} 日 ${weekday} ${lunarDate}`;
+// 更新日期信息
+function updateDateInfo(dateInfo) {
+  if (dateInfoEl && dateInfo) {
+    dateInfoEl.textContent = `${dateInfo.date} ${dateInfo.weekday} ${dateInfo.lunarDate}`;
+  }
 }
 
 // 显示错误信息
