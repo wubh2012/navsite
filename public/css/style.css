@@ -53,7 +53,7 @@ textarea {
   /* 霓虹风格主题变量 - 基于优化建议 */
   --primary-color: #FF0066; /* Neo magenta */
   --secondary-color: #4500FF; /* Neo purple */
-  --accent-color: #0006FF; /* Accent blue */
+  --accent-color: #00F6FF;
   --accent-green: #00FFAA; /* Accent green */
   --warning-color: #FF8800; /* Warning orange */
   --danger-color: #FF4D4F; /* Danger red */
@@ -959,19 +959,19 @@ body {
     0 0 20px rgba(255, 0, 102, 0.6),
     0 0 40px rgba(255, 0, 102, 0.4),
     0 0 60px rgba(255, 0, 102, 0.2);
-  border: 2px solid rgba(255, 0, 102, 0.3);
+  border: 3px solid var(--accent-color);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   animation: avatar-glow 3s ease-in-out infinite;
 }
 
 .user-avatar:hover img {
-  transform: scale(1.1) rotate(5deg);
+  transform: scale(1.2) rotate(10deg);
   box-shadow: 
     0 0 30px rgba(255, 0, 102, 0.8),
     0 0 60px rgba(255, 0, 102, 0.6),
     0 0 90px rgba(255, 0, 102, 0.4),
     0 0 120px rgba(0, 246, 255, 0.3);
-  border-color: rgba(0, 246, 255, 0.5);
+  
 }
 
 @keyframes avatar-glow {
@@ -1550,6 +1550,7 @@ button:focus {
   color: var(--accent-color);
   width: 48px;
   height: 48px;
+  border-radius: 50%;
   object-fit: contain;
   transition: all 0.3s ease;
   filter: drop-shadow(0 0 10px rgba(0, 246, 255, 0.5));
