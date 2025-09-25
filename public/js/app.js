@@ -439,13 +439,18 @@ class ThemeManager {
   }
 
   updateModeToggle() {
-    // 更新模式切换按钮的显示
+    // 更新右上角模式切换按钮的图标
     const themeToggleBtn = document.getElementById('theme-toggle-btn');
     if (themeToggleBtn) {
-      if (this.currentMode === 'dark') {
-        themeToggleBtn.innerHTML = '<i class="bi bi-sun"></i> 亮色模式';
-      } else {
-        themeToggleBtn.innerHTML = '<i class="bi bi-moon"></i> 暗黑模式';
+      const icon = themeToggleBtn.querySelector('i');
+      if (icon) {
+        if (this.currentMode === 'dark') {
+          icon.className = 'bi bi-sun';
+          themeToggleBtn.title = '';
+        } else {
+          icon.className = 'bi bi-moon';
+          themeToggleBtn.title = '';
+        }
       }
     }
     
@@ -456,10 +461,10 @@ class ThemeManager {
       const text = skinModeToggle.querySelector('span');
       if (this.currentMode === 'dark') {
         if (icon) icon.className = 'bi bi-sun';
-        if (text) text.textContent = '亮色模式';
+        if (text) text.textContent = '';
       } else {
         if (icon) icon.className = 'bi bi-moon';
-        if (text) text.textContent = '暗黑模式';
+        if (text) text.textContent = '';
       }
     }
   }
@@ -467,17 +472,25 @@ class ThemeManager {
   bindEvents() {
     // 皮肤选择器展开/收起事件
     document.addEventListener('click', (e) => {
-      if (e.target.closest('.skin-expand-btn')) {
+      // 点击展开按钮或皮肤文字都可以弹出选择页面
+      if (e.target.closest('.skin-expand-btn') || e.target.closest('.current-skin-name')) {
         this.toggleSkinSelector();
       }
       
       if (e.target.closest('.skin-option')) {
         const skinName = e.target.closest('.skin-option').getAttribute('data-skin');
         this.setSkin(skinName);
+        // 选择后自动关闭选择dialog
+        this.closeSkinSelector();
       }
       
       if (e.target.closest('.skin-mode-toggle')) {
         this.toggleMode();
+      }
+      
+      // 点击其他区域关闭皮肤选择器
+      if (!e.target.closest('.skin-selector')) {
+        this.closeSkinSelector();
       }
     });
   }
@@ -495,6 +508,19 @@ class ThemeManager {
         } else {
           expandBtn.className = 'bi bi-chevron-down';
         }
+      }
+    }
+  }
+
+  closeSkinSelector() {
+    const skinSelector = document.querySelector('.skin-selector');
+    if (skinSelector && skinSelector.classList.contains('expanded')) {
+      skinSelector.classList.remove('expanded');
+      
+      // 更新展开按钮的图标
+      const expandBtn = skinSelector.querySelector('.skin-expand-btn i');
+      if (expandBtn) {
+        expandBtn.className = 'bi bi-chevron-down';
       }
     }
   }
@@ -562,7 +588,7 @@ if (document.readyState === 'loading') {
 }
 
 // 初始化函数
-async function init() {
+function init() {
   // 显示页面加载动画
   showPageLoader();
   
@@ -576,7 +602,7 @@ async function init() {
   setInterval(updateTimeInfo, 1000); // 每秒更新一次
 
   // 获取导航数据
-  await fetchNavigationData();
+  fetchNavigationData();
 
   // 添加事件监听器
   addEventListeners();
@@ -1779,13 +1805,18 @@ function updateSkinOptionsState() {
 function updateModeToggleDisplay() {
   const currentMode = themeManager.getCurrentMode();
   
-  // 更新侧边栏的主题切换按钮
+  // 更新右上角的主题切换按钮（只更新图标）
   const themeToggleBtn = document.getElementById('theme-toggle-btn');
   if (themeToggleBtn) {
-    if (currentMode === 'dark') {
-      themeToggleBtn.innerHTML = '<i class="bi bi-sun"></i> 亮色模式';
-    } else {
-      themeToggleBtn.innerHTML = '<i class="bi bi-moon"></i> 暗黑模式';
+    const icon = themeToggleBtn.querySelector('i');
+    if (icon) {
+      if (currentMode === 'dark') {
+        icon.className = 'bi bi-sun';
+        themeToggleBtn.title = '切换亮色模式';
+      } else {
+        icon.className = 'bi bi-moon';
+        themeToggleBtn.title = '切换暗黑模式';
+      }
     }
   }
   
