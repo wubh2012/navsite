@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>主题持久化测试</title>
+</head>
+<body>
+  <h1>主题持久化测试</h1>
+  <p>这个页面用于测试localStorage的主题持久化功能</p>
+  
+  <button onclick="testStorage()">测试存储功能</button>
+  <button onclick="clearStorage()">清空存储</button>
+  
+  <div id="results"></div>
+
+  <script>
+    function testStorage() {
+      const results = document.getElementById('results');
+      
+      try {
+        // 测试设置值
+        localStorage.setItem('skin-theme', 'ocean');
+        localStorage.setItem('theme', 'dark');
+        
+        // 测试读取值
+        const skin = localStorage.getItem('skin-theme');
+        const mode = localStorage.getItem('theme');
+        
+        results.innerHTML = `
+          <h3>存储测试结果:</h3>
+          <p>皮肤主题: ${skin}</p>
+          <p>模式: ${mode}</p>
+          <p>存储功能正常工作！</p>
+        `;
+        
+        console.log('LocalStorage测试成功', { skin, mode });
+      } catch (error) {
+        results.innerHTML = `
+          <h3>存储测试失败:</h3>
+          <p>错误: ${error.message}</p>
+        `;
+        console.error('LocalStorage测试失败:', error);
+      }
+    }
+    
+    function clearStorage() {
+      localStorage.removeItem('skin-theme');
+      localStorage.removeItem('theme');
+      document.getElementById('results').innerHTML = '<p>存储已清空</p>';
+    }
+    
+    // 页面加载时检查现有存储
+    window.addEventListener('load', function() {
+      const skin = localStorage.getItem('skin-theme');
+      const mode = localStorage.getItem('theme');
+      
+      if (skin || mode) {
+        document.getElementById('results').innerHTML = `
+          <h3>当前存储状态:</h3>
+          <p>皮肤主题: ${skin || '未设置'}</p>
+          <p>模式: ${mode || '未设置'}</p>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>

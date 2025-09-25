@@ -6,6 +6,519 @@ let dataCache = null; // 数据缓存
 let cacheTimestamp = null; // 缓存时间戳
 const CACHE_DURATION = 5 * 60 * 1000; // 缓存5分钟
 
+// 皮肤主题配置
+const SKIN_THEMES = {
+  neon: {
+    name: '霓虹风格',
+    icon: 'bi-stars',
+    colors: {
+      light: {
+        primary: '#FF0066',
+        secondary: '#4500FF',
+        accent: '#0006FF',
+        accentGreen: '#00FFAA',
+        warning: '#FF8800',
+        danger: '#FF4D4F',
+        neonPink: '#FF0066',
+        neonCyan: '#00F6FF',
+        neonPurple: '#4500FF',
+        textHigh: '#FFFFFF',
+        textMid: '#8B86BD',
+        textLow: '#5E55E7',
+        primaryBg: 'linear-gradient(135deg, #050012, #0D0122, #1a0033)',
+        glassBg: 'rgba(255, 255, 255, 0.8)',
+        elevatedBg: 'rgba(13, 1, 34, 0.8)'
+      },
+      dark: {
+        primary: '#FF0066',
+        secondary: '#4500FF',
+        accent: '#0006FF',
+        accentGreen: '#00FFAA',
+        warning: '#FF8800',
+        danger: '#FF4D4F',
+        neonPink: '#FF0066',
+        neonCyan: '#00F6FF',
+        neonPurple: '#4500FF',
+        textHigh: '#FFFFFF',
+        textMid: '#8B86BD',
+        textLow: '#5E55E7',
+        primaryBg: 'linear-gradient(135deg, #050012, #0D0122, #1a0033)',
+        glassBg: 'rgba(13, 1, 34, 0.6)',
+        elevatedBg: 'rgba(13, 1, 34, 0.8)'
+      }
+    }
+  },
+  ocean: {
+    name: '海洋蓝调',
+    icon: 'bi-water',
+    colors: {
+      light: {
+        primary: '#0077BE',
+        secondary: '#0096C7',
+        accent: '#00B4D8',
+        accentGreen: '#48CAE4',
+        warning: '#FFB703',
+        danger: '#FF6B6B',
+        neonPink: '#00F5FF',
+        neonCyan: '#40E0D0',
+        neonPurple: '#0096C7',
+        textHigh: '#003566',
+        textMid: '#0077BE',
+        textLow: '#0096C7',
+        primaryBg: 'linear-gradient(135deg, #caf0f8, #ade8f4, #90e0ef)',
+        glassBg: 'rgba(255, 255, 255, 0.8)',
+        elevatedBg: 'rgba(202, 240, 248, 0.8)'
+      },
+      dark: {
+        primary: '#00F5FF',
+        secondary: '#40E0D0',
+        accent: '#48CAE4',
+        accentGreen: '#90E0EF',
+        warning: '#FFB703',
+        danger: '#FF6B6B',
+        neonPink: '#00F5FF',
+        neonCyan: '#40E0D0',
+        neonPurple: '#0096C7',
+        textHigh: '#FFFFFF',
+        textMid: '#CAF0F8',
+        textLow: '#ADE8F4',
+        primaryBg: 'linear-gradient(135deg, #001122, #002244, #003366)',
+        glassBg: 'rgba(0, 34, 68, 0.6)',
+        elevatedBg: 'rgba(0, 34, 68, 0.8)'
+      }
+    }
+  },
+  forest: {
+    name: '森林绿意',
+    icon: 'bi-tree',
+    colors: {
+      light: {
+        primary: '#2D5016',
+        secondary: '#52734D',
+        accent: '#73A942',
+        accentGreen: '#B4C7A9',
+        warning: '#FF8500',
+        danger: '#E63946',
+        neonPink: '#73A942',
+        neonCyan: '#90C695',
+        neonPurple: '#52734D',
+        textHigh: '#1B4332',
+        textMid: '#2D5016',
+        textLow: '#52734D',
+        primaryBg: 'linear-gradient(135deg, #f1faee, #e9f5db, #cfe1b9)',
+        glassBg: 'rgba(255, 255, 255, 0.8)',
+        elevatedBg: 'rgba(241, 250, 238, 0.8)'
+      },
+      dark: {
+        primary: '#90C695',
+        secondary: '#73A942',
+        accent: '#B4C7A9',
+        accentGreen: '#CFE1B9',
+        warning: '#FF8500',
+        danger: '#E63946',
+        neonPink: '#90C695',
+        neonCyan: '#B4C7A9',
+        neonPurple: '#73A942',
+        textHigh: '#FFFFFF',
+        textMid: '#CFE1B9',
+        textLow: '#B4C7A9',
+        primaryBg: 'linear-gradient(135deg, #081c15, #1b4332, #2d5016)',
+        glassBg: 'rgba(27, 67, 50, 0.6)',
+        elevatedBg: 'rgba(27, 67, 50, 0.8)'
+      }
+    }
+  },
+  sunset: {
+    name: '日落橙黄',
+    icon: 'bi-sunset',
+    colors: {
+      light: {
+        primary: '#FF6D00',
+        secondary: '#FF8F00',
+        accent: '#FFB300',
+        accentGreen: '#FFD54F',
+        warning: '#FF5722',
+        danger: '#D32F2F',
+        neonPink: '#FF8F00',
+        neonCyan: '#FFD54F',
+        neonPurple: '#FF6D00',
+        textHigh: '#BF360C',
+        textMid: '#E65100',
+        textLow: '#FF6D00',
+        primaryBg: 'linear-gradient(135deg, #fff8e1, #ffecb3, #ffe082)',
+        glassBg: 'rgba(255, 255, 255, 0.8)',
+        elevatedBg: 'rgba(255, 248, 225, 0.8)'
+      },
+      dark: {
+        primary: '#FFD54F',
+        secondary: '#FFB300',
+        accent: '#FF8F00',
+        accentGreen: '#FFF176',
+        warning: '#FF5722',
+        danger: '#D32F2F',
+        neonPink: '#FFD54F',
+        neonCyan: '#FFF176',
+        neonPurple: '#FFB300',
+        textHigh: '#FFFFFF',
+        textMid: '#FFF8E1',
+        textLow: '#FFECB3',
+        primaryBg: 'linear-gradient(135deg, #3e2723, #5d4037, #8d6e63)',
+        glassBg: 'rgba(62, 39, 35, 0.6)',
+        elevatedBg: 'rgba(62, 39, 35, 0.8)'
+      }
+    }
+  },
+  purple: {
+    name: '优雅紫色',
+    icon: 'bi-gem',
+    colors: {
+      light: {
+        primary: '#6A1B9A',
+        secondary: '#8E24AA',
+        accent: '#AB47BC',
+        accentGreen: '#CE93D8',
+        warning: '#FF9800',
+        danger: '#F44336',
+        neonPink: '#AB47BC',
+        neonCyan: '#CE93D8',
+        neonPurple: '#8E24AA',
+        textHigh: '#4A148C',
+        textMid: '#6A1B9A',
+        textLow: '#8E24AA',
+        primaryBg: 'linear-gradient(135deg, #f3e5f5, #e1bee7, #ce93d8)',
+        glassBg: 'rgba(255, 255, 255, 0.8)',
+        elevatedBg: 'rgba(243, 229, 245, 0.8)'
+      },
+      dark: {
+        primary: '#CE93D8',
+        secondary: '#AB47BC',
+        accent: '#8E24AA',
+        accentGreen: '#E1BEE7',
+        warning: '#FF9800',
+        danger: '#F44336',
+        neonPink: '#CE93D8',
+        neonCyan: '#E1BEE7',
+        neonPurple: '#AB47BC',
+        textHigh: '#FFFFFF',
+        textMid: '#F3E5F5',
+        textLow: '#E1BEE7',
+        primaryBg: 'linear-gradient(135deg, #1a0e1a, #2a1a2a, #3a2a3a)',
+        glassBg: 'rgba(26, 14, 26, 0.6)',
+        elevatedBg: 'rgba(26, 14, 26, 0.8)'
+      }
+    }
+  },
+  classic: {
+    name: '经典灰调',
+    icon: 'bi-circle-half',
+    colors: {
+      light: {
+        primary: '#424242',
+        secondary: '#616161',
+        accent: '#757575',
+        accentGreen: '#9E9E9E',
+        warning: '#FF9800',
+        danger: '#F44336',
+        neonPink: '#757575',
+        neonCyan: '#9E9E9E',
+        neonPurple: '#616161',
+        textHigh: '#212121',
+        textMid: '#424242',
+        textLow: '#616161',
+        primaryBg: 'linear-gradient(135deg, #fafafa, #f5f5f5, #eeeeee)',
+        glassBg: 'rgba(255, 255, 255, 0.8)',
+        elevatedBg: 'rgba(250, 250, 250, 0.8)'
+      },
+      dark: {
+        primary: '#BDBDBD',
+        secondary: '#9E9E9E',
+        accent: '#757575',
+        accentGreen: '#E0E0E0',
+        warning: '#FF9800',
+        danger: '#F44336',
+        neonPink: '#BDBDBD',
+        neonCyan: '#E0E0E0',
+        neonPurple: '#9E9E9E',
+        textHigh: '#FFFFFF',
+        textMid: '#F5F5F5',
+        textLow: '#EEEEEE',
+        primaryBg: 'linear-gradient(135deg, #121212, #1e1e1e, #2a2a2a)',
+        glassBg: 'rgba(18, 18, 18, 0.6)',
+        elevatedBg: 'rgba(18, 18, 18, 0.8)'
+      }
+    }
+  }
+};
+
+// ThemeManager 类 - 主题管理器
+class ThemeManager {
+  constructor() {
+    this.currentSkin = 'neon';  // 默认皮肤
+    this.currentMode = 'light'; // 默认模式
+    this.isInitialized = false;
+    this.init();
+  }
+
+  init() {
+    this.loadUserPreferences();
+    this.applyTheme();
+    this.bindEvents();
+    this.isInitialized = true;
+    
+    // 设置全局标志，表示主题已初始化
+    window.themeInitialized = true;
+  }
+
+  loadUserPreferences() {
+    // 加载用户保存的皮肤选择
+    const savedSkin = localStorage.getItem('skin-theme');
+    if (savedSkin && SKIN_THEMES[savedSkin]) {
+      this.currentSkin = savedSkin;
+    }
+
+    // 加载用户保存的模式选择
+    const savedMode = localStorage.getItem('theme');
+    if (savedMode) {
+      this.currentMode = savedMode;
+    } else {
+      // 检查系统偏好
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      this.currentMode = systemPrefersDark ? 'dark' : 'light';
+    }
+  }
+
+  setSkin(skinName) {
+    if (!SKIN_THEMES[skinName]) {
+      console.warn(`皮肤主题 "${skinName}" 不存在`);
+      return;
+    }
+
+    this.currentSkin = skinName;
+    this.applyTheme();
+    this.savePreferences();
+    this.refreshIcons();
+    this.updateSkinSelector();
+  }
+
+  toggleMode() {
+    this.currentMode = this.currentMode === 'dark' ? 'light' : 'dark';
+    this.applyTheme();
+    this.savePreferences();
+    this.refreshIcons();
+    this.updateModeToggle();
+  }
+
+  setMode(mode) {
+    if (mode === 'dark' || mode === 'light') {
+      this.currentMode = mode;
+      this.applyTheme();
+      this.savePreferences();
+      this.refreshIcons();
+      this.updateModeToggle();
+    }
+  }
+
+  applyTheme() {
+    const skin = SKIN_THEMES[this.currentSkin];
+    const colors = skin.colors[this.currentMode];
+
+    // 设置数据属性
+    document.documentElement.setAttribute('data-skin', this.currentSkin);
+    document.documentElement.setAttribute('data-theme', this.currentMode);
+
+    // 应用CSS变量
+    const root = document.documentElement;
+    
+    // 主题颜色变量
+    root.style.setProperty('--primary-color', colors.primary);
+    root.style.setProperty('--secondary-color', colors.secondary);
+    root.style.setProperty('--accent-color', colors.accent);
+    root.style.setProperty('--accent-green', colors.accentGreen);
+    root.style.setProperty('--warning-color', colors.warning);
+    root.style.setProperty('--danger-color', colors.danger);
+    
+    // 霓虹发光颜色
+    root.style.setProperty('--neon-pink', colors.neonPink);
+    root.style.setProperty('--neon-cyan', colors.neonCyan);
+    root.style.setProperty('--neon-purple', colors.neonPurple);
+    
+    // 文本颜色层级
+    root.style.setProperty('--text-high', colors.textHigh);
+    root.style.setProperty('--text-mid', colors.textMid);
+    root.style.setProperty('--text-low', colors.textLow);
+    
+    // 背景渐变
+    root.style.setProperty('--primary-bg', colors.primaryBg);
+    root.style.setProperty('--glass-bg', colors.glassBg);
+    root.style.setProperty('--elevated-bg', colors.elevatedBg);
+    
+    // 根据模式调整具体元素的颜色
+    this.applyModeSpecificColors();
+  }
+
+  applyModeSpecificColors() {
+    const skin = SKIN_THEMES[this.currentSkin];
+    const colors = skin.colors[this.currentMode];
+    const root = document.documentElement;
+    
+    if (this.currentMode === 'dark') {
+      root.style.setProperty('--bg-color', colors.primaryBg);
+      root.style.setProperty('--text-color', colors.textHigh);
+      root.style.setProperty('--sidebar-bg', colors.elevatedBg);
+      root.style.setProperty('--menu-hover-bg', `rgba(${this.hexToRgb(colors.primary)}, 0.15)`);
+      root.style.setProperty('--menu-active-color', colors.neonPink);
+      root.style.setProperty('--menu-active-border', colors.neonPink);
+      root.style.setProperty('--time-color', colors.textHigh);
+      root.style.setProperty('--date-color', colors.textMid);
+      root.style.setProperty('--tool-item-bg', colors.glassBg);
+      root.style.setProperty('--tool-item-shadow', `0 2px 12px rgba(${this.hexToRgb(colors.primary)}, 0.2)`);
+      root.style.setProperty('--tool-item-hover-shadow', `0 0 20px rgba(${this.hexToRgb(colors.neonPink)}, 0.5)`);
+      root.style.setProperty('--tool-icon-color', colors.textHigh);
+      root.style.setProperty('--tool-name-color', colors.textHigh);
+    } else {
+      // 亮色模式
+      const lightBg = this.currentSkin === 'classic' ? '#fafafa' : 
+                     this.currentSkin === 'ocean' ? '#f8fdff' :
+                     this.currentSkin === 'forest' ? '#f9fdf7' :
+                     this.currentSkin === 'sunset' ? '#fffaf0' :
+                     this.currentSkin === 'purple' ? '#fdf7ff' : '#f5f7fa';
+      
+      root.style.setProperty('--bg-color', lightBg);
+      root.style.setProperty('--text-color', colors.textLow);
+      root.style.setProperty('--sidebar-bg', '#fff');
+      root.style.setProperty('--menu-hover-bg', `rgba(${this.hexToRgb(colors.primary)}, 0.1)`);
+      root.style.setProperty('--menu-active-color', colors.primary);
+      root.style.setProperty('--menu-active-border', colors.primary);
+      root.style.setProperty('--time-color', colors.textMid);
+      root.style.setProperty('--date-color', colors.textLow);
+      root.style.setProperty('--tool-item-bg', '#fff');
+      root.style.setProperty('--tool-item-shadow', '0 2px 8px rgba(0, 0, 0, 0.08)');
+      root.style.setProperty('--tool-item-hover-shadow', `0 4px 16px rgba(${this.hexToRgb(colors.primary)}, 0.2)`);
+      root.style.setProperty('--tool-icon-color', colors.textHigh);
+      root.style.setProperty('--tool-name-color', colors.textLow);
+    }
+  }
+
+  hexToRgb(hex) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? 
+      `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : 
+      '0, 0, 0';
+  }
+
+  savePreferences() {
+    localStorage.setItem('skin-theme', this.currentSkin);
+    localStorage.setItem('theme', this.currentMode);
+  }
+
+  refreshIcons() {
+    // 刷新工具图标，确保图标背景色正确更新
+    if (typeof refreshToolIcons === 'function') {
+      refreshToolIcons();
+    }
+  }
+
+  updateSkinSelector() {
+    // 更新皮肤选择器的显示状态
+    const currentSkinEl = document.querySelector('.current-skin-name');
+    const currentSkinIcon = document.querySelector('.current-skin-icon');
+    
+    if (currentSkinEl) {
+      currentSkinEl.textContent = SKIN_THEMES[this.currentSkin].name;
+    }
+    
+    if (currentSkinIcon) {
+      currentSkinIcon.className = `bi ${SKIN_THEMES[this.currentSkin].icon}`;
+    }
+    
+    // 更新皮肤选项的选中状态
+    document.querySelectorAll('.skin-option').forEach(option => {
+      const skinName = option.getAttribute('data-skin');
+      option.classList.toggle('active', skinName === this.currentSkin);
+    });
+  }
+
+  updateModeToggle() {
+    // 更新模式切换按钮的显示
+    const themeToggleBtn = document.getElementById('theme-toggle-btn');
+    if (themeToggleBtn) {
+      if (this.currentMode === 'dark') {
+        themeToggleBtn.innerHTML = '<i class="bi bi-sun"></i> 亮色模式';
+      } else {
+        themeToggleBtn.innerHTML = '<i class="bi bi-moon"></i> 暗黑模式';
+      }
+    }
+    
+    // 更新皮肤选择器中的模式切换按钮
+    const skinModeToggle = document.querySelector('.skin-mode-toggle');
+    if (skinModeToggle) {
+      const icon = skinModeToggle.querySelector('i');
+      const text = skinModeToggle.querySelector('span');
+      if (this.currentMode === 'dark') {
+        if (icon) icon.className = 'bi bi-sun';
+        if (text) text.textContent = '亮色模式';
+      } else {
+        if (icon) icon.className = 'bi bi-moon';
+        if (text) text.textContent = '暗黑模式';
+      }
+    }
+  }
+
+  bindEvents() {
+    // 皮肤选择器展开/收起事件
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('.skin-expand-btn')) {
+        this.toggleSkinSelector();
+      }
+      
+      if (e.target.closest('.skin-option')) {
+        const skinName = e.target.closest('.skin-option').getAttribute('data-skin');
+        this.setSkin(skinName);
+      }
+      
+      if (e.target.closest('.skin-mode-toggle')) {
+        this.toggleMode();
+      }
+    });
+  }
+
+  toggleSkinSelector() {
+    const skinSelector = document.querySelector('.skin-selector');
+    if (skinSelector) {
+      skinSelector.classList.toggle('expanded');
+      
+      // 更新展开按钮的图标
+      const expandBtn = skinSelector.querySelector('.skin-expand-btn i');
+      if (expandBtn) {
+        if (skinSelector.classList.contains('expanded')) {
+          expandBtn.className = 'bi bi-chevron-up';
+        } else {
+          expandBtn.className = 'bi bi-chevron-down';
+        }
+      }
+    }
+  }
+
+  getCurrentSkin() {
+    return this.currentSkin;
+  }
+
+  getCurrentMode() {
+    return this.currentMode;
+  }
+
+  getSkinList() {
+    return Object.keys(SKIN_THEMES).map(key => ({
+      key,
+      name: SKIN_THEMES[key].name,
+      icon: SKIN_THEMES[key].icon
+    }));
+  }
+}
+
+// 创建全局主题管理器实例
+let themeManager = null;
+
 // DOM元素
 const categoryMenu = document.getElementById('category-menu');
 const toolsGrid = document.getElementById('tools-grid');
@@ -53,7 +566,8 @@ async function init() {
   // 显示页面加载动画
   showPageLoader();
   
-  // 粒子系统已移除
+  // 初始化主题管理器
+  themeManager = new ThemeManager();
   
   // 更新时间信息（确保时间准确）
   updateTimeInfo();
@@ -75,10 +589,21 @@ async function init() {
   setTimeout(() => {
     hidePageLoader();
     
+    // 初始化皮肤选择器
+    initSkinSelector();
+    
     // 确保图标背景色正确设置
     if (window.themeInitialized) {
       refreshToolIcons();
     }
+    
+    // 验证用户偏好持久化功能
+    setTimeout(() => {
+      const isValid = validatePersistence();
+      if (isValid) {
+        console.log('✅ 用户皮肤切换功能初始化成功');
+      }
+    }, 500);
   }, 800);
 }
 
@@ -624,11 +1149,23 @@ class InteractionManager {
 function addEventListeners() {
   // 主页菜单项点击事件
   const homeMenuItem = document.querySelector('[data-category="all"]');
-  homeMenuItem.addEventListener('click', () => showTools('all'));
+  if (homeMenuItem) {
+    homeMenuItem.addEventListener('click', () => showTools('all'));
+  }
 
-  // 暗黑模式切换按钮点击事件
+  // 原有的主题切换按钮点击事件（兼容性）
   const themeToggleBtn = document.getElementById('theme-toggle-btn');
-  themeToggleBtn.addEventListener('click', toggleTheme);
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', () => {
+      if (themeManager) {
+        themeManager.toggleMode();
+      } else {
+        toggleTheme(); // fallback
+      }
+    });
+  }
+
+  // 皮肤选择器事件监听器已在ThemeManager中处理
 
   // 移动端汉堡菜单事件监听器
   addMobileMenuListeners();
@@ -1176,28 +1713,82 @@ function initTouchSupport() {
   }
 }
 
-// 切换主题模式
-function toggleTheme() {
-  const currentTheme = document.documentElement.getAttribute('data-theme');
-  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-
-  // 应用新主题
-  document.documentElement.setAttribute('data-theme', newTheme);
-
-  // 保存用户选择到localStorage
-  localStorage.setItem('theme', newTheme);
-
-  // 更新按钮文本和图标
-  const themeToggleBtn = document.getElementById('theme-toggle-btn');
-  const icon = themeToggleBtn.querySelector('i');
-  if (newTheme === 'dark') {
-    themeToggleBtn.innerHTML = '<i class="bi bi-sun"></i> 亮色模式';
-  } else {
-    themeToggleBtn.innerHTML = '<i class="bi bi-moon"></i> 暗黑模式';
+// 初始化皮肤选择器
+function initSkinSelector() {
+  if (!themeManager) {
+    console.warn('主题管理器未初始化');
+    return;
   }
   
-  // 重新生成工具图标，确保图标背景色正确更新
-  refreshToolIcons();
+  // 更新当前皮肤显示
+  updateCurrentSkinDisplay();
+  
+  // 更新皮肤选项状态
+  updateSkinOptionsState();
+  
+  // 更新模式切换按钮
+  updateModeToggleDisplay();
+}
+
+// 更新当前皮肤显示
+function updateCurrentSkinDisplay() {
+  const currentSkinName = document.querySelector('.current-skin-name');
+  const currentSkinIcon = document.querySelector('.current-skin-icon');
+  
+  if (currentSkinName && currentSkinIcon) {
+    const currentSkin = themeManager.getCurrentSkin();
+    const skinConfig = SKIN_THEMES[currentSkin];
+    
+    currentSkinName.textContent = skinConfig.name;
+    currentSkinIcon.className = `bi ${skinConfig.icon} current-skin-icon`;
+  }
+}
+
+// 更新皮肤选项状态
+function updateSkinOptionsState() {
+  const currentSkin = themeManager.getCurrentSkin();
+  
+  document.querySelectorAll('.skin-option').forEach(option => {
+    const skinName = option.getAttribute('data-skin');
+    option.classList.toggle('active', skinName === currentSkin);
+  });
+}
+
+// 更新模式切换按钮显示
+function updateModeToggleDisplay() {
+  const currentMode = themeManager.getCurrentMode();
+  
+  // 更新侧边栏的主题切换按钮
+  const themeToggleBtn = document.getElementById('theme-toggle-btn');
+  if (themeToggleBtn) {
+    if (currentMode === 'dark') {
+      themeToggleBtn.innerHTML = '<i class="bi bi-sun"></i> 亮色模式';
+    } else {
+      themeToggleBtn.innerHTML = '<i class="bi bi-moon"></i> 暗黑模式';
+    }
+  }
+  
+  // 更新皮肤选择器中的模式切换按钮
+  const skinModeToggle = document.querySelector('.skin-mode-toggle');
+  if (skinModeToggle) {
+    const icon = skinModeToggle.querySelector('i');
+    const text = skinModeToggle.querySelector('span');
+    if (currentMode === 'dark') {
+      if (icon) icon.className = 'bi bi-sun';
+      if (text) text.textContent = '亮色模式';
+    } else {
+      if (icon) icon.className = 'bi bi-moon';
+      if (text) text.textContent = '暗黑模式';
+    }
+  }
+}
+// 切换主题模式（兼容原有接口）
+function toggleTheme() {
+  if (themeManager) {
+    themeManager.toggleMode();
+  } else {
+    console.warn('主题管理器未初始化');
+  }
 }
 
 // 刷新工具图标
@@ -1209,36 +1800,101 @@ function refreshToolIcons() {
   showTools(currentCategory);
 }
 
-// 初始化主题模式
-function initTheme() {
-  // 检查localStorage中是否有用户选择
-  const savedTheme = localStorage.getItem('theme');
-
-  // 检查系统偏好
-  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-  // 确定要应用的主题
-  let themeToApply;
-  if (savedTheme) {
-    themeToApply = savedTheme;
-  } else {
-    themeToApply = systemPrefersDark ? 'dark' : 'light';
-  }
-
-  // 应用主题
-  document.documentElement.setAttribute('data-theme', themeToApply);
-
-  // 更新按钮文本和图标
-  const themeToggleBtn = document.getElementById('theme-toggle-btn');
-  const icon = themeToggleBtn.querySelector('i');
-  if (themeToApply === 'dark') {
-    themeToggleBtn.innerHTML = '<i class="bi bi-sun"></i> 亮色模式';
-  } else {
-    themeToggleBtn.innerHTML = '<i class="bi bi-moon"></i> 暗黑模式';
+// 验证用户偏好持久化功能
+function validatePersistence() {
+  console.log('开始验证用户偏好持久化功能...');
+  
+  if (!themeManager) {
+    console.error('主题管理器未初始化，无法进行持久化测试');
+    return false;
   }
   
-  // 设置标志，表示主题已初始化
-  window.themeInitialized = true;
+  // 获取当前设置
+  const currentSkin = themeManager.getCurrentSkin();
+  const currentMode = themeManager.getCurrentMode();
+  
+  console.log('当前设置:', { currentSkin, currentMode });
+  
+  // 检查localStorage中的值
+  const savedSkin = localStorage.getItem('skin-theme');
+  const savedMode = localStorage.getItem('theme');
+  
+  console.log('保存的设置:', { savedSkin, savedMode });
+  
+  // 验证一致性
+  const skinMatch = savedSkin === currentSkin;
+  const modeMatch = savedMode === currentMode;
+  
+  if (skinMatch && modeMatch) {
+    console.log('✅ 用户偏好持久化功能正常工作');
+    return true;
+  } else {
+    console.warn('⚠️ 用户偏好持久化功能存在问题:', {
+      skinMatch,
+      modeMatch,
+      expected: { currentSkin, currentMode },
+      actual: { savedSkin, savedMode }
+    });
+    return false;
+  }
+}
+
+// 测试完整的皮肤切换流程
+function testSkinSwitching() {
+  if (!themeManager) {
+    console.error('主题管理器未初始化');
+    return;
+  }
+  
+  console.log('开始测试皮肤切换流程...');
+  
+  const testSequence = [
+    { skin: 'ocean', mode: 'light' },
+    { skin: 'forest', mode: 'dark' },
+    { skin: 'sunset', mode: 'light' },
+    { skin: 'purple', mode: 'dark' },
+    { skin: 'classic', mode: 'light' },
+    { skin: 'neon', mode: 'dark' }
+  ];
+  
+  let testIndex = 0;
+  
+  function runNextTest() {
+    if (testIndex >= testSequence.length) {
+      console.log('✅ 所有皮肤切换测试完成');
+      return;
+    }
+    
+    const test = testSequence[testIndex];
+    console.log(`测试 ${testIndex + 1}/${testSequence.length}: ${test.skin} - ${test.mode}`);
+    
+    themeManager.setSkin(test.skin);
+    themeManager.setMode(test.mode);
+    
+    // 验证设置是否正确应用
+    setTimeout(() => {
+      const currentSkin = themeManager.getCurrentSkin();
+      const currentMode = themeManager.getCurrentMode();
+      
+      if (currentSkin === test.skin && currentMode === test.mode) {
+        console.log(`✅ 测试 ${testIndex + 1} 通过:`, { currentSkin, currentMode });
+      } else {
+        console.error(`❌ 测试 ${testIndex + 1} 失败:`, {
+          expected: test,
+          actual: { currentSkin, currentMode }
+        });
+      }
+      
+      testIndex++;
+      setTimeout(runNextTest, 100);
+    }, 100);
+  }
+  
+  runNextTest();
+}
+function initTheme() {
+  // 现在由ThemeManager自动处理主题初始化
+  console.log('主题初始化由ThemeManager处理');
 }
 
 // 页面加载完成后初始化

@@ -113,6 +113,166 @@ textarea {
   --tool-name-color: var(--text-high);
 }
 
+/* 海洋蓝调皮肤主题 */
+[data-skin="ocean"] {
+  --primary-color: #0077BE;
+  --secondary-color: #0096C7;
+  --accent-color: #00B4D8;
+  --accent-green: #48CAE4;
+  --warning-color: #FFB703;
+  --danger-color: #FF6B6B;
+  --neon-pink: #00F5FF;
+  --neon-cyan: #40E0D0;
+  --neon-purple: #0096C7;
+  --text-high: #003566;
+  --text-mid: #0077BE;
+  --text-low: #0096C7;
+  --primary-bg: linear-gradient(135deg, #caf0f8, #ade8f4, #90e0ef);
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --elevated-bg: rgba(202, 240, 248, 0.8);
+  --border-glass: rgba(0, 181, 216, 0.1);
+  --border-neon: rgba(0, 245, 255, 0.3);
+  --glow-pink: 0 0 20px rgba(0, 245, 255, 0.5);
+  --glow-cyan: 0 0 20px rgba(64, 224, 208, 0.3);
+}
+
+[data-skin="ocean"][data-theme="dark"] {
+  --text-high: #FFFFFF;
+  --text-mid: #CAF0F8;
+  --text-low: #ADE8F4;
+  --primary-bg: linear-gradient(135deg, #001122, #002244, #003366);
+  --glass-bg: rgba(0, 34, 68, 0.6);
+  --elevated-bg: rgba(0, 34, 68, 0.8);
+}
+
+/* 森林绿意皮肤主题 */
+[data-skin="forest"] {
+  --primary-color: #2D5016;
+  --secondary-color: #52734D;
+  --accent-color: #73A942;
+  --accent-green: #B4C7A9;
+  --warning-color: #FF8500;
+  --danger-color: #E63946;
+  --neon-pink: #73A942;
+  --neon-cyan: #90C695;
+  --neon-purple: #52734D;
+  --text-high: #1B4332;
+  --text-mid: #2D5016;
+  --text-low: #52734D;
+  --primary-bg: linear-gradient(135deg, #f1faee, #e9f5db, #cfe1b9);
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --elevated-bg: rgba(241, 250, 238, 0.8);
+  --border-glass: rgba(115, 169, 66, 0.1);
+  --border-neon: rgba(144, 198, 149, 0.3);
+  --glow-pink: 0 0 20px rgba(115, 169, 66, 0.5);
+  --glow-cyan: 0 0 20px rgba(144, 198, 149, 0.3);
+}
+
+[data-skin="forest"][data-theme="dark"] {
+  --text-high: #FFFFFF;
+  --text-mid: #CFE1B9;
+  --text-low: #B4C7A9;
+  --primary-bg: linear-gradient(135deg, #081c15, #1b4332, #2d5016);
+  --glass-bg: rgba(27, 67, 50, 0.6);
+  --elevated-bg: rgba(27, 67, 50, 0.8);
+}
+
+/* 日落橙黄皮肤主题 */
+[data-skin="sunset"] {
+  --primary-color: #FF6D00;
+  --secondary-color: #FF8F00;
+  --accent-color: #FFB300;
+  --accent-green: #FFD54F;
+  --warning-color: #FF5722;
+  --danger-color: #D32F2F;
+  --neon-pink: #FF8F00;
+  --neon-cyan: #FFD54F;
+  --neon-purple: #FF6D00;
+  --text-high: #BF360C;
+  --text-mid: #E65100;
+  --text-low: #FF6D00;
+  --primary-bg: linear-gradient(135deg, #fff8e1, #ffecb3, #ffe082);
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --elevated-bg: rgba(255, 248, 225, 0.8);
+  --border-glass: rgba(255, 179, 0, 0.1);
+  --border-neon: rgba(255, 213, 79, 0.3);
+  --glow-pink: 0 0 20px rgba(255, 143, 0, 0.5);
+  --glow-cyan: 0 0 20px rgba(255, 213, 79, 0.3);
+}
+
+[data-skin="sunset"][data-theme="dark"] {
+  --text-high: #FFFFFF;
+  --text-mid: #FFF8E1;
+  --text-low: #FFECB3;
+  --primary-bg: linear-gradient(135deg, #3e2723, #5d4037, #8d6e63);
+  --glass-bg: rgba(62, 39, 35, 0.6);
+  --elevated-bg: rgba(62, 39, 35, 0.8);
+}
+
+/* 优雅紫色皮肤主题 */
+[data-skin="purple"] {
+  --primary-color: #6A1B9A;
+  --secondary-color: #8E24AA;
+  --accent-color: #AB47BC;
+  --accent-green: #CE93D8;
+  --warning-color: #FF9800;
+  --danger-color: #F44336;
+  --neon-pink: #AB47BC;
+  --neon-cyan: #CE93D8;
+  --neon-purple: #8E24AA;
+  --text-high: #4A148C;
+  --text-mid: #6A1B9A;
+  --text-low: #8E24AA;
+  --primary-bg: linear-gradient(135deg, #f3e5f5, #e1bee7, #ce93d8);
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --elevated-bg: rgba(243, 229, 245, 0.8);
+  --border-glass: rgba(171, 71, 188, 0.1);
+  --border-neon: rgba(206, 147, 216, 0.3);
+  --glow-pink: 0 0 20px rgba(171, 71, 188, 0.5);
+  --glow-cyan: 0 0 20px rgba(206, 147, 216, 0.3);
+}
+
+[data-skin="purple"][data-theme="dark"] {
+  --text-high: #FFFFFF;
+  --text-mid: #F3E5F5;
+  --text-low: #E1BEE7;
+  --primary-bg: linear-gradient(135deg, #1a0e1a, #2a1a2a, #3a2a3a);
+  --glass-bg: rgba(26, 14, 26, 0.6);
+  --elevated-bg: rgba(26, 14, 26, 0.8);
+}
+
+/* 经典灰调皮肤主题 */
+[data-skin="classic"] {
+  --primary-color: #424242;
+  --secondary-color: #616161;
+  --accent-color: #757575;
+  --accent-green: #9E9E9E;
+  --warning-color: #FF9800;
+  --danger-color: #F44336;
+  --neon-pink: #757575;
+  --neon-cyan: #9E9E9E;
+  --neon-purple: #616161;
+  --text-high: #212121;
+  --text-mid: #424242;
+  --text-low: #616161;
+  --primary-bg: linear-gradient(135deg, #fafafa, #f5f5f5, #eeeeee);
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --elevated-bg: rgba(250, 250, 250, 0.8);
+  --border-glass: rgba(117, 117, 117, 0.1);
+  --border-neon: rgba(158, 158, 158, 0.3);
+  --glow-pink: 0 0 20px rgba(117, 117, 117, 0.5);
+  --glow-cyan: 0 0 20px rgba(158, 158, 158, 0.3);
+}
+
+[data-skin="classic"][data-theme="dark"] {
+  --text-high: #FFFFFF;
+  --text-mid: #F5F5F5;
+  --text-low: #EEEEEE;
+  --primary-bg: linear-gradient(135deg, #121212, #1e1e1e, #2a2a2a);
+  --glass-bg: rgba(18, 18, 18, 0.6);
+  --elevated-bg: rgba(18, 18, 18, 0.8);
+}
+
 body {
   font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
   background: var(--bg-color);
@@ -659,6 +819,69 @@ body {
   .add-link-btn {
     width: 100%;
   }
+  
+  /* 移动端皮肤选择器适配 */
+  .skin-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    padding: 12px;
+  }
+  
+  .skin-option {
+    padding: 8px 4px;
+    font-size: 12px;
+  }
+  
+  .color-dot {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .skin-colors {
+    gap: 3px;
+    margin-bottom: 6px;
+  }
+  
+  .skin-label {
+    font-size: 11px;
+  }
+  
+  .current-skin {
+    padding: 12px 16px;
+  }
+  
+  .current-skin-name {
+    font-size: 14px;
+  }
+  
+  .skin-selector.expanded .skin-options {
+    max-height: 200px;
+  }
+  
+  .skin-mode-toggle {
+    padding: 10px 12px;
+    margin: 6px 12px 12px;
+  }
+  
+  .skin-mode-toggle span {
+    font-size: 13px;
+  }
+}
+
+/* 小屏幕设备优化 */
+@media (max-width: 480px) {
+  .skin-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  
+  .skin-option {
+    padding: 10px 6px;
+  }
+  
+  .skin-selector.expanded .skin-options {
+    max-height: 240px;
+  }
 }
 
 .mobile-search.active {
@@ -977,6 +1200,258 @@ body {
 .theme-toggle li:hover {
   background-color: var(--menu-hover-bg);
   color: var(--menu-active-color);
+}
+
+/* 皮肤选择器样式 */
+.skin-selector {
+  margin-top: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-glass);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.current-skin {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.current-skin:hover {
+  background-color: var(--menu-hover-bg);
+}
+
+.current-skin-preview {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--neon-pink), var(--neon-cyan));
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.current-skin-preview i {
+  font-size: 12px;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.current-skin-name {
+  flex: 1;
+  font-size: 16px;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+.skin-expand-btn {
+  background: none;
+  border: none;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.skin-expand-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-color);
+}
+
+.skin-expand-btn i {
+  font-size: 14px;
+  transition: transform 0.3s ease;
+}
+
+.skin-selector.expanded .skin-expand-btn i {
+  transform: rotate(180deg);
+}
+
+/* 皮肤选项容器 */
+.skin-options {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.skin-selector.expanded .skin-options {
+  max-height: 280px;
+}
+
+.skin-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  padding: 16px;
+}
+
+.skin-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 8px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(255, 255, 255, 0.03);
+  transform: translateY(10px);
+  opacity: 0;
+}
+
+.skin-selector.expanded .skin-option {
+  animation: slideInUp 0.3s ease forwards;
+}
+
+.skin-option:nth-child(1) { animation-delay: 0.1s; }
+.skin-option:nth-child(2) { animation-delay: 0.15s; }
+.skin-option:nth-child(3) { animation-delay: 0.2s; }
+.skin-option:nth-child(4) { animation-delay: 0.25s; }
+.skin-option:nth-child(5) { animation-delay: 0.3s; }
+.skin-option:nth-child(6) { animation-delay: 0.35s; }
+
+.skin-option:hover {
+  background: var(--menu-hover-bg);
+  border-color: var(--border-neon);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.skin-option.active {
+  border-color: var(--neon-pink);
+  background: rgba(255, 0, 102, 0.1);
+  box-shadow: var(--glow-pink);
+}
+
+.skin-colors {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.color-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* 各皮肤主题的颜色点 */
+[data-skin="neon"] .skin-option[data-skin="neon"] .color-dot.primary { background: #FF0066; }
+[data-skin="neon"] .skin-option[data-skin="neon"] .color-dot.secondary { background: #4500FF; }
+[data-skin="neon"] .skin-option[data-skin="neon"] .color-dot.accent { background: #00F6FF; }
+
+[data-skin="ocean"] .skin-option[data-skin="ocean"] .color-dot.primary { background: #0077BE; }
+[data-skin="ocean"] .skin-option[data-skin="ocean"] .color-dot.secondary { background: #00F5FF; }
+[data-skin="ocean"] .skin-option[data-skin="ocean"] .color-dot.accent { background: #40E0D0; }
+
+[data-skin="forest"] .skin-option[data-skin="forest"] .color-dot.primary { background: #2D5016; }
+[data-skin="forest"] .skin-option[data-skin="forest"] .color-dot.secondary { background: #73A942; }
+[data-skin="forest"] .skin-option[data-skin="forest"] .color-dot.accent { background: #90C695; }
+
+[data-skin="sunset"] .skin-option[data-skin="sunset"] .color-dot.primary { background: #FF6D00; }
+[data-skin="sunset"] .skin-option[data-skin="sunset"] .color-dot.secondary { background: #FF8F00; }
+[data-skin="sunset"] .skin-option[data-skin="sunset"] .color-dot.accent { background: #FFD54F; }
+
+[data-skin="purple"] .skin-option[data-skin="purple"] .color-dot.primary { background: #6A1B9A; }
+[data-skin="purple"] .skin-option[data-skin="purple"] .color-dot.secondary { background: #AB47BC; }
+[data-skin="purple"] .skin-option[data-skin="purple"] .color-dot.accent { background: #CE93D8; }
+
+[data-skin="classic"] .skin-option[data-skin="classic"] .color-dot.primary { background: #424242; }
+[data-skin="classic"] .skin-option[data-skin="classic"] .color-dot.secondary { background: #757575; }
+[data-skin="classic"] .skin-option[data-skin="classic"] .color-dot.accent { background: #9E9E9E; }
+
+/* 通用颜色点样式（当皮肤不匹配时使用） */
+.skin-option[data-skin="neon"] .color-dot.primary { background: #FF0066; }
+.skin-option[data-skin="neon"] .color-dot.secondary { background: #4500FF; }
+.skin-option[data-skin="neon"] .color-dot.accent { background: #00F6FF; }
+
+.skin-option[data-skin="ocean"] .color-dot.primary { background: #0077BE; }
+.skin-option[data-skin="ocean"] .color-dot.secondary { background: #00F5FF; }
+.skin-option[data-skin="ocean"] .color-dot.accent { background: #40E0D0; }
+
+.skin-option[data-skin="forest"] .color-dot.primary { background: #2D5016; }
+.skin-option[data-skin="forest"] .color-dot.secondary { background: #73A942; }
+.skin-option[data-skin="forest"] .color-dot.accent { background: #90C695; }
+
+.skin-option[data-skin="sunset"] .color-dot.primary { background: #FF6D00; }
+.skin-option[data-skin="sunset"] .color-dot.secondary { background: #FF8F00; }
+.skin-option[data-skin="sunset"] .color-dot.accent { background: #FFD54F; }
+
+.skin-option[data-skin="purple"] .color-dot.primary { background: #6A1B9A; }
+.skin-option[data-skin="purple"] .color-dot.secondary { background: #AB47BC; }
+.skin-option[data-skin="purple"] .color-dot.accent { background: #CE93D8; }
+
+.skin-option[data-skin="classic"] .color-dot.primary { background: #424242; }
+.skin-option[data-skin="classic"] .color-dot.secondary { background: #757575; }
+.skin-option[data-skin="classic"] .color-dot.accent { background: #9E9E9E; }
+
+.skin-label {
+  font-size: 12px;
+  color: var(--text-mid);
+  text-align: center;
+  font-weight: 500;
+}
+
+/* 模式切换按钮 */
+.skin-mode-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  margin: 8px 16px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-glass);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  gap: 8px;
+}
+
+.skin-mode-toggle:hover {
+  background: var(--menu-hover-bg);
+  border-color: var(--border-neon);
+}
+
+.skin-mode-toggle i {
+  font-size: 16px;
+  color: var(--neon-cyan);
+}
+
+.skin-mode-toggle span {
+  font-size: 14px;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+/* 皮肤切换动画 */
+.theme-transition {
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.skin-switching {
+  animation: skinFade 0.6s ease-in-out;
+}
+
+@keyframes skinFade {
+  0% { opacity: 1; }
+  50% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+@keyframes slideInUp {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 /* 主内容区样式 */
@@ -1418,6 +1893,17 @@ button:focus {
   51%, 100% { border-color: transparent; }
 }
 
+.tool-item a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
+  height: 100%;
+}
+
 .tool-icon {
   font-size: 36px;
   margin-bottom: 15px;
@@ -1425,6 +1911,9 @@ button:focus {
   width: 48px;
   height: 48px;
   object-fit: contain;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .text-icon {
@@ -1437,6 +1926,8 @@ button:focus {
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 15px;
+  margin-left: auto;
+  margin-right: auto;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -1583,11 +2074,23 @@ button:focus {
     padding: 12px;
   }
   
+  .tool-item a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
   .tool-icon {
     font-size: 28px;
     margin-bottom: 10px;
     width: 36px;
     height: 36px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
   }
   
   .text-icon {
@@ -1595,6 +2098,8 @@ button:focus {
     height: 36px;
     font-size: 16px;
     margin-bottom: 10px;
+    margin-left: auto;
+    margin-right: auto;
   }
   
   .tool-name {
@@ -1607,16 +2112,30 @@ button:focus {
     border-radius: 8px;
   }
 
+  .tool-item a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
   .tool-icon {
     font-size: 28px;
     margin-bottom: 8px;
     width: 36px;
     height: 36px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .text-icon {
     width: 36px;
     height: 36px;
+    margin-left: auto;
+    margin-right: auto;
     font-size: 16px;
     margin-bottom: 8px;
   }
