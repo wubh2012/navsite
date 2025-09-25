@@ -53,7 +53,7 @@ textarea {
   /* 霓虹风格主题变量 - 基于优化建议 */
   --primary-color: #FF0066; /* Neo magenta */
   --secondary-color: #4500FF; /* Neo purple */
-  --accent-color: #0006FF; /* Accent blue */
+  --accent-color: #00F6FF;
   --accent-green: #00FFAA; /* Accent green */
   --warning-color: #FF8800; /* Warning orange */
   --danger-color: #FF4D4F; /* Danger red */
@@ -79,7 +79,10 @@ textarea {
   --glow-pink: 0 0 20px rgba(255, 0, 102, 0.5);
   --glow-cyan: 0 0 20px rgba(0, 246, 255, 0.3);
   
-  /* 亮色模式变量 - 基于霓虹风格 */
+}
+
+/* 亮色模式变量 - 基于霓虹风格 */
+[data-theme="light"] {
   --bg-color: #f5f7fa;
   --text-color: var(--text-low);
   --sidebar-bg: #fff;
@@ -281,6 +284,63 @@ body {
   overflow-x: hidden;
   font-weight: 400;
   line-height: 1.5;
+  position: relative;
+}
+
+/* 动态粒子背景 */
+.particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  background: var(--accent-color);
+  border-radius: 50%;
+  animation: float 6s infinite linear;
+  opacity: 0.6;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.6;
+  }
+  90% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-100px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* 霓虹网格背景 */
+.grid-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(255, 0, 102, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 0, 102, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+  z-index: 1;
+  animation: grid-pulse 4s ease-in-out infinite;
+}
+
+@keyframes grid-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
 }
 
 /* 🎭 玻璃拟态效果 */
@@ -1087,6 +1147,8 @@ body {
 .container {
   display: flex;
   min-height: 100vh;
+  position: relative;
+  z-index: 10;
 }
 
 /* 左侧侧边栏样式 */
@@ -1108,6 +1170,7 @@ body {
 .user-avatar {
   text-align: center;
   padding: 20px 0;
+  position: relative;
 }
 
 .user-avatar img {
@@ -1115,7 +1178,38 @@ body {
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 
+    0 0 20px rgba(255, 0, 102, 0.6),
+    0 0 40px rgba(255, 0, 102, 0.4),
+    0 0 60px rgba(255, 0, 102, 0.2);
+  border: 3px solid var(--accent-color);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: avatar-glow 3s ease-in-out infinite;
+}
+
+.user-avatar:hover img {
+  transform: scale(1.2) rotate(10deg);
+  box-shadow: 
+    0 0 30px rgba(255, 0, 102, 0.8),
+    0 0 60px rgba(255, 0, 102, 0.6),
+    0 0 90px rgba(255, 0, 102, 0.4),
+    0 0 120px rgba(0, 246, 255, 0.3);
+  
+}
+
+@keyframes avatar-glow {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px rgba(255, 0, 102, 0.6),
+      0 0 40px rgba(255, 0, 102, 0.4),
+      0 0 60px rgba(255, 0, 102, 0.2);
+  }
+  50% {
+    box-shadow: 
+      0 0 30px rgba(255, 0, 102, 0.8),
+      0 0 60px rgba(255, 0, 102, 0.6),
+      0 0 90px rgba(255, 0, 102, 0.4);
+  }
 }
 
 .nav-menu {
@@ -1468,20 +1562,36 @@ body {
 /* 顶部信息区样式 */
 .top-info {
   text-align: center;
-  padding: 20px 0;
-  margin-bottom: 30px;
+  padding: 40px 0 60px;
+  position: relative;
 }
 
 .current-time {
-  font-size: 48px;
-  font-weight: 300;
-  color: var(--time-color);
-  margin-bottom: 5px;
+  font-family: 'Orbitron', monospace;
+  font-size: 72px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 20px rgba(255, 0, 102, 0.5));
+  margin-bottom: 10px;
+  animation: time-pulse 2s ease-in-out infinite;
+}
+
+@keyframes time-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 20px rgba(255, 0, 102, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 30px rgba(255, 0, 102, 0.8));
+  }
 }
 
 .date-info {
-  font-size: 16px;
-  color: var(--date-color);
+  font-size: 18px;
+  color: var(--text-mid);
+  text-shadow: 0 0 10px rgba(0, 246, 255, 0.3);
 }
 
 /* 工具图标列表样式 */
@@ -1504,7 +1614,11 @@ body {
 
 .tool-item {
   @apply glass-container hover-lift click-bounce;
-  padding: 20px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-glass);
+  border-radius: 20px;
+  padding: 30px 20px;
   text-align: center;
   cursor: pointer;
   user-select: none;
@@ -1514,6 +1628,7 @@ body {
   min-height: 100px;
   text-decoration: none;
   color: inherit;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .tool-item::before {
@@ -1525,9 +1640,9 @@ body {
   bottom: 0;
   background: linear-gradient(
     135deg,
-    rgba(255, 0, 102, 0.08) 0%,
+    rgba(255, 0, 102, 0.1) 0%,
     transparent 50%,
-    rgba(0, 246, 255, 0.08) 100%
+    rgba(0, 246, 255, 0.1) 100%
   );
   pointer-events: none;
   opacity: 0;
@@ -1539,7 +1654,18 @@ body {
 }
 
 .tool-item:hover {
-  box-shadow: var(--glow-pink);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 0 40px rgba(255, 0, 102, 0.4),
+    inset 0 0 20px rgba(255, 255, 255, 0.1);
+  transform: translateY(-10px) scale(1.05);
+  border-color: var(--primary-color);
+}
+
+.tool-item:hover .tool-icon {
+  transform: scale(1.2);
+  color: var(--primary-color);
+  filter: drop-shadow(0 0 20px rgba(255, 0, 102, 0.8));
 }
 
 /* 暗黑模式下的玻璃效果 */
@@ -1905,15 +2031,18 @@ button:focus {
 }
 
 .tool-icon {
-  font-size: 36px;
+  font-size: 48px;
   margin-bottom: 15px;
-  color: var(--tool-icon-color);
+  color: var(--accent-color);
   width: 48px;
   height: 48px;
+  border-radius: 50%;
   object-fit: contain;
   display: block;
   margin-left: auto;
   margin-right: auto;
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 0 10px rgba(0, 246, 255, 0.5));
 }
 
 .text-icon {
@@ -1933,7 +2062,7 @@ button:focus {
 
 .tool-name {
   font-size: 14px;
-  color: var(--tool-name-color);
+  color: var(--text-color);
   font-weight: 500;
   white-space: nowrap; /* 强制单行显示 */
   overflow: hidden;
@@ -1941,6 +2070,7 @@ button:focus {
   max-width: 100%; /* 限制最大宽度 */
   width: 100%;
   text-align: center;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
 /* 响应式设计 - 移动优先策略 */
@@ -2057,7 +2187,7 @@ button:focus {
   }
 
   .current-time {
-    font-size: 32px;
+    font-size: 42px;
   }
 
   .date-info {
@@ -2216,7 +2346,7 @@ button:focus {
   }
 
   .current-time {
-    font-size: 40px;
+    font-size: 56px;
   }
 
   .tools-grid {

@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>水果导航 - Neon Style</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #FF0066;
+            --secondary-color: #4500FF;
+            --accent-color: #00F6FF;
+            --accent-green: #00FFAA;
+            --warning-color: #FF8800;
+            --text-high: #FFFFFF;
+            --text-mid: #8B86BD;
+            --text-low: #5E55E7;
+            --bg-dark: linear-gradient(135deg, #050012, #0D0122, #1a0033);
+            --glass-bg: rgba(13, 1, 34, 0.8);
+            --border-glass: rgba(255, 255, 255, 0.1);
+            --glow-pink: 0 0 20px rgba(255, 0, 102, 0.5);
+            --glow-cyan: 0 0 20px rgba(0, 246, 255, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-high);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 动态粒子背景 */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--accent-color);
+            border-radius: 50%;
+            animation: float 6s infinite linear;
+            opacity: 0.6;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* 霓虹网格背景 */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 0, 102, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 0, 102, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 1;
+            animation: grid-pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes grid-pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* 侧边栏美化 */
+        .sidebar {
+            width: 280px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--border-glass);
+            padding: 20px;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 0, 102, 0.1) 0%,
+                transparent 50%,
+                rgba(0, 246, 255, 0.1) 100%
+            );
+            pointer-events: none;
+        }
+
+        .user-avatar {
+            text-align: center;
+            padding: 30px 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .user-avatar img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid var(--accent-color);
+            box-shadow: var(--glow-cyan);
+            animation: avatar-glow 2s ease-in-out infinite alternate;
+            transition: all 0.3s ease;
+        }
+
+        .user-avatar img:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(0, 246, 255, 0.8);
+        }
+
+        @keyframes avatar-glow {
+            from { box-shadow: 0 0 15px rgba(0, 246, 255, 0.5); }
+            to { box-shadow: 0 0 25px rgba(0, 246, 255, 0.8); }
+        }
+
+        .nav-menu {
+            flex: 1;
+            position: relative;
+            z-index: 2;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            margin: 8px 0;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-glass);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            font-size: 16px;
+        }
+
+        .nav-menu li::before {
+            content: '';
+            position: absolute;
+            left: -100%;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 0, 102, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-menu li:hover::before {
+            left: 100%;
+        }
+
+        .nav-menu li:hover {
+            transform: translateX(8px);
+            background: rgba(255, 0, 102, 0.15);
+            border-color: var(--primary-color);
+            box-shadow: var(--glow-pink);
+        }
+
+        .nav-menu li.active {
+            background: linear-gradient(135deg, rgba(255, 0, 102, 0.2), rgba(69, 0, 255, 0.15));
+            border-color: var(--primary-color);
+            box-shadow: var(--glow-pink);
+            transform: translateX(5px);
+        }
+
+        .nav-menu li i {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            color: var(--accent-color);
+            font-size: 18px;
+        }
+
+        /* 主内容区域 */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* 时间显示美化 */
+        .top-info {
+            text-align: center;
+            padding: 40px 0 60px;
+            position: relative;
+        }
+
+        .current-time {
+            font-family: 'Orbitron', monospace;
+            font-size: 72px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(255, 0, 102, 0.5));
+            margin-bottom: 10px;
+            animation: time-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes time-pulse {
+            0%, 100% {
+                filter: drop-shadow(0 0 20px rgba(255, 0, 102, 0.5));
+            }
+            50% {
+                filter: drop-shadow(0 0 30px rgba(255, 0, 102, 0.8));
+            }
+        }
+
+        .date-info {
+            font-size: 18px;
+            color: var(--text-mid);
+            text-shadow: 0 0 10px rgba(0, 246, 255, 0.3);
+        }
+
+        /* 工具网格美化 */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .tool-item {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 1/1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .tool-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 0, 102, 0.1) 0%,
+                transparent 50%,
+                rgba(0, 246, 255, 0.1) 100%
+            );
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .tool-item:hover::before {
+            opacity: 1;
+        }
+
+        .tool-item:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 40px rgba(255, 0, 102, 0.4),
+                inset 0 0 20px rgba(255, 255, 255, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .tool-item:active {
+            transform: translateY(-8px) scale(1.02);
+        }
+
+        .tool-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: var(--accent-color);
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 0 10px rgba(0, 246, 255, 0.5));
+        }
+
+        .tool-item:hover .tool-icon {
+            transform: scale(1.2);
+            color: var(--primary-color);
+            filter: drop-shadow(0 0 20px rgba(255, 0, 102, 0.8));
+        }
+
+        .tool-name {
+            font-size: 14px;
+            color: var(--text-high);
+            font-weight: 500;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        /* 添加按钮美化 */
+        .add-link-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 
+                0 10px 30px rgba(255, 0, 102, 0.4),
+                0 0 20px rgba(255, 0, 102, 0.6);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            animation: float-btn 3s ease-in-out infinite;
+        }
+
+        @keyframes float-btn {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .add-link-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 
+                0 15px 40px rgba(255, 0, 102, 0.6),
+                0 0 30px rgba(255, 0, 102, 0.8);
+        }
+
+        .add-link-btn:active {
+            transform: scale(1.05);
+        }
+
+        /* 主题切换按钮 */
+        .theme-toggle {
+            margin-top: auto;
+            padding: 20px 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .theme-toggle li {
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            border-radius: 10px;
+        }
+
+        .theme-toggle li:hover {
+            background: rgba(255, 0, 102, 0.15);
+            transform: translateX(5px);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 250px;
+            }
+            .main-content {
+                margin-left: 250px;
+            }
+            .current-time {
+                font-size: 56px;
+            }
+            .tools-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                transition: left 0.3s ease;
+                z-index: 1001;
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            
+            .mobile-header {
+                display: block;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1000;
+                background: var(--glass-bg);
+                backdrop-filter: blur(20px);
+                border-bottom: 1px solid var(--border-glass);
+                padding: 15px 20px;
+            }
+            
+            .mobile-nav {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            
+            .hamburger-btn {
+                background: none;
+                border: none;
+                color: var(--text-high);
+                font-size: 24px;
+                cursor: pointer;
+                padding: 8px;
+                border-radius: 8px;
+                transition: all 0.3s ease;
+            }
+            
+            .hamburger-btn:hover {
+                background: rgba(255, 0, 102, 0.2);
+                box-shadow: 0 0 15px rgba(255, 0, 102, 0.5);
+            }
+            
+            .mobile-logo {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                font-size: 18px;
+                font-weight: 600;
+            }
+            
+            .mobile-logo img {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+            }
+            
+            .container {
+                padding-top: 70px;
+            }
+            
+            .current-time {
+                font-size: 42px;
+            }
+            
+            .tools-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 12px;
+            }
+            
+            .tool-item {
+                padding: 20px 15px;
+            }
+            
+            .tool-icon {
+                font-size: 36px;
+                margin-bottom: 10px;
+            }
+            
+            .tool-name {
+                font-size: 12px;
+            }
+        }
+
+        /* 加载动画 */
+        .tool-item {
+            animation: slideInUp 0.6s ease forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .tool-item:nth-child(1) { animation-delay: 0.1s; }
+        .tool-item:nth-child(2) { animation-delay: 0.2s; }
+        .tool-item:nth-child(3) { animation-delay: 0.3s; }
+        .tool-item:nth-child(4) { animation-delay: 0.4s; }
+        .tool-item:nth-child(5) { animation-delay: 0.5s; }
+        .tool-item:nth-child(6) { animation-delay: 0.6s; }
+        .tool-item:nth-child(7) { animation-delay: 0.7s; }
+        .tool-item:nth-child(8) { animation-delay: 0.8s; }
+        .tool-item:nth-child(9) { animation-delay: 0.9s; }
+        .tool-item:nth-child(10) { animation-delay: 1.0s; }
+
+        @keyframes slideInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 滚动条美化 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(255, 0, 102, 0.5);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-color);
+        }
+
+        /* 移动端overlay */
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .mobile-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 动态背景 -->
+    <div class="grid-bg"></div>
+    <div class="particles" id="particles"></div>
+
+    <!-- 移动端顶部导航栏 -->
+    <header class="mobile-header" style="display: none;">
+        <div class="mobile-nav">
+            <button class="hamburger-btn" id="hamburger-btn">
+                <i class="bi bi-list"></i>
+            </button>
+            <div class="mobile-logo">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23FF0066;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%2300F6FF;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='45' fill='url(%23grad)' /%3E%3Ctext x='50' y='60' text-anchor='middle' fill='white' font-size='40' font-weight='bold'%3E🍓%3C/text%3E%3C/svg%3E" alt="水果导航">
+                <span>水果导航</span>
+            </div>
+            <button class="search-btn">
+                <i class="bi bi-search"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- 移动端遮罩 -->
+    <div class="mobile-overlay" id="mobile-overlay"></div>
+
+    <div class="container">
+        <!-- 侧边栏 -->
+        <aside class="sidebar" id="sidebar">
+            <div class="user-avatar">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23FF0066;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%2300F6FF;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='45' fill='url(%23grad)' /%3E%3Ctext x='50' y='60' text-anchor='middle' fill='white' font-size='40' font-weight='bold'%3E🍓%3C/text%3E%3C/svg%3E" alt="头像">
+            </div>
+
+            <nav class="nav-menu">
+                <ul>
+                    <li class="active">
+                        <i class="bi bi-house-door"></i>
+                        <span>全部</span>
+                    </li>
+                    <li>
+                        <i class="bi bi-code-slash"></i>
+                        <span>Code</span>
+                    </li>
+                    <li>
+                        <i class="bi bi-film"></i>
+                        <span>影视</span>
+                    </li>
+                    <li>
+                        <i class="bi bi-robot"></i>
+                        <span>AI</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="theme-toggle">
+                <ul>
+                    <li>
+                        <i class="bi bi-moon"></i>
+                        <span>暗黑模式</span>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 顶部时间信息 -->
+            <header class="top-info">
+                <div class="current-time" id="current-time">10:51:20</div>
+                <div class="date-info" id="date-info">9月8日 星期一 七月十七</div>
+            </header>
+
+            <!-- 工具网格 -->
+            <div class="tools-grid">
+                <div class="tool-item">
+                    <div class="tool-icon">🐧</div>
+                    <div class="tool-name">Linux.do</div>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">💬</div>
+                    <div class="tool-name">微信阅读</div>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">🌿</div>
+                    <div class="tool-name">水草手头</div>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">✈️</div>
+                    <div class="tool-name">即梦</div>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">😺</div>
+                    <div class="tool-name">狐子</div>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">❌</div>
+                    <div class="tool-name">X</div>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">📺</div>
+                    <div class="tool-name">油管</div>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">🔍</div>
+                    <div class="tool-name">DeepSeek</div>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">💼</div>
+                    <div class="tool-name">豆包</div>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">📝</div>
+                    <div class="tool-name">即刻</div>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">🐦</div>
+                    <div class="tool-name">微博</div>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">📧</div>
+                    <div class="tool-name">Gmail</div>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">👨‍💻</div>
+                    <div class="tool-name">Github</div>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">🎨</div>
+                    <div class="tool-name">element-plus</div>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">💚</div>
+                    <div class="tool-name">Vue3</div>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">☕</div>
+                    <div class="tool-name">Java全栈</div>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">🅱️</div>
+                    <div class="tool-name">B站</div>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">🎬</div>
+                    <div class="tool-name">低端影视</div>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">🎭</div>
+                    <div class="tool-name">观影</div>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-icon">🎞️</div>
+                    <div class="tool-name">影视在线</div>
+                </div>
+            </div>
+
+            <!-- 添加网站按钮 -->
+            <button class="add-link-btn" title="添加网站">
+                <i class="bi bi-plus"></i>
+            </button>
+        </main>
+    </div>
+
+    <script>
+        // 实时时间更新
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toTimeString().split(' ')[0];
+            const dateString = `${now.getMonth() + 1}月${now.getDate()}日 ${['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'][now.getDay()]}`;
+            
+            document.getElementById('current-time').textContent = timeString;
+            document.getElementById('date-info').textContent = dateString;
+        }
+
+        // 初始化时间并设置定时更新
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        // 动态粒子生成
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            
+            const size = Math.random() * 4 + 1;
+            const startX = Math.random() * window.innerWidth;
+            const duration = Math.random() * 3 + 3;
+            
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+            particle.style.left = startX + 'px';
+            particle.style.animationDuration = duration + 's';
+            
+            // 随机颜色
+            const colors = ['#FF0066', '#00F6FF', '#4500FF', '#00FFAA'];
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+            
+            document.getElementById('particles').appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, duration * 1000);
+        }
+
+        // 定期生成粒子
+        setInterval(createParticle, 300);
+
+        // 移动端菜单控制
+        const hamburgerBtn = document.getElementById('hamburger-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('mobile-overlay');
+
+        if (hamburgerBtn) {
+            hamburgerBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+
+            overlay.addEventListener('click', () => {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+        }
+
+        // 导航菜单切换
+        const navItems = document.querySelectorAll('.nav-menu li');
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+
+        // 工具项点击效果
+        const toolItems = document.querySelectorAll('.tool-item');
+        toolItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                // 添加点击涟漪效果
+                const ripple = document.createElement('span');
+                ripple.style.position = 'absolute';
+                ripple.style.borderRadius = '50%';
+                ripple.style.background = 'rgba(255, 255, 255, 0.6)';
+                ripple.style.transform = 'scale(0)';
+                ripple.style.animation = 'ripple 0.6s linear';
+                ripple.style.left = (e.clientX - item.getBoundingClientRect().left) + 'px';
+                ripple.style.top = (e.clientY - item.getBoundingClientRect().top) + 'px';
+                ripple.style.width = ripple.style.height = '10px';
+                
+                item.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+
+        // 添加涟漪动画样式
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 页面加载完成后添加动画类
+        window.addEventListener('load', () => {
+            document.body.classList.add('loaded');
+        });
+
+        // 处理响应式设计
+        function handleResize() {
+            if (window.innerWidth <= 768) {
+                document.querySelector('.mobile-header').style.display = 'block';
+            } else {
+                document.querySelector('.mobile-header').style.display = 'none';
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+        }
+
+        window.addEventListener('resize', handleResize);
+        handleResize(); // 初始化
+    </script>
+</body>
+</html>
