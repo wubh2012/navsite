@@ -194,6 +194,11 @@ app.get('/api/navigation', async (req, res) => {
       categories = Object.keys(mockData);
     }
     
+    // 获取中文星期
+    const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+    const today = new Date();
+    const chineseWeekday = weekdays[today.getDay()];
+    
     res.json({
       success: true,
       data: data,
@@ -202,7 +207,7 @@ app.get('/api/navigation', async (req, res) => {
       dateInfo: {
         time: moment().format('HH:mm'),
         date: moment().format('M月D日'),
-        weekday: moment().format('dddd'),
+        weekday: chineseWeekday,
         lunarDate: getLunarDateString()
       }
     });

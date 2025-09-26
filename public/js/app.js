@@ -1175,7 +1175,7 @@ function getFaviconUrl(url) {
 
     // 备用方案： https://favicon.im/hey.com
     // 使用Google的favicon服务作为主要方案 `https://www.google.com/s2/favicons?sz=48&domain_url=${hostname}`;
-    const googleFaviconUrl = `https://www.google.com/s2/favicons?sz=48&domain_url=${hostname}`;
+    const googleFaviconUrl = `https://www.google.com/s2/favicons?sz=48&domain_url=${url}`;
 
     // 服务器代理作为备用方案
     const proxyFaviconUrl = `/api/favicon?url=${encodeURIComponent(url)}`;
@@ -2625,7 +2625,7 @@ function initAddLinkFeature() {
   addLinkBtn.addEventListener('click', showModal);
   closeModalBtn.addEventListener('click', hideModal);
   cancelAddBtn.addEventListener('click', hideModal);
-  saveLinkBtn.addEventListener('click', submitForm);
+  //saveLinkBtn.addEventListener('click', submitForm);
   modalOverlay.addEventListener('click', hideModal);
 
   // 阻止模态框内容点击事件冒泡到遮罩层
