@@ -2598,7 +2598,7 @@ function initAddLinkFeature() {
 
       if (result.success) {
         // 显示成功提示
-        showSuccessMessage('链接添加成功');
+        showSuccessMessage('添加成功');
 
         // 隐藏模态框
         hideModal();
@@ -2607,10 +2607,10 @@ function initAddLinkFeature() {
         await fetchNavigationData(true);
       } else {
         // 显示错误提示
-        showErrorMessage(result.message || '添加链接失败');
+        showErrorMessage(result.message || '添加失败');
       }
     } catch (error) {
-      console.error('添加链接异常:', error);
+      console.error('添加异常:', error);
       showErrorMessage('网络错误，请检查网络连接后重试');
     } finally {
       // 恢复保存按钮状态
@@ -2625,7 +2625,7 @@ function initAddLinkFeature() {
   addLinkBtn.addEventListener('click', showModal);
   closeModalBtn.addEventListener('click', hideModal);
   cancelAddBtn.addEventListener('click', hideModal);
-  //saveLinkBtn.addEventListener('click', submitForm);
+  saveLinkBtn.addEventListener('click', submitForm);
   modalOverlay.addEventListener('click', hideModal);
 
   // 阻止模态框内容点击事件冒泡到遮罩层
@@ -2641,10 +2641,10 @@ function initAddLinkFeature() {
   });
 
   // 表单提交事件
-  addLinkForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-    submitForm();
-  });
+  // addLinkForm.addEventListener('submit', function (e) {
+  //   e.preventDefault();
+  //   submitForm();
+  // });
 
   // 实时验证
   document.getElementById('site-name').addEventListener('input', function () {
