@@ -51,39 +51,38 @@ textarea {
 
 :root {
   /* 霓虹风格主题变量 - 基于优化建议 */
-  --primary-color: #FF0066; /* Neo magenta */
-  --secondary-color: #4500FF; /* Neo purple */
-  --accent-color: #00F6FF;
-  --accent-green: #00FFAA; /* Accent green */
-  --warning-color: #FF8800; /* Warning orange */
-  --danger-color: #FF4D4F; /* Danger red */
-  
+  --primary-color: #ff0066; /* Neo magenta */
+  --secondary-color: #4500ff; /* Neo purple */
+  --accent-color: #00f6ff;
+  --accent-green: #00ffaa; /* Accent green */
+  --warning-color: #ff8800; /* Warning orange */
+  --danger-color: #ff4d4f; /* Danger red */
+
   /* 霓虹发光颜色 */
-  --neon-pink: #FF0066;
-  --neon-cyan: #00F6FF;
-  --neon-purple: #4500FF;
-  
+  --neon-pink: #ff0066;
+  --neon-cyan: #00f6ff;
+  --neon-purple: #4500ff;
+
   /* RGB格式颜色值用于rgba函数 */
   --neon-pink-rgb: 255, 0, 102;
   --neon-cyan-rgb: 0, 246, 255;
   --neon-purple-rgb: 69, 0, 255;
-  
+
   /* 文本颜色层级 */
-  --text-high: #FFFFFF; /* High contrast text */
-  --text-mid: #8B86BD; /* Mid contrast text */
-  --text-low: #5E55E7; /* Low contrast text */
-  
+  --text-high: #ffffff; /* High contrast text */
+  --text-mid: #8b86bd; /* Mid contrast text */
+  --text-low: #5e55e7; /* Low contrast text */
+
   /* 背景渐变 */
-  --primary-bg: linear-gradient(135deg, #050012, #0D0122, #1a0033);
+  --primary-bg: linear-gradient(135deg, #050012, #0d0122, #1a0033);
   --glass-bg: rgba(255, 255, 255, 0.8);
   --elevated-bg: rgba(13, 1, 34, 0.8);
-  
+
   /* 边框和效果 */
   --border-glass: rgba(255, 255, 255, 0.1);
   --border-neon: rgba(255, 0, 102, 0.3);
   --glow-pink: 0 0 20px rgba(255, 0, 102, 0.5);
   --glow-cyan: 0 0 20px rgba(0, 246, 255, 0.3);
-  
 }
 
 /* 亮色模式变量 - 基于霓虹风格 */
@@ -92,8 +91,8 @@ textarea {
   --text-color: var(--text-low);
   --sidebar-bg: #fff;
   --menu-hover-bg: rgba(255, 0, 102, 0.1);
-  --menu-active-color: #FF0066;
-  --menu-active-border: #FF0066;
+  --menu-active-color: #ff0066;
+  --menu-active-border: #ff0066;
   --time-color: var(--text-mid);
   --date-color: var(--text-low);
   --tool-item-bg: #fff;
@@ -101,6 +100,20 @@ textarea {
   --tool-item-hover-shadow: 0 4px 16px rgba(255, 0, 102, 0.2);
   --tool-icon-color: var(--text-high);
   --tool-name-color: var(--text-low);
+}
+
+[data-theme="light"] .add-link-btn {
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
+  border: 2px solid rgba(255, 0, 102, 0.15);
+  box-shadow: 0 10px 30px rgba(255, 0, 102, 0.3), 0 0 20px rgba(255, 0, 102, 0.4);
+  color: #ff0066;
+}
+
+[data-theme="light"] .add-link-btn:hover {
+  background: linear-gradient(135deg, #ff0066, #ff3388);
+  color: white;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15), 0 0 25px rgba(255, 0, 102, 0.6), 0 0 35px rgba(255, 51, 136, 0.4);
+  border-color: #ff66a3;
 }
 
 /* 暗黑模式变量 - 霓虹风格 */
@@ -121,23 +134,27 @@ textarea {
   --tool-name-color: var(--text-high);
 }
 
+[data-theme="dark"] .add-link-btn {
+  box-shadow: 0 10px 30px rgba(255, 0, 102, 0.4), 0 0 20px rgba(255, 0, 102, 0.6);
+}
+
 /* 海洋蓝调皮肤主题 */
 [data-skin="ocean"] {
-  --primary-color: #0077BE;
-  --secondary-color: #0096C7;
-  --accent-color: #00B4D8;
-  --accent-green: #48CAE4;
-  --warning-color: #FFB703;
-  --danger-color: #FF6B6B;
-  --neon-pink: #00F5FF;
-  --neon-cyan: #40E0D0;
-  --neon-purple: #0096C7;
+  --primary-color: #0077be;
+  --secondary-color: #0096c7;
+  --accent-color: #00b4d8;
+  --accent-green: #48cae4;
+  --warning-color: #ffb703;
+  --danger-color: #ff6b6b;
+  --neon-pink: #00f5ff;
+  --neon-cyan: #40e0d0;
+  --neon-purple: #0096c7;
   --neon-pink-rgb: 0, 245, 255;
   --neon-cyan-rgb: 64, 224, 208;
   --neon-purple-rgb: 0, 150, 199;
   --text-high: #003566;
-  --text-mid: #0077BE;
-  --text-low: #0096C7;
+  --text-mid: #0077be;
+  --text-low: #0096c7;
   --primary-bg: linear-gradient(135deg, #caf0f8, #ade8f4, #90e0ef);
   --glass-bg: rgba(255, 255, 255, 0.8);
   --elevated-bg: rgba(202, 240, 248, 0.8);
@@ -147,10 +164,33 @@ textarea {
   --glow-cyan: 0 0 20px rgba(64, 224, 208, 0.3);
 }
 
+[data-skin="ocean"] .add-link-btn {
+  box-shadow: 0 10px 30px rgba(0, 150, 199, 0.4), 0 0 20px rgba(0, 245, 255, 0.6);
+}
+
+[data-skin="ocean"] .add-link-btn:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15), 0 0 25px rgba(0, 181, 216, 0.7), 0 0 35px rgba(0, 245, 255, 0.4);
+  border-color: #00b4d8;
+}
+
+@keyframes add-button-pulse-ocean {
+  0%,
+  100% {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), 0 0 0 0 rgba(0, 245, 255, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), 0 0 0 8px rgba(0, 245, 255, 0);
+  }
+}
+
+[data-skin="ocean"] .add-link-btn {
+  animation: float-btn 3s ease-in-out infinite;
+}
+
 [data-skin="ocean"][data-theme="dark"] {
-  --text-high: #FFFFFF;
-  --text-mid: #CAF0F8;
-  --text-low: #ADE8F4;
+  --text-high: #ffffff;
+  --text-mid: #caf0f8;
+  --text-low: #ade8f4;
   --primary-bg: linear-gradient(135deg, #001122, #002244, #003366);
   --glass-bg: rgba(0, 34, 68, 0.6);
   --elevated-bg: rgba(0, 34, 68, 0.8);
@@ -158,21 +198,21 @@ textarea {
 
 /* 森林绿意皮肤主题 */
 [data-skin="forest"] {
-  --primary-color: #2D5016;
-  --secondary-color: #52734D;
-  --accent-color: #73A942;
-  --accent-green: #B4C7A9;
-  --warning-color: #FF8500;
-  --danger-color: #E63946;
-  --neon-pink: #73A942;
-  --neon-cyan: #90C695;
-  --neon-purple: #52734D;
+  --primary-color: #2d5016;
+  --secondary-color: #52734d;
+  --accent-color: #73a942;
+  --accent-green: #b4c7a9;
+  --warning-color: #ff8500;
+  --danger-color: #e63946;
+  --neon-pink: #73a942;
+  --neon-cyan: #90c695;
+  --neon-purple: #52734d;
   --neon-pink-rgb: 115, 169, 66;
   --neon-cyan-rgb: 144, 198, 149;
   --neon-purple-rgb: 82, 115, 77;
-  --text-high: #1B4332;
-  --text-mid: #2D5016;
-  --text-low: #52734D;
+  --text-high: #1b4332;
+  --text-mid: #2d5016;
+  --text-low: #52734d;
   --primary-bg: linear-gradient(135deg, #f1faee, #e9f5db, #cfe1b9);
   --glass-bg: rgba(255, 255, 255, 0.8);
   --elevated-bg: rgba(241, 250, 238, 0.8);
@@ -182,10 +222,33 @@ textarea {
   --glow-cyan: 0 0 20px rgba(144, 198, 149, 0.3);
 }
 
+[data-skin="forest"] .add-link-btn {
+  box-shadow: 0 10px 30px rgba(82, 115, 77, 0.4), 0 0 20px rgba(115, 169, 66, 0.6);
+}
+
+[data-skin="forest"] .add-link-btn:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15), 0 0 25px rgba(115, 169, 66, 0.7), 0 0 35px rgba(144, 198, 149, 0.4);
+  border-color: #90c695;
+}
+
+@keyframes add-button-pulse-forest {
+  0%,
+  100% {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), 0 0 0 0 rgba(115, 169, 66, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), 0 0 0 8px rgba(115, 169, 66, 0);
+  }
+}
+
+[data-skin="forest"] .add-link-btn {
+  animation: float-btn 3s ease-in-out infinite;
+}
+
 [data-skin="forest"][data-theme="dark"] {
-  --text-high: #FFFFFF;
-  --text-mid: #CFE1B9;
-  --text-low: #B4C7A9;
+  --text-high: #ffffff;
+  --text-mid: #cfe1b9;
+  --text-low: #b4c7a9;
   --primary-bg: linear-gradient(135deg, #081c15, #1b4332, #2d5016);
   --glass-bg: rgba(27, 67, 50, 0.6);
   --elevated-bg: rgba(27, 67, 50, 0.8);
@@ -193,21 +256,21 @@ textarea {
 
 /* 日落橙黄皮肤主题 */
 [data-skin="sunset"] {
-  --primary-color: #FF6D00;
-  --secondary-color: #FF8F00;
-  --accent-color: #FFB300;
-  --accent-green: #FFD54F;
-  --warning-color: #FF5722;
-  --danger-color: #D32F2F;
-  --neon-pink: #FF8F00;
-  --neon-cyan: #FFD54F;
-  --neon-purple: #FF6D00;
+  --primary-color: #ff6d00;
+  --secondary-color: #ff8f00;
+  --accent-color: #ffb300;
+  --accent-green: #ffd54f;
+  --warning-color: #ff5722;
+  --danger-color: #d32f2f;
+  --neon-pink: #ff8f00;
+  --neon-cyan: #ffd54f;
+  --neon-purple: #ff6d00;
   --neon-pink-rgb: 255, 143, 0;
   --neon-cyan-rgb: 255, 213, 79;
   --neon-purple-rgb: 255, 109, 0;
-  --text-high: #BF360C;
-  --text-mid: #E65100;
-  --text-low: #FF6D00;
+  --text-high: #bf360c;
+  --text-mid: #e65100;
+  --text-low: #ff6d00;
   --primary-bg: linear-gradient(135deg, #fff8e1, #ffecb3, #ffe082);
   --glass-bg: rgba(255, 255, 255, 0.8);
   --elevated-bg: rgba(255, 248, 225, 0.8);
@@ -218,31 +281,54 @@ textarea {
 }
 
 [data-skin="sunset"][data-theme="dark"] {
-  --text-high: #FFFFFF;
-  --text-mid: #FFF8E1;
-  --text-low: #FFECB3;
+  --text-high: #ffffff;
+  --text-mid: #fff8e1;
+  --text-low: #ffecb3;
   --primary-bg: linear-gradient(135deg, #3e2723, #5d4037, #8d6e63);
   --glass-bg: rgba(62, 39, 35, 0.6);
   --elevated-bg: rgba(62, 39, 35, 0.8);
 }
 
+[data-skin="sunset"] .add-link-btn {
+  box-shadow: 0 10px 30px rgba(255, 109, 0, 0.4), 0 0 20px rgba(255, 143, 0, 0.6);
+}
+
+[data-skin="sunset"] .add-link-btn:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15), 0 0 25px rgba(255, 179, 0, 0.7), 0 0 35px rgba(255, 213, 79, 0.4);
+  border-color: #ffb300;
+}
+
+@keyframes add-button-pulse-sunset {
+  0%,
+  100% {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), 0 0 0 0 rgba(255, 143, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), 0 0 0 8px rgba(255, 143, 0, 0);
+  }
+}
+
+[data-skin="sunset"] .add-link-btn {
+  animation: float-btn 3s ease-in-out infinite;
+}
+
 /* 优雅紫色皮肤主题 */
 [data-skin="purple"] {
-  --primary-color: #6A1B9A;
-  --secondary-color: #8E24AA;
-  --accent-color: #AB47BC;
-  --accent-green: #CE93D8;
-  --warning-color: #FF9800;
-  --danger-color: #F44336;
-  --neon-pink: #AB47BC;
-  --neon-cyan: #CE93D8;
-  --neon-purple: #8E24AA;
+  --primary-color: #6a1b9a;
+  --secondary-color: #8e24aa;
+  --accent-color: #ab47bc;
+  --accent-green: #ce93d8;
+  --warning-color: #ff9800;
+  --danger-color: #f44336;
+  --neon-pink: #ab47bc;
+  --neon-cyan: #ce93d8;
+  --neon-purple: #8e24aa;
   --neon-pink-rgb: 171, 71, 188;
   --neon-cyan-rgb: 206, 147, 216;
   --neon-purple-rgb: 142, 36, 170;
-  --text-high: #4A148C;
-  --text-mid: #6A1B9A;
-  --text-low: #8E24AA;
+  --text-high: #4a148c;
+  --text-mid: #6a1b9a;
+  --text-low: #8e24aa;
   --primary-bg: linear-gradient(135deg, #f3e5f5, #e1bee7, #ce93d8);
   --glass-bg: rgba(255, 255, 255, 0.8);
   --elevated-bg: rgba(243, 229, 245, 0.8);
@@ -253,12 +339,35 @@ textarea {
 }
 
 [data-skin="purple"][data-theme="dark"] {
-  --text-high: #FFFFFF;
-  --text-mid: #F3E5F5;
-  --text-low: #E1BEE7;
+  --text-high: #ffffff;
+  --text-mid: #f3e5f5;
+  --text-low: #e1bee7;
   --primary-bg: linear-gradient(135deg, #1a0e1a, #2a1a2a, #3a2a3a);
   --glass-bg: rgba(26, 14, 26, 0.6);
   --elevated-bg: rgba(26, 14, 26, 0.8);
+}
+
+[data-skin="purple"] .add-link-btn {
+  box-shadow: 0 10px 30px rgba(106, 27, 154, 0.4), 0 0 20px rgba(171, 71, 188, 0.6);
+}
+
+[data-skin="purple"] .add-link-btn:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15), 0 0 25px rgba(142, 36, 170, 0.7), 0 0 35px rgba(206, 147, 216, 0.4);
+  border-color: #ce93d8;
+}
+
+@keyframes add-button-pulse-purple {
+  0%,
+  100% {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), 0 0 0 0 rgba(171, 71, 188, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), 0 0 0 8px rgba(171, 71, 188, 0);
+  }
+}
+
+[data-skin="purple"] .add-link-btn {
+  animation: float-btn 3s ease-in-out infinite;
 }
 
 /* 经典灰调皮肤主题 */
@@ -266,11 +375,11 @@ textarea {
   --primary-color: #424242;
   --secondary-color: #616161;
   --accent-color: #757575;
-  --accent-green: #9E9E9E;
-  --warning-color: #FF9800;
-  --danger-color: #F44336;
+  --accent-green: #9e9e9e;
+  --warning-color: #ff9800;
+  --danger-color: #f44336;
   --neon-pink: #757575;
-  --neon-cyan: #9E9E9E;
+  --neon-cyan: #9e9e9e;
   --neon-purple: #616161;
   --neon-pink-rgb: 117, 117, 117;
   --neon-cyan-rgb: 158, 158, 158;
@@ -288,16 +397,40 @@ textarea {
 }
 
 [data-skin="classic"][data-theme="dark"] {
-  --text-high: #FFFFFF;
-  --text-mid: #F5F5F5;
-  --text-low: #EEEEEE;
+  --text-high: #ffffff;
+  --text-mid: #f5f5f5;
+  --text-low: #eeeeee;
   --primary-bg: linear-gradient(135deg, #121212, #1e1e1e, #2a2a2a);
   --glass-bg: rgba(18, 18, 18, 0.6);
   --elevated-bg: rgba(18, 18, 18, 0.8);
 }
 
+[data-skin="classic"] .add-link-btn {
+  box-shadow: 0 10px 30px rgba(97, 97, 97, 0.4), 0 0 20px rgba(117, 117, 117, 0.6);
+}
+
+[data-skin="classic"] .add-link-btn:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15), 0 0 25px rgba(97, 97, 97, 0.7), 0 0 35px rgba(158, 158, 158, 0.4);
+  border-color: #9e9e9e;
+}
+
+@keyframes add-button-pulse-classic {
+  0%,
+  100% {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), 0 0 0 0 rgba(117, 117, 117, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), 0 0 0 8px rgba(117, 117, 117, 0);
+  }
+}
+
+[data-skin="classic"] .add-link-btn {
+  animation: float-btn 3s ease-in-out infinite;
+}
+
 body {
-  font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-family: "Inter", "SF Pro Display", -apple-system, BlinkMacSystemFont,
+    "PingFang SC", "Microsoft YaHei", sans-serif;
   background: var(--bg-color);
   color: var(--text-color);
   min-height: 100vh;
@@ -350,8 +483,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: 
-    linear-gradient(rgba(255, 0, 102, 0.1) 1px, transparent 1px),
+  background-image: linear-gradient(rgba(255, 0, 102, 0.1) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 0, 102, 0.1) 1px, transparent 1px);
   background-size: 50px 50px;
   z-index: 1;
@@ -359,8 +491,13 @@ body {
 }
 
 @keyframes grid-pulse {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.6; }
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
 }
 
 /* 🎭 玻璃拟态效果 */
@@ -375,7 +512,7 @@ body {
 }
 
 .glass-container::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -398,27 +535,20 @@ body {
 
 /* 🌟 霓虹发光系统 */
 .neon-glow {
-  box-shadow: 
-    0 0 10px var(--neon-pink),
-    0 0 20px var(--neon-pink),
-    0 0 40px var(--neon-pink),
-    inset 0 0 10px rgba(255, 0, 102, 0.1);
+  box-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink),
+    0 0 40px var(--neon-pink), inset 0 0 10px rgba(255, 0, 102, 0.1);
 }
 
 /* 动态发光动画 */
 @keyframes neon-pulse {
-  0%, 100% {
-    box-shadow: 
-      0 0 10px var(--neon-pink),
-      0 0 20px var(--neon-pink),
+  0%,
+  100% {
+    box-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink),
       0 0 30px var(--neon-pink);
   }
   50% {
-    box-shadow: 
-      0 0 15px var(--neon-pink),
-      0 0 30px var(--neon-pink),
-      0 0 45px var(--neon-pink),
-      0 0 60px rgba(255, 0, 102, 0.4);
+    box-shadow: 0 0 15px var(--neon-pink), 0 0 30px var(--neon-pink),
+      0 0 45px var(--neon-pink), 0 0 60px rgba(255, 0, 102, 0.4);
   }
 }
 
@@ -607,30 +737,78 @@ body {
 }
 
 .add-link-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px 24px;
-  background-color: var(--menu-active-color);
-  color: white;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
   border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 500;
+  color: white;
+  font-size: 24px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(var(--neon-pink-rgb), 0.4),
+    0 0 20px rgba(var(--neon-pink-rgb), 0.6);
+  z-index: 1000;
+  
 }
 
+@keyframes float-btn {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+
 .add-link-btn:hover {
-  background-color: #0958d9;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  background: var(--menu-active-color);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15), 0 0 20px rgba(var(--neon-pink-rgb), 0.6);
+  border-color: var(--neon-pink);
 }
 
 .add-link-btn:active {
   transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.add-link-btn i {
+  font-size: 24px;
+  transition: transform 0.3s ease;
+}
+
+.add-link-btn:hover i {
+  transform: scale(1.1);
+}
+
+/* 添加按钮脉冲动画 */
+@keyframes add-button-pulse {
+  0%,
+  100% {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), 0 0 0 0 rgba(255, 0, 102, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), 0 0 0 8px rgba(255, 0, 102, 0);
+  }
+}
+
+.add-link-btn {
+  /* animation: add-button-pulse 3s ease-in-out infinite; */
+  animation: float-btn 3s ease-in-out infinite;
+}
+
+.add-link-btn:hover {
+  animation: none;
 }
 
 /* 模态框样式 */
@@ -926,20 +1104,20 @@ body {
     max-height: none;
     border-radius: 12px 12px 0 0;
   }
-  
+
   .modal-body {
     max-height: calc(100vh - 200px);
   }
-  
+
   .add-link-btn {
     width: 100%;
   }
-  
+
   /* 移动端皮肤选择器适配 */
   .skin-selector {
     position: relative;
   }
-  
+
   .skin-options {
     position: absolute;
     bottom: 100%;
@@ -948,7 +1126,7 @@ body {
     max-height: none;
     margin-bottom: 8px;
   }
-  
+
   .skin-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 6px;
@@ -956,39 +1134,39 @@ body {
     max-height: 180px;
     overflow: visible;
   }
-  
+
   .skin-option {
     padding: 8px 4px;
     font-size: 12px;
   }
-  
+
   .color-dot {
     width: 10px;
     height: 10px;
   }
-  
+
   .skin-colors {
     gap: 3px;
     margin-bottom: 6px;
   }
-  
+
   .skin-label {
     font-size: 11px;
   }
-  
+
   .current-skin {
     padding: 12px 16px;
   }
-  
+
   .current-skin-name {
     font-size: 14px;
   }
-  
+
   .skin-mode-toggle {
     padding: 10px 12px;
     margin: 6px 12px 12px;
   }
-  
+
   .skin-mode-toggle span {
     font-size: 13px;
   }
@@ -1002,7 +1180,7 @@ body {
     max-height: 160px;
     overflow: visible;
   }
-  
+
   .skin-option {
     padding: 10px 6px;
   }
@@ -1242,8 +1420,7 @@ body {
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  box-shadow: 
-    0 0 20px rgba(var(--neon-pink-rgb, 255, 0, 102), 0.6),
+  box-shadow: 0 0 20px rgba(var(--neon-pink-rgb, 255, 0, 102), 0.6),
     0 0 40px rgba(var(--neon-pink-rgb, 255, 0, 102), 0.4),
     0 0 60px rgba(var(--neon-pink-rgb, 255, 0, 102), 0.2);
   border: 3px solid var(--accent-color);
@@ -1253,24 +1430,21 @@ body {
 
 .user-avatar:hover img {
   transform: scale(1.2) rotate(10deg);
-  box-shadow: 
-    0 0 30px rgba(var(--neon-pink-rgb, 255, 0, 102), 0.8),
+  box-shadow: 0 0 30px rgba(var(--neon-pink-rgb, 255, 0, 102), 0.8),
     0 0 60px rgba(var(--neon-pink-rgb, 255, 0, 102), 0.6),
     0 0 90px rgba(var(--neon-pink-rgb, 255, 0, 102), 0.4),
     0 0 120px rgba(var(--neon-cyan-rgb, 0, 246, 255), 0.3);
-  
 }
 
 @keyframes avatar-glow {
-  0%, 100% {
-    box-shadow: 
-      0 0 20px rgba(var(--neon-pink-rgb, 255, 0, 102), 0.6),
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(var(--neon-pink-rgb, 255, 0, 102), 0.6),
       0 0 40px rgba(var(--neon-pink-rgb, 255, 0, 102), 0.4),
       0 0 60px rgba(var(--neon-pink-rgb, 255, 0, 102), 0.2);
   }
   50% {
-    box-shadow: 
-      0 0 30px rgba(var(--neon-pink-rgb, 255, 0, 102), 0.8),
+    box-shadow: 0 0 30px rgba(var(--neon-pink-rgb, 255, 0, 102), 0.8),
       0 0 60px rgba(var(--neon-pink-rgb, 255, 0, 102), 0.6),
       0 0 90px rgba(var(--neon-pink-rgb, 255, 0, 102), 0.4);
   }
@@ -1300,13 +1474,18 @@ body {
 }
 
 .nav-menu li::before {
-  content: '';
+  content: "";
   position: absolute;
   left: -100%;
   top: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 0, 102, 0.1), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 0, 102, 0.1),
+    transparent
+  );
   transition: left 0.5s ease;
 }
 
@@ -1322,7 +1501,11 @@ body {
 }
 
 .nav-menu li.active {
-  background: linear-gradient(135deg, rgba(255, 0, 102, 0.15), rgba(69, 0, 255, 0.1));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 0, 102, 0.15),
+    rgba(69, 0, 255, 0.1)
+  );
   border-color: var(--neon-pink);
   box-shadow: var(--glow-pink);
 }
@@ -1496,12 +1679,24 @@ body {
   animation: slideInUp 0.3s ease forwards;
 }
 
-.skin-option:nth-child(1) { animation-delay: 0.05s; }
-.skin-option:nth-child(2) { animation-delay: 0.1s; }
-.skin-option:nth-child(3) { animation-delay: 0.15s; }
-.skin-option:nth-child(4) { animation-delay: 0.2s; }
-.skin-option:nth-child(5) { animation-delay: 0.25s; }
-.skin-option:nth-child(6) { animation-delay: 0.3s; }
+.skin-option:nth-child(1) {
+  animation-delay: 0.05s;
+}
+.skin-option:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.skin-option:nth-child(3) {
+  animation-delay: 0.15s;
+}
+.skin-option:nth-child(4) {
+  animation-delay: 0.2s;
+}
+.skin-option:nth-child(5) {
+  animation-delay: 0.25s;
+}
+.skin-option:nth-child(6) {
+  animation-delay: 0.3s;
+}
 
 .skin-option:hover {
   background: var(--menu-hover-bg);
@@ -1530,54 +1725,126 @@ body {
 }
 
 /* 各皮肤主题的颜色点 */
-[data-skin="neon"] .skin-option[data-skin="neon"] .color-dot.primary { background: #FF0066; }
-[data-skin="neon"] .skin-option[data-skin="neon"] .color-dot.secondary { background: #4500FF; }
-[data-skin="neon"] .skin-option[data-skin="neon"] .color-dot.accent { background: #00F6FF; }
+[data-skin="neon"] .skin-option[data-skin="neon"] .color-dot.primary {
+  background: #ff0066;
+}
+[data-skin="neon"] .skin-option[data-skin="neon"] .color-dot.secondary {
+  background: #4500ff;
+}
+[data-skin="neon"] .skin-option[data-skin="neon"] .color-dot.accent {
+  background: #00f6ff;
+}
 
-[data-skin="ocean"] .skin-option[data-skin="ocean"] .color-dot.primary { background: #0077BE; }
-[data-skin="ocean"] .skin-option[data-skin="ocean"] .color-dot.secondary { background: #00F5FF; }
-[data-skin="ocean"] .skin-option[data-skin="ocean"] .color-dot.accent { background: #40E0D0; }
+[data-skin="ocean"] .skin-option[data-skin="ocean"] .color-dot.primary {
+  background: #0077be;
+}
+[data-skin="ocean"] .skin-option[data-skin="ocean"] .color-dot.secondary {
+  background: #00f5ff;
+}
+[data-skin="ocean"] .skin-option[data-skin="ocean"] .color-dot.accent {
+  background: #40e0d0;
+}
 
-[data-skin="forest"] .skin-option[data-skin="forest"] .color-dot.primary { background: #2D5016; }
-[data-skin="forest"] .skin-option[data-skin="forest"] .color-dot.secondary { background: #73A942; }
-[data-skin="forest"] .skin-option[data-skin="forest"] .color-dot.accent { background: #90C695; }
+[data-skin="forest"] .skin-option[data-skin="forest"] .color-dot.primary {
+  background: #2d5016;
+}
+[data-skin="forest"] .skin-option[data-skin="forest"] .color-dot.secondary {
+  background: #73a942;
+}
+[data-skin="forest"] .skin-option[data-skin="forest"] .color-dot.accent {
+  background: #90c695;
+}
 
-[data-skin="sunset"] .skin-option[data-skin="sunset"] .color-dot.primary { background: #FF6D00; }
-[data-skin="sunset"] .skin-option[data-skin="sunset"] .color-dot.secondary { background: #FF8F00; }
-[data-skin="sunset"] .skin-option[data-skin="sunset"] .color-dot.accent { background: #FFD54F; }
+[data-skin="sunset"] .skin-option[data-skin="sunset"] .color-dot.primary {
+  background: #ff6d00;
+}
+[data-skin="sunset"] .skin-option[data-skin="sunset"] .color-dot.secondary {
+  background: #ff8f00;
+}
+[data-skin="sunset"] .skin-option[data-skin="sunset"] .color-dot.accent {
+  background: #ffd54f;
+}
 
-[data-skin="purple"] .skin-option[data-skin="purple"] .color-dot.primary { background: #6A1B9A; }
-[data-skin="purple"] .skin-option[data-skin="purple"] .color-dot.secondary { background: #AB47BC; }
-[data-skin="purple"] .skin-option[data-skin="purple"] .color-dot.accent { background: #CE93D8; }
+[data-skin="purple"] .skin-option[data-skin="purple"] .color-dot.primary {
+  background: #6a1b9a;
+}
+[data-skin="purple"] .skin-option[data-skin="purple"] .color-dot.secondary {
+  background: #ab47bc;
+}
+[data-skin="purple"] .skin-option[data-skin="purple"] .color-dot.accent {
+  background: #ce93d8;
+}
 
-[data-skin="classic"] .skin-option[data-skin="classic"] .color-dot.primary { background: #424242; }
-[data-skin="classic"] .skin-option[data-skin="classic"] .color-dot.secondary { background: #757575; }
-[data-skin="classic"] .skin-option[data-skin="classic"] .color-dot.accent { background: #9E9E9E; }
+[data-skin="classic"] .skin-option[data-skin="classic"] .color-dot.primary {
+  background: #424242;
+}
+[data-skin="classic"] .skin-option[data-skin="classic"] .color-dot.secondary {
+  background: #757575;
+}
+[data-skin="classic"] .skin-option[data-skin="classic"] .color-dot.accent {
+  background: #9e9e9e;
+}
 
 /* 通用颜色点样式（当皮肤不匹配时使用） */
-.skin-option[data-skin="neon"] .color-dot.primary { background: #FF0066; }
-.skin-option[data-skin="neon"] .color-dot.secondary { background: #4500FF; }
-.skin-option[data-skin="neon"] .color-dot.accent { background: #00F6FF; }
+.skin-option[data-skin="neon"] .color-dot.primary {
+  background: #ff0066;
+}
+.skin-option[data-skin="neon"] .color-dot.secondary {
+  background: #4500ff;
+}
+.skin-option[data-skin="neon"] .color-dot.accent {
+  background: #00f6ff;
+}
 
-.skin-option[data-skin="ocean"] .color-dot.primary { background: #0077BE; }
-.skin-option[data-skin="ocean"] .color-dot.secondary { background: #00F5FF; }
-.skin-option[data-skin="ocean"] .color-dot.accent { background: #40E0D0; }
+.skin-option[data-skin="ocean"] .color-dot.primary {
+  background: #0077be;
+}
+.skin-option[data-skin="ocean"] .color-dot.secondary {
+  background: #00f5ff;
+}
+.skin-option[data-skin="ocean"] .color-dot.accent {
+  background: #40e0d0;
+}
 
-.skin-option[data-skin="forest"] .color-dot.primary { background: #2D5016; }
-.skin-option[data-skin="forest"] .color-dot.secondary { background: #73A942; }
-.skin-option[data-skin="forest"] .color-dot.accent { background: #90C695; }
+.skin-option[data-skin="forest"] .color-dot.primary {
+  background: #2d5016;
+}
+.skin-option[data-skin="forest"] .color-dot.secondary {
+  background: #73a942;
+}
+.skin-option[data-skin="forest"] .color-dot.accent {
+  background: #90c695;
+}
 
-.skin-option[data-skin="sunset"] .color-dot.primary { background: #FF6D00; }
-.skin-option[data-skin="sunset"] .color-dot.secondary { background: #FF8F00; }
-.skin-option[data-skin="sunset"] .color-dot.accent { background: #FFD54F; }
+.skin-option[data-skin="sunset"] .color-dot.primary {
+  background: #ff6d00;
+}
+.skin-option[data-skin="sunset"] .color-dot.secondary {
+  background: #ff8f00;
+}
+.skin-option[data-skin="sunset"] .color-dot.accent {
+  background: #ffd54f;
+}
 
-.skin-option[data-skin="purple"] .color-dot.primary { background: #6A1B9A; }
-.skin-option[data-skin="purple"] .color-dot.secondary { background: #AB47BC; }
-.skin-option[data-skin="purple"] .color-dot.accent { background: #CE93D8; }
+.skin-option[data-skin="purple"] .color-dot.primary {
+  background: #6a1b9a;
+}
+.skin-option[data-skin="purple"] .color-dot.secondary {
+  background: #ab47bc;
+}
+.skin-option[data-skin="purple"] .color-dot.accent {
+  background: #ce93d8;
+}
 
-.skin-option[data-skin="classic"] .color-dot.primary { background: #424242; }
-.skin-option[data-skin="classic"] .color-dot.secondary { background: #757575; }
-.skin-option[data-skin="classic"] .color-dot.accent { background: #9E9E9E; }
+.skin-option[data-skin="classic"] .color-dot.primary {
+  background: #424242;
+}
+.skin-option[data-skin="classic"] .color-dot.secondary {
+  background: #757575;
+}
+.skin-option[data-skin="classic"] .color-dot.accent {
+  background: #9e9e9e;
+}
 
 .skin-label {
   font-size: 12px;
@@ -1628,9 +1895,15 @@ body {
 }
 
 @keyframes skinFade {
-  0% { opacity: 1; }
-  50% { opacity: 0.7; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes slideInUp {
@@ -1659,10 +1932,14 @@ body {
 }
 
 .current-time {
-  font-family: 'Orbitron', monospace;
+  font-family: "Orbitron", monospace;
   font-size: 72px;
   font-weight: 700;
-  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--accent-color)
+  );
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1672,7 +1949,8 @@ body {
 }
 
 @keyframes time-pulse {
-  0%, 100% {
+  0%,
+  100% {
     filter: drop-shadow(0 0 20px rgba(var(--neon-pink-rgb, 255, 0, 102), 0.5));
   }
   50% {
@@ -1724,7 +2002,7 @@ body {
 }
 
 .tool-item::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -1746,9 +2024,7 @@ body {
 }
 
 .tool-item:hover {
-  box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.3),
-    0 0 40px rgba(255, 0, 102, 0.4),
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 40px rgba(255, 0, 102, 0.4),
     inset 0 0 20px rgba(255, 255, 255, 0.1);
   transform: translateY(-10px) scale(1.05);
   border-color: var(--primary-color);
@@ -1775,7 +2051,7 @@ body {
 }
 
 .ripple::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -1938,16 +2214,36 @@ body {
   animation: fadeInUp 0.6s ease-out forwards;
 }
 
-.tool-item:nth-child(1) { animation-delay: 0.1s; }
-.tool-item:nth-child(2) { animation-delay: 0.2s; }
-.tool-item:nth-child(3) { animation-delay: 0.3s; }
-.tool-item:nth-child(4) { animation-delay: 0.4s; }
-.tool-item:nth-child(5) { animation-delay: 0.5s; }
-.tool-item:nth-child(6) { animation-delay: 0.6s; }
-.tool-item:nth-child(7) { animation-delay: 0.7s; }
-.tool-item:nth-child(8) { animation-delay: 0.8s; }
-.tool-item:nth-child(9) { animation-delay: 0.9s; }
-.tool-item:nth-child(10) { animation-delay: 1.0s; }
+.tool-item:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.tool-item:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.tool-item:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.tool-item:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.tool-item:nth-child(5) {
+  animation-delay: 0.5s;
+}
+.tool-item:nth-child(6) {
+  animation-delay: 0.6s;
+}
+.tool-item:nth-child(7) {
+  animation-delay: 0.7s;
+}
+.tool-item:nth-child(8) {
+  animation-delay: 0.8s;
+}
+.tool-item:nth-child(9) {
+  animation-delay: 0.9s;
+}
+.tool-item:nth-child(10) {
+  animation-delay: 1s;
+}
 
 /* 响应式优化 */
 @media (max-width: 768px) {
@@ -1955,7 +2251,7 @@ body {
     padding: 12px 15px;
     margin: 8px 0;
   }
-  
+
   .tool-item {
     padding: 15px;
     margin: 8px;
@@ -1975,6 +2271,12 @@ body {
   .page-loader {
     animation: none !important;
     transition: none !important;
+  }
+
+  /* 当禁用动画时，确保工具卡片可见 */
+  .tool-item {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
   }
 }
 
@@ -2020,7 +2322,7 @@ body.loaded .tool-item:nth-child(n) {
     padding: 12px 16px;
     margin: 4px 0;
   }
-  
+
   .tool-item {
     padding: 15px;
     border-radius: 12px;
@@ -2035,6 +2337,12 @@ body.loaded .tool-item:nth-child(n) {
   .loader-logo {
     animation: none;
     transition: none;
+  }
+
+  /* 确保工具卡片在禁用动画时仍然可见 */
+  body.loaded .tool-item {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
   }
 }
 
@@ -2054,9 +2362,7 @@ button:focus {
 
 .hover-lift:hover {
   transform: translateY(-8px) scale(1.02);
-  box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.3),
-    var(--glow-pink);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), var(--glow-pink);
 }
 
 /* 弹性点击效果 */
@@ -2096,8 +2402,12 @@ button:focus {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* 打字机霓虹效果 */
@@ -2107,8 +2417,14 @@ button:focus {
 }
 
 @keyframes neon-blink {
-  0%, 50% { border-color: var(--neon-cyan); }
-  51%, 100% { border-color: transparent; }
+  0%,
+  50% {
+    border-color: var(--neon-cyan);
+  }
+  51%,
+  100% {
+    border-color: transparent;
+  }
 }
 
 .tool-item a {
@@ -2290,12 +2606,12 @@ button:focus {
     grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
     gap: 10px;
   }
-  
+
   .tool-item {
     min-height: 90px;
     padding: 12px;
   }
-  
+
   .tool-item a {
     display: flex;
     flex-direction: column;
@@ -2314,7 +2630,7 @@ button:focus {
     margin-left: auto;
     margin-right: auto;
   }
-  
+
   .text-icon {
     width: 36px;
     height: 36px;
@@ -2323,7 +2639,7 @@ button:focus {
     margin-left: auto;
     margin-right: auto;
   }
-  
+
   .tool-name {
     font-size: 12px;
   }
@@ -2368,11 +2684,21 @@ button:focus {
     -webkit-line-clamp: 2;
   }
 
-  /* 移动端隐藏添加按钮 */
+  /* 移动端添加按钮适配 */
   .add-link-btn {
-    display: none;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 24px;
+    font-size: 14px;
+    border-radius: 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   }
-  
+
+  .add-link-btn i {
+    font-size: 16px;
+  }
+
   /* 移动端模式切换按钮适配 */
   .theme-toggle-button {
     top: 15px;
@@ -2478,11 +2804,21 @@ button:focus {
     font-size: 13px;
   }
 
-  /* 大屏手机也隐藏添加按钮 */
+  /* 大屏手机添加按钮适配 */
   .add-link-btn {
-    display: none;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 13px 26px;
+    font-size: 15px;
+    border-radius: 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   }
-  
+
+  .add-link-btn i {
+    font-size: 17px;
+  }
+
   /* 大屏手机模式切换按钮适配 */
   .theme-toggle-button {
     top: 15px;

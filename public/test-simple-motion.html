@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>减少动画模式测试 - 简单版</title>
+    <style>
+        /* 基础样式 */
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .test-card {
+            /* 模拟工具卡片的初始状态 */
+            width: 200px;
+            height: 150px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 20px;
+            display: inline-block;
+            text-align: center;
+            padding: 20px;
+            
+            /* 关键：初始状态与工具卡片相同 */
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideInUp 0.3s ease forwards;
+        }
+        
+        @keyframes slideInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* 减少动画模式的样式 */
+        @media (prefers-reduced-motion: reduce) {
+            .test-card {
+                animation: none !important;
+                transition: none !important;
+                /* 修复：确保在禁用动画时仍然可见 */
+                opacity: 1 !important;
+                transform: translateY(0) !important;
+            }
+        }
+        
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .status {
+            font-weight: bold;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body>
+    <h1>减少动画模式测试</h1>
+    
+    <div class="info">
+        <p>这个页面测试在系统禁用动画时的显示效果。</p>
+        <p>当前状态: <span class="status" id="status">检测中...</span></p>
+        <p>预期行为:</p>
+        <ul>
+            <li>正常模式: 卡片从下方淡入</li>
+            <li>减少动画模式: 卡片直接显示，没有动画</li>
+        </ul>
+    </div>
+    
+    <div class="test-card">
+        <h3>测试卡片 1</h3>
+        <p>这是一个测试卡片</p>
+    </div>
+    
+    <div class="test-card">
+        <h3>测试卡片 2</h3>
+        <p>这是另一个测试卡片</p>
+    </div>
+    
+    <div class="test-card">
+        <h3>测试卡片 3</h3>
+        <p>这是第三个测试卡片</p>
+    </div>
+    
+    <script>
+        // 检测减少动画模式
+        function updateStatus() {
+            const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+            const statusElement = document.getElementById('status');
+            
+            if (mediaQuery.matches) {
+                statusElement.textContent = '已启用减少动画模式 - 卡片应该直接显示';
+                statusElement.style.color = '#4CAF50';
+            } else {
+                statusElement.textContent = '正常动画模式 - 卡片应该有淡入动画';
+                statusElement.style.color = '#FF9800';
+            }
+        }
+        
+        // 监听变化
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStatus();
+            
+            const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+            mediaQuery.addEventListener('change', updateStatus);
+        });
+    </script>
+</body>
+</html>
