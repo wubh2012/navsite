@@ -2439,7 +2439,9 @@ function initDeleteLinkFeature() {
   });
 }
 
-// 添加链接功能
+// 添加链接功能的事件监听器（一次性绑定）
+let isAddLinkEventsBound = false;
+
 function initAddLinkFeature() {
   const addLinkBtn = document.getElementById('add-link-btn');
   const addLinkModal = document.getElementById('add-link-modal');
@@ -2452,6 +2454,11 @@ function initAddLinkFeature() {
   // 检查元素是否存在
   if (!addLinkBtn || !addLinkModal || !closeModalBtn || !cancelAddBtn || !saveLinkBtn || !addLinkForm) {
     console.error('添加链接功能的DOM元素未找到');
+    return;
+  }
+
+  // 如果事件监听器已经绑定，直接返回
+  if (isAddLinkEventsBound) {
     return;
   }
 
@@ -2621,12 +2628,15 @@ function initAddLinkFeature() {
 
 
 
-  // 添加事件监听器
+  // 添加事件监听器（一次性绑定）
   addLinkBtn.addEventListener('click', showModal);
   closeModalBtn.addEventListener('click', hideModal);
   cancelAddBtn.addEventListener('click', hideModal);
   saveLinkBtn.addEventListener('click', submitForm);
   modalOverlay.addEventListener('click', hideModal);
+  
+  // 标记事件监听器已绑定
+  isAddLinkEventsBound = true;
 
   // 阻止模态框内容点击事件冒泡到遮罩层
   addLinkModal.querySelector('.modal-content').addEventListener('click', function (e) {
@@ -2865,23 +2875,35 @@ function showErrorMessage(message) {
 }
 
 // 在数据加载完成后初始化添加链接功能
+let isAddLinkFeatureInitialized = false;
+
 function initAddLinkFeatureAfterDataLoaded() {
+  // 如果已经初始化过，直接返回
+  if (isAddLinkFeatureInitialized) {
+    return;
+  }
+  
   // 检查是否有分类数据
   if (categories && categories.length > 0) {
     initAddLinkFeature();
+    isAddLinkFeatureInitialized = true;
   } else {
     // 如果没有分类数据，等待数据加载
     const checkInterval = setInterval(() => {
       if (categories && categories.length > 0) {
         clearInterval(checkInterval);
         initAddLinkFeature();
+        isAddLinkFeatureInitialized = true;
       }
     }, 500);
 
     // 5秒后超时
     setTimeout(() => {
       clearInterval(checkInterval);
-      initAddLinkFeature();
+      if (!isAddLinkFeatureInitialized) {
+        initAddLinkFeature();
+        isAddLinkFeatureInitialized = true;
+      }
     }, 5000);
   }
 }
