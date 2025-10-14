@@ -237,22 +237,23 @@
     <div class="modal-body">
       <form id="add-link-form">
         <div class="form-group">
+          <label for="site-url">网站网址 *</label>
+          <input type="url" id="site-url" name="site-url" value="https://" placeholder="请输入完整网址，包含http://或https://">
+          <div class="error-message" id="url-error"></div>
+        </div>
+        <div class="form-group">
           <label for="site-name">网站名称 *</label>
           <input type="text" id="site-name" name="site-name" placeholder="请输入网站名称" maxlength="50">
           <div class="error-message" id="name-error"></div>
-        </div>
-        
-        <div class="form-group">
-          <label for="site-url">网站网址 *</label>
-          <input type="url" id="site-url" name="site-url" placeholder="请输入完整网址，包含http://或https://">
-          <div class="error-message" id="url-error"></div>
-        </div>
-        
+        </div>        
         <div class="form-group">
           <label for="site-category">分类 *</label>
           <select id="site-category" name="site-category">
             <!-- 动态生成的分类选项 -->
           </select>
+          <div id="custom-category-container" style="display: none; margin-top: 10px;">
+            <input type="text" id="custom-category" name="custom-category" placeholder="请输入自定义分类名称" maxlength="20">
+          </div>
           <div class="error-message" id="category-error"></div>
         </div>
         
