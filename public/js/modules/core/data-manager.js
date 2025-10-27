@@ -5,26 +5,66 @@ class DataManager {
   constructor() {
     this.navigationData = {};
     this.categories = [];
-    this.dataCache = null;
-    this.cacheTimestamp = null;
     this.CACHE_DURATION = 5 * 60 * 1000; // 缓存5分钟
+    this.CACHE_KEY = 'navsite_navigation_cache'; // LocalStorage键名
+  }
+
+  // 从LocalStorage读取缓存数据
+  readCacheFromStorage() {
+    try {
+      const cachedData = localStorage.getItem(this.CACHE_KEY);
+      if (!cachedData) return null;
+      
+      const parsedData = JSON.parse(cachedData);
+      
+      // 检查缓存是否过期
+      if (Date.now() - parsedData.timestamp > this.CACHE_DURATION) {
+        localStorage.removeItem(this.CACHE_KEY); // 删除过期缓存
+        return null;
+      }
+      
+      return parsedData;
+    } catch (error) {
+      console.warn('读取缓存数据失败:', error);
+      localStorage.removeItem(this.CACHE_KEY); // 删除损坏的缓存
+      return null;
+    }
+  }
+
+  // 将缓存数据写入LocalStorage
+  writeCacheToStorage(data, categories, dateInfo) {
+    try {
+      const cacheData = {
+        data: data,
+        categories: categories,
+        dateInfo: dateInfo,
+        timestamp: Date.now()
+      };
+      localStorage.setItem(this.CACHE_KEY, JSON.stringify(cacheData));
+    } catch (error) {
+      console.warn('写入缓存数据失败:', error);
+      // 静默处理写入失败，不影响主要功能
+    }
   }
 
   // 获取导航数据
   async fetchNavigationData(forceRefresh = false) {
-    // 检查缓存是否有效（除非强制刷新）
-    if (!forceRefresh && this.dataCache && this.cacheTimestamp && 
-        (Date.now() - this.cacheTimestamp < this.CACHE_DURATION)) {
-      console.log('使用缓存数据');
-      this.navigationData = this.dataCache.data;
-      this.categories = this.dataCache.categories;
-      return {
-        success: true,
-        data: this.navigationData,
-        categories: this.categories,
-        dateInfo: this.dataCache.dateInfo,
-        fromCache: true
-      };
+    // 检查是否强制刷新
+    if (!forceRefresh) {
+      // 尝试从LocalStorage读取缓存
+      const cachedData = this.readCacheFromStorage();
+      if (cachedData) {
+        console.log('使用LocalStorage缓存数据');
+        this.navigationData = cachedData.data;
+        this.categories = cachedData.categories;
+        return {
+          success: true,
+          data: this.navigationData,
+          categories: this.categories,
+          dateInfo: cachedData.dateInfo,
+          fromCache: true
+        };
+      }
     }
 
     try {
@@ -50,13 +90,8 @@ class DataManager {
         this.navigationData = result.data;
         this.categories = result.categories;
 
-        // 缓存数据
-        this.dataCache = {
-          data: result.data,
-          categories: result.categories,
-          dateInfo: result.dateInfo
-        };
-        this.cacheTimestamp = Date.now();
+        // 将数据缓存到LocalStorage
+        this.writeCacheToStorage(result.data, result.categories, result.dateInfo);
 
         return result;
       } else {
@@ -100,23 +135,26 @@ class DataManager {
       ]
     };
     
-    // 缓存数据
-    this.dataCache = {
+    // 缓存数据到LocalStorage
+    this.writeCacheToStorage(
+      this.navigationData, 
+      this.categories, 
+      {
+        date: '12月25日',
+        weekday: '星期一',
+        lunarDate: '腊月初五'
+      }
+    );
+    
+    return {
+      success: true,
       data: this.navigationData,
       categories: this.categories,
       dateInfo: {
         date: '12月25日',
         weekday: '星期一',
         lunarDate: '腊月初五'
-      }
-    };
-    this.cacheTimestamp = Date.now();
-    
-    return {
-      success: true,
-      data: this.navigationData,
-      categories: this.categories,
-      dateInfo: this.dataCache.dateInfo,
+      },
       fromDefault: true
     };
   }
@@ -178,23 +216,26 @@ class DataManager {
 
   // 清除缓存
   clearCache() {
-    this.dataCache = null;
-    this.cacheTimestamp = null;
+    try {
+      localStorage.removeItem(this.CACHE_KEY);
+      console.log('已清除LocalStorage缓存');
+    } catch (error) {
+      console.warn('清除缓存失败:', error);
+    }
   }
 
   // 获取当前数据
   getCurrentData() {
     return {
       navigationData: this.navigationData,
-      categories: this.categories,
-      dataCache: this.dataCache
+      categories: this.categories
     };
   }
 
   // 检查缓存是否有效
   isCacheValid() {
-    return this.dataCache && this.cacheTimestamp && 
-           (Date.now() - this.cacheTimestamp < this.CACHE_DURATION);
+    const cachedData = this.readCacheFromStorage();
+    return cachedData !== null;
   }
 }
 

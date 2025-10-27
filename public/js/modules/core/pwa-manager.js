@@ -21,14 +21,14 @@ class PWAManager {
       const registration = await navigator.serviceWorker.register('/sw.js', {
         scope: '/'
       });
-      
+
       console.log('[PWA] Service Worker 注册成功:', registration.scope);
-      
+
       // 监听 Service Worker 更新
       registration.addEventListener('updatefound', () => {
         const newWorker = registration.installing;
         console.log('[PWA] 发现新版本 Service Worker');
-        
+
         newWorker.addEventListener('statechange', () => {
           if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
             console.log('[PWA] 新版本已安装，等待激活');
@@ -36,13 +36,13 @@ class PWAManager {
           }
         });
       });
-      
+
       // 监听 Service Worker 控制器变化
       navigator.serviceWorker.addEventListener('controllerchange', () => {
         console.log('[PWA] Service Worker 已更新，重新加载页面');
         window.location.reload();
       });
-      
+
     } catch (error) {
       console.error('[PWA] Service Worker 注册失败:', error);
     }
@@ -78,7 +78,7 @@ class PWAManager {
         <button class="dismiss-btn">×</button>
       </div>
     `;
-    
+
     // 添加样式
     const style = document.createElement('style');
     style.textContent = `
@@ -118,7 +118,7 @@ class PWAManager {
     `;
     document.head.appendChild(style);
     document.body.appendChild(notification);
-    
+
     // 事件监听
     notification.querySelector('.update-btn').addEventListener('click', () => {
       navigator.serviceWorker.getRegistration().then(registration => {
@@ -128,11 +128,11 @@ class PWAManager {
       });
       notification.remove();
     });
-    
+
     notification.querySelector('.dismiss-btn').addEventListener('click', () => {
       notification.remove();
     });
-    
+
     // 10秒后自动消失
     setTimeout(() => {
       if (notification.parentNode) {
@@ -144,7 +144,7 @@ class PWAManager {
   // 显示安装提示
   showInstallPrompt() {
     if (!this.deferredPrompt) return;
-    
+
     const prompt = document.createElement('div');
     prompt.className = 'pwa-install-prompt';
     prompt.innerHTML = `
@@ -162,7 +162,7 @@ class PWAManager {
         </div>
       </div>
     `;
-    
+
     // 添加样式
     const style = document.createElement('style');
     style.textContent = `
@@ -237,34 +237,34 @@ class PWAManager {
     `;
     document.head.appendChild(style);
     document.body.appendChild(prompt);
-    
+
     // 事件监听
     prompt.querySelector('.install-btn').addEventListener('click', async () => {
       if (this.deferredPrompt) {
         this.deferredPrompt.prompt();
         const { outcome } = await this.deferredPrompt.userChoice;
         console.log('[PWA] 用户选择:', outcome);
-        
+
         if (outcome === 'accepted') {
           console.log('[PWA] 用户接受安装');
         } else {
           console.log('[PWA] 用户拒绝安装');
         }
-        
+
         this.deferredPrompt = null;
       }
       prompt.remove();
     });
-    
+
     prompt.querySelector('.later-btn').addEventListener('click', () => {
       prompt.remove();
-      // 保存用户选择，24小时内不再显示
+      // 保存用户选择，7*24小时内不再显示
       localStorage.setItem('pwa-install-dismissed', Date.now());
     });
-    
+
     // 检查是否最近被拒绝过
     const lastDismissed = localStorage.getItem('pwa-install-dismissed');
-    if (lastDismissed && (Date.now() - parseInt(lastDismissed)) < 24 * 60 * 60 * 1000) {
+    if (lastDismissed && (Date.now() - parseInt(lastDismissed)) < 7 * 24 * 60 * 60 * 1000) {
       prompt.remove();
       return;
     }
@@ -280,7 +280,7 @@ class PWAManager {
         <span>水果导航已成功安装到您的设备</span>
       </div>
     `;
-    
+
     // 添加样式
     const style = document.createElement('style');
     style.textContent = `
@@ -304,7 +304,7 @@ class PWAManager {
     `;
     document.head.appendChild(style);
     document.body.appendChild(message);
-    
+
     // 5秒后自动消失
     setTimeout(() => {
       if (message.parentNode) {
@@ -312,7 +312,7 @@ class PWAManager {
         setTimeout(() => message.remove(), 300);
       }
     }, 5000);
-    
+
     // 清除安装提示标记
     localStorage.removeItem('pwa-install-dismissed');
   }

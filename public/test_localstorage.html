@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocalStorage 缓存测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .test-section {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #0069d9;
+        }
+        .cache-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .cache-item {
+            background-color: #e9ecef;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <h1>LocalStorage 缓存功能测试</h1>
+    
+    <div class="container">
+        <div class="test-section">
+            <h2>1. 检查 LocalStorage 支持</h2>
+            <button onclick="testLocalStorageSupport()">测试支持</button>
+            <div id="localStorage-support" class="result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>2. 测试数据写入和读取</h2>
+            <button onclick="testWriteAndRead()">写入测试数据</button>
+            <button onclick="testReadData()">读取测试数据</button>
+            <button onclick="clearTestData()">清除测试数据</button>
+            <div id="read-write-result" class="result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>3. 测试缓存有效期</h2>
+            <button onclick="testCacheValidity()">检查缓存有效性</button>
+            <div id="cache-validity-result" class="result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>4. 检查当前缓存状态</h2>
+            <button onclick="checkCurrentCache()">检查缓存</button>
+            <div id="current-cache-result" class="result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>5. 测试 DataManager 缓存功能</h2>
+            <button onclick="testDataManagerFetch()">测试获取导航数据</button>
+            <button onclick="testDataManagerClear()">测试清除缓存</button>
+            <div id="data-manager-result" class="result"></div>
+        </div>
+    </div>
+
+    <script src="js/modules/core/data-manager.js"></script>
+    <script>
+        // 创建 DataManager 实例
+        window.dataManager = new DataManager();
+        
+        // 等待 DOM 加载完成
+        document.addEventListener('DOMContentLoaded', function() {
+            updateResult('localStorage-support', '点击按钮开始测试 LocalStorage 支持', 'info');
+            updateResult('read-write-result', '点击按钮测试数据写入和读取', 'info');
+            updateResult('cache-validity-result', '点击按钮测试缓存有效期', 'info');
+            updateResult('current-cache-result', '点击按钮检查当前缓存状态', 'info');
+            updateResult('data-manager-result', '点击按钮测试 DataManager 缓存功能', 'info');
+        });
+        
+        // 更新结果显示
+        function updateResult(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = `result ${type}`;
+        }
+        
+        // 测试 LocalStorage 支持
+        window.testLocalStorageSupport = function() {
+            try {
+                const testKey = 'test_localstorage_support';
+                localStorage.setItem(testKey, 'test');
+                localStorage.removeItem(testKey);
+                updateResult('localStorage-support', '✓ LocalStorage 支持正常', 'success');
+            } catch (e) {
+                updateResult('localStorage-support', `✗ LocalStorage 不支持: ${e.message}`, 'error');
+            }
+        };
+        
+        // 测试数据写入
+        window.testWriteAndRead = function() {
+            try {
+                const testData = {
+                    data: [
+                        { id: '1', title: '测试链接1', url: 'https://example1.com', category: '测试分类' },
+                        { id: '2', title: '测试链接2', url: 'https://example2.com', category: '测试分类' }
+                    ],
+                    timestamp: Date.now()
+                };
+                
+                localStorage.setItem('navsite_cache_test', JSON.stringify(testData));
+                updateResult('read-write-result', '✓ 测试数据已写入 LocalStorage', 'success');
+            } catch (e) {
+                updateResult('read-write-result', `✗ 写入失败: ${e.message}`, 'error');
+            }
+        };
+        
+        // 测试数据读取
+        window.testReadData = function() {
+            try {
+                const cachedData = localStorage.getItem('navsite_cache_test');
+                if (cachedData) {
+                    const parsedData = JSON.parse(cachedData);
+                    const dataCount = parsedData.data ? parsedData.data.length : 0;
+                    const timestamp = new Date(parsedData.timestamp).toLocaleString();
+                    updateResult('read-write-result', 
+                        `✓ 成功读取测试数据: ${dataCount} 条记录，缓存时间: ${timestamp}`, 
+                        'success');
+                } else {
+                    updateResult('read-write-result', '✗ 没有找到测试数据，请先写入数据', 'error');
+                }
+            } catch (e) {
+                updateResult('read-write-result', `✗ 读取失败: ${e.message}`, 'error');
+            }
+        };
+        
+        // 清除测试数据
+        window.clearTestData = function() {
+            try {
+                localStorage.removeItem('navsite_cache_test');
+                updateResult('read-write-result', '✓ 测试数据已清除', 'success');
+            } catch (e) {
+                updateResult('read-write-result', `✗ 清除失败: ${e.message}`, 'error');
+            }
+        };
+        
+        // 测试缓存有效期
+        window.testCacheValidity = function() {
+            try {
+                const CACHE_DURATION = 5 * 60 * 1000; // 5分钟
+                
+                // 创建一个过期的缓存
+                const expiredData = {
+                    data: [{ id: 'expired', title: '过期数据', url: 'https://expired.com' }],
+                    timestamp: Date.now() - CACHE_DURATION - 1000 // 比缓存有效期多1秒
+                };
+                
+                localStorage.setItem('navsite_cache_expired', JSON.stringify(expiredData));
+                
+                // 检查缓存是否有效
+                const cachedData = localStorage.getItem('navsite_cache_expired');
+                const parsedData = JSON.parse(cachedData);
+                const isExpired = (Date.now() - parsedData.timestamp) > CACHE_DURATION;
+                
+                if (isExpired) {
+                    updateResult('cache-validity-result', 
+                        `✓ 缓存有效性检查正常: 数据已过期 (缓存时间: ${new Date(parsedData.timestamp).toLocaleString()})`, 
+                        'success');
+                } else {
+                    updateResult('cache-validity-result', '✗ 缓存有效性检查异常: 数据应该已过期但显示为有效', 'error');
+                }
+                
+                // 清理测试数据
+                localStorage.removeItem('navsite_cache_expired');
+            } catch (e) {
+                updateResult('cache-validity-result', `✗ 测试失败: ${e.message}`, 'error');
+            }
+        };
+        
+        // 检查当前缓存状态
+        window.checkCurrentCache = function() {
+            try {
+                const cacheKeys = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key && key.includes('navsite')) {
+                        cacheKeys.push(key);
+                    }
+                }
+                
+                if (cacheKeys.length === 0) {
+                    updateResult('current-cache-result', '当前没有找到 navsite 相关的缓存', 'info');
+                } else {
+                    let resultHTML = `<div class="cache-info">找到 ${cacheKeys.length} 个缓存项:</div>`;
+                    resultHTML += '<div class="cache-info">';
+                    
+                    cacheKeys.forEach(key => {
+                        const value = localStorage.getItem(key);
+                        try {
+                            const parsed = JSON.parse(value);
+                            const size = new Blob([value]).size;
+                            const timestamp = parsed.timestamp ? new Date(parsed.timestamp).toLocaleString() : '未知';
+                            const dataCount = parsed.data ? parsed.data.length : '未知';
+                            
+                            resultHTML += `<div class="cache-item">
+                                <strong>${key}</strong><br>
+                                大小: ${size} 字节<br>
+                                数据条数: ${dataCount}<br>
+                                时间: ${timestamp}
+                            </div>`;
+                        } catch (e) {
+                            const size = new Blob([value]).size;
+                            resultHTML += `<div class="cache-item">
+                                <strong>${key}</strong><br>
+                                大小: ${size} 字节<br>
+                                状态: 非JSON格式
+                            </div>`;
+                        }
+                    });
+                    
+                    resultHTML += '</div>';
+                    document.getElementById('current-cache-result').innerHTML = resultHTML;
+                    document.getElementById('current-cache-result').className = 'result success';
+                }
+            } catch (e) {
+                updateResult('current-cache-result', `✗ 检查失败: ${e.message}`, 'error');
+            }
+        };
+        
+        // 测试 DataManager 获取数据
+        window.testDataManagerFetch = async function() {
+            try {
+                updateResult('data-manager-result', '正在获取导航数据...', 'info');
+                const data = await window.dataManager.fetchNavigationData();
+                
+                if (data && data.length > 0) {
+                    updateResult('data-manager-result', 
+                        `✓ 成功获取 ${data.length} 条导航数据`, 
+                        'success');
+                } else {
+                    updateResult('data-manager-result', 
+                        '✗ 获取的导航数据为空', 
+                        'error');
+                }
+            } catch (e) {
+                updateResult('data-manager-result', 
+                    `✗ 获取导航数据失败: ${e.message}`, 
+                    'error');
+            }
+        };
+        
+        // 测试 DataManager 清除缓存
+        window.testDataManagerClear = function() {
+            try {
+                window.dataManager.clearCache();
+                updateResult('data-manager-result', 
+                    '✓ 缓存已清除', 
+                    'success');
+            } catch (e) {
+                updateResult('data-manager-result', 
+                    `✗ 清除缓存失败: ${e.message}`, 
+                    'error');
+            }
+        };
+    </script>
+</body>
+</html>
