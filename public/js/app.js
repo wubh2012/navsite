@@ -13,7 +13,6 @@ function loadModules() {
     '/js/modules/core/ui-renderer.js',
     
     // 功能模块
-    '/js/modules/features/search-manager.js',
     '/js/modules/features/link-manager.js',
     '/js/modules/features/interaction-manager.js',
     
@@ -39,7 +38,6 @@ let dataManager = null;
 let uiRenderer = null;
 let themeManager = null;
 let pwaManager = null;
-let searchManager = null;
 let linkManager = null;
 let interactionManager = null;
 
@@ -120,10 +118,6 @@ async function initCoreModules() {
 
 // 初始化功能模块
 async function initFeatureModules() {
-  // 初始化搜索管理器
-  searchManager = new window.SearchManager(dataManager);
-  window.searchManager = searchManager; // 设置全局引用
-  
   // 初始化链接管理器
   linkManager = new window.LinkManager(dataManager);
   window.linkManager = linkManager; // 设置全局引用

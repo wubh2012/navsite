@@ -48,16 +48,19 @@ class InteractionManager {
   }
   
   bindThemeToggle() {
-    const themeToggleBtn = document.getElementById('theme-toggle-btn');
-    if (themeToggleBtn) {
-      themeToggleBtn.addEventListener('click', (e) => {
-        this.createClickEffect(e.currentTarget);
-        // 主题切换逻辑由ThemeManager处理
-        if (window.themeManager) {
-          window.themeManager.toggleMode();
-        }
-      });
-    }
+    // 绑定移动端和桌面端的主题切换按钮
+    const themeToggleBtns = document.querySelectorAll('#theme-toggle-btn, #desktop-theme-toggle-btn');
+    themeToggleBtns.forEach(themeToggleBtn => {
+      if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', (e) => {
+          this.createClickEffect(e.currentTarget);
+          // 主题切换逻辑由ThemeManager处理
+          if (window.themeManager) {
+            window.themeManager.toggleMode();
+          }
+        });
+      }
+    });
   }
   
   bindGlobalEvents() {

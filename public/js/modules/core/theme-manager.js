@@ -435,21 +435,23 @@ class ThemeManager {
   }
 
   updateModeToggle() {
-    // 更新右上角模式切换按钮的图标
-    const themeToggleBtn = document.getElementById('theme-toggle-btn');
-    if (themeToggleBtn) {
-      const icon = themeToggleBtn.querySelector('i');
-      if (icon) {
-        if (this.currentMode === 'dark') {
-          icon.className = 'bi bi-sun';
-          themeToggleBtn.title = '';
-        } else {
-          icon.className = 'bi bi-moon';
-          themeToggleBtn.title = '';
+    // 更新所有主题切换按钮的图标（包括移动端和桌面端）
+    const themeToggleBtns = document.querySelectorAll('#theme-toggle-btn, #desktop-theme-toggle-btn');
+    themeToggleBtns.forEach(themeToggleBtn => {
+      if (themeToggleBtn) {
+        const icon = themeToggleBtn.querySelector('i');
+        if (icon) {
+          if (this.currentMode === 'dark') {
+            icon.className = 'bi bi-sun';
+            themeToggleBtn.title = '';
+          } else {
+            icon.className = 'bi bi-moon';
+            themeToggleBtn.title = '';
+          }
         }
       }
-    }
-    
+    });
+
     // 更新皮肤选择器中的模式切换按钮
     const skinModeToggle = document.querySelector('.skin-mode-toggle');
     if (skinModeToggle) {

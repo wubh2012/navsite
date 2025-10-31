@@ -126,24 +126,26 @@ function updateSkinOptionsState() {
 // 更新模式切换按钮显示
 function updateModeToggleDisplay() {
   if (!window.themeManager) return;
-  
+
   const currentMode = window.themeManager.getCurrentMode();
-  
-  // 更新右上角的主题切换按钮（只更新图标）
-  const themeToggleBtn = document.getElementById('theme-toggle-btn');
-  if (themeToggleBtn) {
-    const icon = themeToggleBtn.querySelector('i');
-    if (icon) {
-      if (currentMode === 'dark') {
-        icon.className = 'bi bi-sun';
-        themeToggleBtn.title = '切换亮色模式';
-      } else {
-        icon.className = 'bi bi-moon';
-        themeToggleBtn.title = '切换暗黑模式';
+
+  // 更新所有主题切换按钮（包括移动端和桌面端）
+  const themeToggleBtns = document.querySelectorAll('#theme-toggle-btn, #desktop-theme-toggle-btn');
+  themeToggleBtns.forEach(themeToggleBtn => {
+    if (themeToggleBtn) {
+      const icon = themeToggleBtn.querySelector('i');
+      if (icon) {
+        if (currentMode === 'dark') {
+          icon.className = 'bi bi-sun';
+          themeToggleBtn.title = '切换亮色模式';
+        } else {
+          icon.className = 'bi bi-moon';
+          themeToggleBtn.title = '切换暗黑模式';
+        }
       }
     }
-  }
-  
+  });
+
   // 更新皮肤选择器中的模式切换按钮
   const skinModeToggle = document.querySelector('.skin-mode-toggle');
   if (skinModeToggle) {

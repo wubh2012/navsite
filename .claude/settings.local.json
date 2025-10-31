@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run dev)",
+      "Bash(PORT=3001 npm run dev)",
+      "Bash(curl -s http://localhost:3001/api/navigation)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

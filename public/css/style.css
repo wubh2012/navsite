@@ -618,6 +618,25 @@ body {
   justify-content: space-between;
   padding: 0 16px;
   height: 56px;
+  position: relative;
+}
+
+/* 移动端导航栏右侧按钮组 */
+.mobile-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* 桌面端专用按钮（隐藏） */
+.desktop-only {
+  display: flex;
+}
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none;
+  }
 }
 
 .mobile-logo {
@@ -679,24 +698,6 @@ body {
 }
 
 /* 搜索按钮 */
-.search-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  border-radius: 8px;
-  transition: background-color 0.3s ease;
-  font-size: 18px;
-  color: var(--text-color);
-}
-
-.search-btn:hover {
-  background-color: var(--menu-hover-bg);
-}
 
 /* 移动端遮罩层 */
 .mobile-overlay {
@@ -717,18 +718,6 @@ body {
   opacity: 1;
 }
 
-/* 移动端搜索界面 */
-.mobile-search {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: var(--bg-color);
-  z-index: 1002;
-  transform: translateY(-100%);
-  transition: transform 0.3s ease;
-}
 
 /* 添加链接按钮样式 */
 .add-link-section {
@@ -1109,8 +1098,19 @@ body {
     max-height: calc(100vh - 200px);
   }
 
+  /* 移动端添加按钮 - 使用圆形设计 */
   .add-link-btn {
-    width: 100%;
+    width: 56px;
+    height: 56px;
+    padding: 0;
+    border-radius: 50%;
+    /* left: 50%; */
+    transform: translateX(-50%);
+    bottom: 20px;
+  }
+
+  .add-link-btn i {
+    font-size: 24px;
   }
 
   /* 移动端皮肤选择器适配 */
@@ -1186,205 +1186,6 @@ body {
   }
 }
 
-.mobile-search.active {
-  transform: translateY(0);
-}
-
-.search-container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.search-header {
-  display: flex;
-  align-items: center;
-  padding: 12px 16px;
-  background-color: var(--sidebar-bg);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  gap: 12px;
-}
-
-.search-back-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  border-radius: 50%;
-  transition: background-color 0.3s ease;
-  font-size: 18px;
-  color: var(--text-color);
-}
-
-.search-back-btn:hover {
-  background-color: var(--menu-hover-bg);
-}
-
-.search-input-wrapper {
-  flex: 1;
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.search-input {
-  width: 100%;
-  height: 44px;
-  padding: 0 44px 0 16px;
-  border: 1px solid #e0e0e0;
-  border-radius: 22px;
-  background-color: var(--tool-item-bg);
-  color: var(--text-color);
-  font-size: 16px;
-  outline: none;
-  transition: all 0.3s ease;
-}
-
-.search-input:focus {
-  border-color: var(--menu-active-color);
-  box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
-}
-
-.search-input::placeholder {
-  color: #999;
-}
-
-.search-clear-btn {
-  position: absolute;
-  right: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  border-radius: 50%;
-  transition: background-color 0.3s ease;
-  font-size: 14px;
-  color: #999;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.search-clear-btn.visible {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.search-clear-btn:hover {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
-.search-results {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px;
-}
-
-.search-suggestions {
-  margin-bottom: 24px;
-}
-
-.suggestions-title {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 12px;
-  font-weight: 500;
-}
-
-.suggestions-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.suggestion-item {
-  padding: 8px 16px;
-  background-color: var(--tool-item-bg);
-  border: 1px solid #e0e0e0;
-  border-radius: 20px;
-  font-size: 14px;
-  color: var(--text-color);
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.suggestion-item:hover {
-  background-color: var(--menu-hover-bg);
-  border-color: var(--menu-active-color);
-}
-
-.search-no-results {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  text-align: center;
-  color: #666;
-}
-
-.search-no-results i {
-  font-size: 48px;
-  margin-bottom: 16px;
-  opacity: 0.5;
-}
-
-.search-no-results p {
-  font-size: 16px;
-  margin-bottom: 8px;
-}
-
-.search-no-results span {
-  font-size: 14px;
-  opacity: 0.7;
-}
-
-.search-result-item {
-  display: flex;
-  align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid #f0f0f0;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.search-result-item:hover {
-  background-color: var(--menu-hover-bg);
-  margin: 0 -16px;
-  padding: 12px 16px;
-  border-radius: 8px;
-}
-
-.search-result-icon {
-  width: 32px;
-  height: 32px;
-  margin-right: 12px;
-  border-radius: 6px;
-  object-fit: cover;
-}
-
-.search-result-info {
-  flex: 1;
-}
-
-.search-result-name {
-  font-size: 16px;
-  color: var(--text-color);
-  margin-bottom: 4px;
-  font-weight: 500;
-}
-
-.search-result-category {
-  font-size: 12px;
-  color: #666;
-}
 
 .container {
   display: flex;
@@ -2069,10 +1870,7 @@ body {
 }
 
 /* 按钮触摸反馈 */
-.hamburger-btn:active,
-.search-btn:active,
-.search-back-btn:active,
-.search-clear-btn:active {
+.hamburger-btn:active {
   transform: scale(0.95);
   transition: transform 0.1s ease;
 }
@@ -2084,11 +1882,6 @@ body {
 }
 
 .nav-menu ul {
-  -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
-}
-
-.search-results {
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
 }
@@ -2108,25 +1901,6 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-/* 优化搜索结果项的交互 */
-.search-result-item:active {
-  background-color: var(--menu-hover-bg);
-  transform: scale(0.98);
-}
-
-/* 改进建议标签的交互 */
-.suggestion-item:active {
-  transform: scale(0.95);
-  background-color: var(--menu-active-color);
-  color: white;
-}
-
-/* 优化移动端输入框 */
-.search-input:focus {
-  transform: scale(1.02);
-  transition: all 0.3s ease;
 }
 
 /* 添加页面切换动画 */
@@ -2183,9 +1957,7 @@ body {
     min-height: 44px;
   }
 
-  .hamburger-btn,
-  .search-btn,
-  .search-back-btn {
+  .hamburger-btn {
     min-width: 44px;
     min-height: 44px;
   }
@@ -2684,28 +2456,27 @@ button:focus {
     -webkit-line-clamp: 2;
   }
 
-  /* 移动端添加按钮适配 */
+  /* 移动端添加按钮适配 - 使用圆形设计 */
   .add-link-btn {
-    bottom: 80px;
-    left: 50%;
+    width: 56px;
+    height: 56px;
+    bottom: 20px;
     transform: translateX(-50%);
-    padding: 12px 24px;
-    font-size: 14px;
-    border-radius: 25px;
+    padding: 0;
+    border-radius: 50%;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   }
 
   .add-link-btn i {
-    font-size: 16px;
+    font-size: 24px;
   }
 
-  /* 移动端模式切换按钮适配 */
-  .theme-toggle-button {
-    top: 15px;
-    right: 60px; /* 为移动端搜索按钮预留空间 */
-    width: 40px;
-    height: 40px;
+  /* 移动端模式切换按钮 - 移动到导航栏内，与搜索按钮水平对齐 */
+  .mobile-nav .theme-toggle-button {
+    width: 44px;
+    height: 44px;
     font-size: 18px;
+    position: unset;
   }
 }
 
@@ -2804,25 +2575,23 @@ button:focus {
     font-size: 13px;
   }
 
-  /* 大屏手机添加按钮适配 */
+  /* 大屏手机添加按钮适配 - 使用圆形设计 */
   .add-link-btn {
-    bottom: 80px;
-    left: 50%;
+    width: 56px;
+    height: 56px;
+    bottom: 20px;
     transform: translateX(-50%);
-    padding: 13px 26px;
-    font-size: 15px;
-    border-radius: 25px;
+    padding: 0;
+    border-radius: 50%;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   }
 
   .add-link-btn i {
-    font-size: 17px;
+    font-size: 24px;
   }
 
-  /* 大屏手机模式切换按钮适配 */
-  .theme-toggle-button {
-    top: 15px;
-    right: 60px;
+  /* 移动端模式切换按钮 - 移动到导航栏内，与搜索按钮水平对齐 */
+  .mobile-nav .theme-toggle-button {
     width: 44px;
     height: 44px;
     font-size: 19px;
