@@ -222,8 +222,8 @@ class UIRenderer {
     let iconHtml = '';
     let useFavicon = false;
 
-    if (tool.icon) {
-      // 如果是URL，使用img标签
+    if (tool.icon && typeof tool.icon === 'string' && tool.icon.trim()) {
+      // 如果是URL，使用img标签      
       if (tool.icon.startsWith('http')) {
         iconHtml = `<img src="${tool.icon}" alt="${tool.name}" class="tool-icon">`;
       } else {
@@ -232,7 +232,7 @@ class UIRenderer {
       }
     } else {
       // 尝试使用网站的favicon
-      const faviconUrl = this.getFaviconUrl(tool.url);
+      const faviconUrl = this.getFaviconUrl(tool.url);      
       if (faviconUrl) {
         // 添加onerror处理，当图标加载失败时显示文字图标
         iconHtml = `<img src="${faviconUrl}" alt="${tool.name}" class="tool-icon" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`;

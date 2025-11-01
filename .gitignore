@@ -39,3 +39,4 @@ Thumbs.db
 *.sublime-workspace
 .vercel
 .codebuddy/
+.claude/

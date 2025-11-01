@@ -126,7 +126,7 @@ function processTableData(items) {
       url: fields.url || fields.网址.link || '',
       category: fields.category || fields.分类 || '其它',
       sort: fields.sort || fields.排序 || 0,
-      icon: fields.icon || fields.图标 || ''
+      icon: fields?.icon?.link || fields?.备用图标?.link || ''
     };
   }).filter(record => record !== null); // 过滤掉空记录
 

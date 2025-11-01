@@ -277,9 +277,8 @@ class ThemeManager {
     if (savedMode) {
       this.currentMode = savedMode;
     } else {
-      // 检查系统偏好
-      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      this.currentMode = systemPrefersDark ? 'dark' : 'light';
+      // 始终使用 dark 模式作为默认（忽略系统偏好）
+      this.currentMode = 'dark';
     }
   }
 
