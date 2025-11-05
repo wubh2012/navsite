@@ -1717,7 +1717,7 @@ body {
 /* 主内容区样式 */
 .main-content {
   flex: 1;
-  padding: 20px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
   min-height: calc(100vh - 40px);
@@ -1728,7 +1728,7 @@ body {
 /* 顶部信息区样式 */
 .top-info {
   text-align: center;
-  padding: 40px 0 60px;
+  padding: 10px;
   position: relative;
 }
 

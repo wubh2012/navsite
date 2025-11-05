@@ -5,7 +5,7 @@ class DataManager {
   constructor() {
     this.navigationData = {};
     this.categories = [];
-    this.CACHE_DURATION = 5 * 60 * 1000; // 缓存5分钟
+    this.CACHE_DURATION = 60 * 60 * 1000; // 缓存1小时
     this.CACHE_KEY = 'navsite_navigation_cache'; // LocalStorage键名
   }
 
