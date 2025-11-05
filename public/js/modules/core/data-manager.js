@@ -89,9 +89,15 @@ class DataManager {
       if (result.success) {
         this.navigationData = result.data;
         this.categories = result.categories;
+        const isMockData = result.isMockData;
 
-        // 将数据缓存到LocalStorage
-        this.writeCacheToStorage(result.data, result.categories, result.dateInfo);
+        // 只有非模拟数据才进行缓存
+        if (!isMockData) {
+          console.log('非模拟数据，开始缓存...');
+          this.writeCacheToStorage(result.data, result.categories, result.dateInfo);
+        } else {
+          console.log('检测到模拟数据，不进行缓存');
+        }
 
         return result;
       } else {
@@ -135,16 +141,7 @@ class DataManager {
       ]
     };
     
-    // 缓存数据到LocalStorage
-    this.writeCacheToStorage(
-      this.navigationData, 
-      this.categories, 
-      {
-        date: '12月25日',
-        weekday: '星期一',
-        lunarDate: '腊月初五'
-      }
-    );
+    // 默认数据不再缓存，以便下次尝试从API获取最新数据
     
     return {
       success: true,

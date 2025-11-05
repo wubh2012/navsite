@@ -180,7 +180,7 @@ app.get('/api/navigation', async (req, res) => {
   try {
     let data;
     let categories;
-    
+    let isMockData = false;
     // 尝试从飞书API获取数据
     try {
       const token = await getTenantAccessToken();
@@ -192,6 +192,7 @@ app.get('/api/navigation', async (req, res) => {
       // 使用模拟数据
       data = mockData;
       categories = Object.keys(mockData);
+      isMockData = true;
     }
     
     // 获取中文星期
@@ -201,6 +202,7 @@ app.get('/api/navigation', async (req, res) => {
     
     res.json({
       success: true,
+      isMockData: isMockData,
       data: data,
       categories: categories,
       timestamp: new Date().toISOString(),
