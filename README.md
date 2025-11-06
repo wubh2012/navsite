@@ -2,7 +2,7 @@
 
 ## 📖 项目介绍
 
-这是一个基于飞书多维表格开发的导航网站。 **在线演示地址**：[https://navsite-phi.vercel.app/](https://navsite-phi.vercel.app/)
+这是一个基于飞书多维表格开发的导航网站。 **在线演示地址**：[https://testnav-one.vercel.app/](https://testnav-one.vercel.app/)
 
 <table>
   <tr>
@@ -107,6 +107,7 @@
 
 📖 [查看配置指南 →](./doc/飞书多维表格设置.md)
 
+示例数据可以看这里： [示例数据](https://pcnz0m411rr0.feishu.cn/base/QqmhbhUqRaGCjHs6l9XcKJtEnIc?table=tblva1FKxYGEZ7ce&view=vewbqWfrEv)
 
 ### 💻 步骤3: 本地启动开发
 
