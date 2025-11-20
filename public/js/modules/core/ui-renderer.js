@@ -6,7 +6,7 @@ class UIRenderer {
     this.dataManager = dataManager;
     this.currentCategory = 'all';
     this.faviconCache = new Map();
-    
+
     // DOM元素引用
     this.categoryMenu = document.getElementById('category-menu');
     this.toolsGrid = document.getElementById('tools-grid');
@@ -17,9 +17,9 @@ class UIRenderer {
   // 生成分类菜单
   generateCategoryMenu() {
     if (!this.categoryMenu) return;
-    
+
     const { categories } = this.dataManager.getCurrentData();
-    
+
     // 保留第一个"主页"菜单项
     const homeMenuItem = this.categoryMenu.firstElementChild;
     this.categoryMenu.innerHTML = '';
@@ -179,7 +179,7 @@ class UIRenderer {
 
     // 检查当前主题模式
     const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
-    
+
     // 生成随机背景色（柔和的颜色）
     const hue = Math.floor(Math.random() * 360);
     // 在亮色模式下使用更浅的背景色（亮度从80%提高到90%）
@@ -232,7 +232,7 @@ class UIRenderer {
       }
     } else {
       // 尝试使用网站的favicon
-      const faviconUrl = this.getFaviconUrl(tool.url);      
+      const faviconUrl = this.getFaviconUrl(tool.url);
       if (faviconUrl) {
         // 添加onerror处理，当图标加载失败时显示文字图标
         iconHtml = `<img src="${faviconUrl}" alt="${tool.name}" class="tool-icon" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`;
@@ -284,7 +284,7 @@ class UIRenderer {
   // 显示加载动画
   showLoadingAnimation() {
     if (!this.toolsGrid) return;
-    
+
     this.toolsGrid.innerHTML = `
       <div class="loading-container" style="
         display: flex;
@@ -318,7 +318,7 @@ class UIRenderer {
   // 隐藏加载动画
   hideLoadingAnimation() {
     if (!this.toolsGrid) return;
-    
+
     const loadingContainer = this.toolsGrid.querySelector('.loading-container');
     if (loadingContainer) {
       loadingContainer.remove();
@@ -328,7 +328,7 @@ class UIRenderer {
   // 显示错误信息
   showError(message) {
     if (!this.toolsGrid) return;
-    
+
     this.toolsGrid.innerHTML = `
       <div style="text-align: center; width: 100%; padding: 30px;">
         <i class="bi bi-exclamation-triangle" style="font-size: 48px; color: #ff4d4f; margin-bottom: 20px;"></i>
@@ -340,7 +340,7 @@ class UIRenderer {
   // 更新时间信息
   updateTimeInfo() {
     if (!this.currentTimeEl) return;
-    
+
     const now = new Date();
 
     // 更新当前时间
@@ -350,18 +350,18 @@ class UIRenderer {
     this.currentTimeEl.textContent = `${hours}:${minutes}:${seconds}`;
 
     // 如果有缓存数据，使用缓存的日期信息
-    const { dataCache } = this.dataManager.getCurrentData();
-    if (dataCache && dataCache.dateInfo) {
-      this.updateDateInfo(dataCache.dateInfo);
+    const { dateInfo } = this.dataManager.getCurrentData();
+    if (dateInfo) {
+      this.updateDateInfo(dateInfo);
     } else {
       // 更新日期信息（使用静态值作为fallback）
       const month = now.getMonth() + 1;
       const date = now.getDate();
       const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
       const weekday = weekdays[now.getDay()];
-      const lunarDate = '闰六月十八'; // 示例值
+
       if (this.dateInfoEl) {
-        this.dateInfoEl.textContent = `${month} 月 ${date} 日 ${weekday} ${lunarDate}`;
+        this.dateInfoEl.textContent = `${month} 月 ${date} 日 ${weekday}`;
       }
     }
   }
@@ -385,19 +385,15 @@ class UIRenderer {
       this.currentTimeEl.textContent = `${hours}:${minutes}:${seconds}`;
 
       // 更新日期信息
-      const month = now.getMonth() + 1;
-      const date = now.getDate();
-      const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
-      const weekday = weekdays[now.getDay()];
-
-      // 如果有缓存数据，使用缓存的日期信息
-      const { dataCache } = this.dataManager.getCurrentData();
-      if (dataCache && dataCache.dateInfo) {
-        this.dateInfoEl.textContent = `${dataCache.dateInfo.date} ${dataCache.dateInfo.weekday} ${dataCache.dateInfo.lunarDate}`;
+      const { dateInfo } = this.dataManager.getCurrentData();
+      if (dateInfo) {
+        this.dateInfoEl.textContent = `${dateInfo.date} ${dateInfo.weekday} ${dateInfo.lunarDate}`;
       } else {
-        // 这里使用固定的农历日期，实际应用中可以使用专门的农历转换库
-        const lunarDate = '闰六月十八'; // 示例值
-        this.dateInfoEl.textContent = `${month} 月 ${date} 日 ${weekday} ${lunarDate}`;
+        const month = now.getMonth() + 1;
+        const date = now.getDate();
+        const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+        const weekday = weekdays[now.getDay()];
+        this.dateInfoEl.textContent = `${month} 月 ${date} 日 ${weekday}`;
       }
     }
   }

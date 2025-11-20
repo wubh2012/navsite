@@ -5,6 +5,7 @@ class DataManager {
   constructor() {
     this.navigationData = {};
     this.categories = [];
+    this.dateInfo = null;
     this.CACHE_DURATION = 60 * 60 * 1000; // 缓存1小时
     this.CACHE_KEY = 'navsite_navigation_cache'; // LocalStorage键名
   }
@@ -14,15 +15,15 @@ class DataManager {
     try {
       const cachedData = localStorage.getItem(this.CACHE_KEY);
       if (!cachedData) return null;
-      
+
       const parsedData = JSON.parse(cachedData);
-      
+
       // 检查缓存是否过期
       if (Date.now() - parsedData.timestamp > this.CACHE_DURATION) {
         localStorage.removeItem(this.CACHE_KEY); // 删除过期缓存
         return null;
       }
-      
+
       return parsedData;
     } catch (error) {
       console.warn('读取缓存数据失败:', error);
@@ -57,6 +58,7 @@ class DataManager {
         console.log('使用LocalStorage缓存数据');
         this.navigationData = cachedData.data;
         this.categories = cachedData.categories;
+        this.dateInfo = cachedData.dateInfo;
         return {
           success: true,
           data: this.navigationData,
@@ -69,26 +71,27 @@ class DataManager {
 
     try {
       const response = await fetch('/api/navigation');
-      
+
       // 检查响应状态
       if (!response.ok) {
         console.warn(`API 请求失败: ${response.status} ${response.statusText}`);
         return this.useDefaultNavigationData();
       }
-      
+
       // 检查内容类型
       const contentType = response.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
         console.warn('API 返回非 JSON 数据，使用默认数据');
         return this.useDefaultNavigationData();
       }
-      
+
       const result = await response.json();
       console.log('获取导航数据:', result);
 
       if (result.success) {
         this.navigationData = result.data;
         this.categories = result.categories;
+        this.dateInfo = result.dateInfo;
         const isMockData = result.isMockData;
 
         // 只有非模拟数据才进行缓存
@@ -113,10 +116,10 @@ class DataManager {
   // 使用默认导航数据
   useDefaultNavigationData() {
     console.log('使用默认导航数据');
-    
+
     // 默认分类
     this.categories = ['Code', '设计', '工具', '学习'];
-    
+
     // 默认导航数据
     this.navigationData = {
       'Code': [
@@ -140,18 +143,20 @@ class DataManager {
         { name: 'FreeCodeCamp', url: 'https://freecodecamp.org', icon: '💡' }
       ]
     };
-    
+
+    this.dateInfo = {
+      date: '12月25日',
+      weekday: '星期一',
+      lunarDate: '腊月初五'
+    };
+
     // 默认数据不再缓存，以便下次尝试从API获取最新数据
-    
+
     return {
       success: true,
       data: this.navigationData,
       categories: this.categories,
-      dateInfo: {
-        date: '12月25日',
-        weekday: '星期一',
-        lunarDate: '腊月初五'
-      },
+      dateInfo: this.dateInfo,
       fromDefault: true
     };
   }
@@ -168,12 +173,12 @@ class DataManager {
       });
 
       const result = await response.json();
-      
+
       if (result.success) {
         // 清除缓存，强制下次重新获取数据
         this.clearCache();
       }
-      
+
       return result;
     } catch (error) {
       console.error('添加链接异常:', error);
@@ -195,12 +200,12 @@ class DataManager {
       });
 
       const result = await response.json();
-      
+
       if (result.success) {
         // 清除缓存，强制下次重新获取数据
         this.clearCache();
       }
-      
+
       return result;
     } catch (error) {
       console.error('删除链接异常:', error);
@@ -225,7 +230,8 @@ class DataManager {
   getCurrentData() {
     return {
       navigationData: this.navigationData,
-      categories: this.categories
+      categories: this.categories,
+      dateInfo: this.dateInfo
     };
   }
 
