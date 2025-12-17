@@ -8,43 +8,30 @@ function showPageLoader() {
   if (!loader) {
     loader = document.createElement('div');
     loader.id = 'page-loader';
-    loader.style.position = 'fixed';
-    loader.style.top = '0';
-    loader.style.left = '0';
-    loader.style.width = '100%';
-    loader.style.height = '100%';
-    loader.style.background = 'var(--bg-color, #fff)';
-    loader.style.zIndex = '9999';
-    loader.style.display = 'flex';
-    loader.style.justifyContent = 'center';
-    loader.style.alignItems = 'center';
-    loader.style.transition = 'opacity 0.5s ease';
-
+    loader.className = 'page-loader';
+    
     loader.innerHTML = `
-      <div class="loader-content" style="text-align: center;">
-        <div class="spinner" style="width: 40px; height: 40px; border: 4px solid rgba(0,0,0,0.1); border-top-color: var(--primary-color, #ff0066); border-radius: 50%; animation: spin 1s linear infinite;"></div>
-        <p style="margin-top: 10px; color: var(--text-color, #333);">加载中...</p>
+      <div class="loader-content">
+        <div class="spinner"></div>
+        <p class="loader-text">加载中...</p>
       </div>
-      <style>
-        @keyframes spin { to { transform: rotate(360deg); } }
-      </style>
     `;
 
     document.body.appendChild(loader);
   }
 
-  loader.style.display = 'flex';
-  loader.style.opacity = '1';
+  // 通过添加类名来显示，避免直接操作样式
+  loader.classList.remove('page-loader--hidden');
+  loader.classList.add('page-loader--visible');
 }
 
 // 隐藏页面加载动画
 function hidePageLoader() {
   const loader = document.getElementById('page-loader');
   if (loader) {
-    loader.style.opacity = '0';
-    setTimeout(() => {
-      loader.style.display = 'none';
-    }, 500);
+    // 通过移除类名来隐藏，避免直接操作样式
+    loader.classList.remove('page-loader--visible');
+    loader.classList.add('page-loader--hidden');
   }
 }
 
